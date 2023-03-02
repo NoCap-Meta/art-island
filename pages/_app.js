@@ -1,4 +1,6 @@
 import '../styles/globals.css'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import localFont from 'next/font/local'
 
 export const MagnetRegular = localFont({
