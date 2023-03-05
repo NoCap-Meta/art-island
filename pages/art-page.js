@@ -1,4 +1,5 @@
 import { ArtPageHero, Details, ItemActivity } from 'components'
+import { MagnetMedium } from 'pages/_app';
 
 const ArtPage = () => {
   return (
