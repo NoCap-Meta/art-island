@@ -1,3 +1,4 @@
+import { NavBar } from 'components'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app'
 import { useState } from 'react'
 
@@ -68,35 +69,7 @@ const ArtPageHero = () => {
 
   return (
     <div className="min-h-[100vh] w-[100vw]">
-      <div className="w-[100vw] flex justify-center">
-        <div className="w-[90vw] h-[70px] justify-between flex items-center">
-          <div className="flex gap-[10px] h-[70px]  items-center">
-            <img src='Images/SVG/Star.svg' />
-            <p className={`${MagnetBold.className} text-[24px] overflow-hidden leading-[29px] text-black`}>
-              ART ISLAND RODEO CLUB
-            </p>
-
-          </div>
-          <div className='flex gap-[5px] h-[70px]  items-center'>
-            <img className='opacity-50' src='Images/SVG/Search.svg' />
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
-              Search NFTs, Collections...
-            </p>
-          </div>
-          <div className='flex gap-[50px] h-[70px]  items-center'>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
-              Explore
-            </p>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
-              Stats
-            </p>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
-              Create
-            </p>
-            <img src='Images/SVG/Menu.svg' />
-          </div>
-        </div>
-      </div>
+      <NavBar/>
       <div className="w-[100vw] mt-[2rem] flex justify-center">
         <div className='w-[90vw] flex'>
           <div className='w-[44.5vw] gap-[1rem] flex'>

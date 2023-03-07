@@ -6,6 +6,17 @@ import Footer from './Footer/index';
 import ArtPageHero from './Art-Page/Hero';
 import Details from './Art-Page/Details';
 import ItemActivity from './Art-Page/ItemActivity/index.jsx';
+import { ArtistHeader, NavBar } from './Common';
+import ArtistHero from './Artist-Profile/ArtistHero/index';
+
+export const imageBackgroundOptions = {
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center'
+}
+
+
+
 
 export {
   Hero,
@@ -15,5 +26,8 @@ export {
   Footer,
   ArtPageHero,
   Details,
-  ItemActivity
+  ItemActivity,
+  ArtistHero,
+  ArtistHeader,
+  NavBar
 };
