@@ -8,6 +8,7 @@ import Details from './Art-Page/Details';
 import ItemActivity from './Art-Page/ItemActivity/index.jsx';
 import { ArtistHeader, NavBar } from './Common';
 import ArtistHero from './Artist-Profile/ArtistHero/index';
+import { TableCell } from "./Art-Page/ItemActivity/index.jsx";
 
 export const imageBackgroundOptions = {
   backgroundRepeat: 'no-repeat',
@@ -29,5 +30,6 @@ export {
   ItemActivity,
   ArtistHero,
   ArtistHeader,
-  NavBar
+  NavBar,
+  TableCell
 };

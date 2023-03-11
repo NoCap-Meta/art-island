@@ -43,7 +43,7 @@ const FilterList = ({handleFilter})=>{
   )
 }
 
-const TableCell = ({children, text, font, right})=>{
+export const TableCell = ({children, text, font, right})=>{
   return (
     <div className='w-[20%] flex gap-[5px] items-center'>
       {!right && children}

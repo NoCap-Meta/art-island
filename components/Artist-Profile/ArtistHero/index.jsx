@@ -1,4 +1,4 @@
-import { NavBar, ArtistHeader } from "components"
+import { NavBar, ArtistHeader, TableCell } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 
@@ -65,6 +65,8 @@ const ArtistHero = () => {
     }
   ])
 
+  const [selectedTab, setSeletctedTab] = useState("Featured")
+
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
       if(option.name === name){
@@ -79,6 +81,7 @@ const ArtistHero = () => {
         }
       }
     })
+    setSeletctedTab(name)
     setOptions(newOptions)
   }
 
@@ -128,14 +131,48 @@ const ArtistHero = () => {
           </div>
         </div>
 
-          <div className="w-[90vw] flex gap-[40px] flex-wrap mt-[42px]">
+         {selectedTab==="Featured" && <div className="w-[90vw] flex gap-[40px] flex-wrap mt-[42px]">
               {
                 Array.from({length:10}).map(()=>{
                   return <Card/>
                 })
               }
-          </div>
-
+          </div>}
+          {
+            selectedTab==='Transaction History' && (
+              <div>
+                <div className="w-[90vw] h-[3rem] mt-[36px] flex justify-end items-center rounded-lg bg-[rgba(255,255,255,0.5)] mb-[10px]">
+                  <img src='Images/SVG/Chevron-small-down.svg' className='mr-[12px]'/>
+                </div>
+                <div className='flex flex-col mt-[1rem] w-[90vw]'>
+                  <div className='w-[100%] h-[40px] items-center border-b flex  border-[rgba(0,0,0,0.2)] '>
+                    <TableCell font={MagnetMedium.className} text='Event'/>
+                    <TableCell font={MagnetMedium.className} text='Price'/>
+                    <TableCell font={MagnetMedium.className} text='From'/>
+                    <TableCell font={MagnetMedium.className} text='To'/>
+                    <TableCell font={MagnetMedium.className} text='Date'/>
+                  </div>
+                  {
+                    Array.from({length:10}).map((_, index)=>{
+                      return (
+                        <div className='w-[100%] h-[56px] items-center border-y flex border-[rgba(0,0,0,0.2)] '>
+                          <TableCell text='Sale'>
+                            <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
+                          </TableCell>
+                          <TableCell text='0.069 ETH'/>
+                          <TableCell text='NeutralHose'/>
+                          <TableCell text='AtomicBrother'/>
+                          <TableCell text='3 days ago' right>
+                            <img src="Images/SVG/Newscreen.svg" />
+                          </TableCell>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            )
+          }
       </div>
     </div>
   )

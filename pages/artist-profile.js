@@ -6,7 +6,7 @@ const ArtistProfile = () => {
   return (
     <div>
       <div className='pb-[125px] min-h-screen bg-[#f5dfc2] md:flex flex-col hidden'>
-        <ArtistHero />
+        <ArtistHero showCards />
       </div>
       <div className="md:hidden flex items-center bg-[#f5dfc2] w-[100vw] h-[100vh] justify-center">
         <div className="w-[90vw]">
