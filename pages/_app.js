@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ContextProvider } from 'utils/Context/index'
 import localFont from 'next/font/local'
 
 export const MagnetRegular = localFont({
@@ -24,7 +25,9 @@ export const MagnetMedium = localFont({
 export default function App({ Component, pageProps }) {
   return (
     <main>
-      <Component {...pageProps} />
+      <ContextProvider>
+        <Component {...pageProps} />
+      </ContextProvider>
     </main>
   )
 }

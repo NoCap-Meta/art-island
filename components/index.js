@@ -9,6 +9,10 @@ import ItemActivity from './Art-Page/ItemActivity/index.jsx';
 import { ArtistHeader, NavBar } from './Common';
 import ArtistHero from './Artist-Profile/ArtistHero/index';
 import { TableCell } from "./Art-Page/ItemActivity/index.jsx";
+import SignIn from './Modals/GoogleSign/index';
+import Wallet from './Modals/Wallet/index';
+import KycModal from './Modals/KycModal/index';
+
 
 export const imageBackgroundOptions = {
   backgroundRepeat: 'no-repeat',
@@ -31,5 +35,8 @@ export {
   ArtistHero,
   ArtistHeader,
   NavBar,
-  TableCell
+  TableCell,
+  SignIn,
+  Wallet,
+  KycModal
 };
