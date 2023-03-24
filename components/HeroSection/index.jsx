@@ -1,15 +1,10 @@
 import { MagnetLight, MagnetRegular, MagnetBold } from 'pages/_app'
+import { NavBar } from '../Common'
 
 const Hero = () => {
   return (
     <div className="min-h-[100vh] bg-[#f5dfc2] w-[100vw] pb-[125px]">
-      <div className="h-[60px] flex justify-center w-[100vw] items-center">
-        <div className="w-[95%] flex justify-between items-center">
-          <img src="Images/SVG/Star.svg" />
-          <p className={`${MagnetBold.className} text-[24px] leading-[30px]`}>ART ISLAND RODEO CLUB</p>
-          <img src="Images/SVG/Menu.svg" />
-        </div>
-      </div>
+      <NavBar isLogined/>
       <div className='h-[70vh] w-[100vw] flex items-center justify-center'>
         <p className={`${MagnetLight.className} text-[72px] leading-[91px] text-center`}>
           Thou art can and <span className={MagnetRegular.className}><i>will</i></span> save us ; it’s <br /> only a matter of time.

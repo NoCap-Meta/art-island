@@ -16,9 +16,9 @@ const ModalNavigation = () => {
 
   return (
     <div className='w-[100%] mt-[47px] flex justify-center gap-[10px]'>
-      <div onClick={()=>handleSetActiveModal('google')} className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.google?'opacity-50':'opacity-10'}`}/>
-      <div onClick={()=>handleSetActiveModal('wallet')} className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.wallet?'opacity-50':'opacity-10'}`}/>
-      <div onClick={()=>handleSetActiveModal('kyc')} className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.kyc?'opacity-50':'opacity-10'}`}/>
+      <div className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.google?'opacity-50':'opacity-10'}`}/>
+      <div className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.wallet?'opacity-50':'opacity-10'}`}/>
+      <div className={`w-[5rem] cursor-pointer h-[2px] bg-black ${activeModal.kyc?'opacity-50':'opacity-10'}`}/>
     </div>
   )
 }

@@ -55,7 +55,9 @@ export default function SignIn() {
                       </div>
                     </div>
                     <div className='mb-[74px]'>
-                    <div className='h-[52px] w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-md'>
+                    <div onClick={()=>{
+                      window.location.href = 'https://nocapnetwork-api.vercel.app/auth/google'
+                    }} className='h-[52px] cursor-pointer w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-md'>
                         <img className='h-[32px] w-[32px]' src='Images/SVG/Google.svg' />
                         <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
                           Sign in with Google

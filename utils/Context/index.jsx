@@ -1,5 +1,5 @@
-import {createContext, useState, useContext as useCon} from 'react'
-
+import {createContext, useState, useContext as useCon, useEffect} from 'react'
+import jwt_decode from "jwt-decode";
 const Context = createContext()
 
 //provider
@@ -9,10 +9,27 @@ export const ContextProvider = ({children}) => {
     wallet:false,
     kyc:false,
   })
+
+  const [authToken, setAuthToken] = useState('')
+  const [user, setUser] = useState({})
+
+  useEffect(()=>{
+    const token = localStorage.getItem('token')
+    if(token){
+      setAuthToken(token)
+      const decoded = jwt_decode(token)
+      setUser(decoded?.user)
+    }
+  },[])
+
   return (
     <Context.Provider value={{
       activeModal,
-      setActiveModal
+      setActiveModal,
+      authToken,
+      setAuthToken,
+      user,
+      setUser
     }}>
       {children}
     </Context.Provider>
