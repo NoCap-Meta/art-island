@@ -3,10 +3,15 @@ import { Fragment, useState } from 'react'
 import {MagnetLight, MagnetMedium} from 'pages/_app.js'
 import { useContext } from '@/utils/Context'
 import ModalNavigation from '../ModalNavigation'
+import { useMetaMask } from "metamask-react";
+import { useEffect } from 'react';
+import axios from 'axios'
 
 export default function Wallet() {
-  const {activeModal, setActiveModal} = useContext()
+  const {activeModal, setActiveModal, user} = useContext()
   const isOpen = activeModal.wallet
+  const {account,connect,status} = useMetaMask();
+  const [walletAddress, setWalletAddress] = useState(null)
 
 
   function closeModal() {
@@ -16,6 +21,45 @@ export default function Wallet() {
       kyc: false
     })
   }
+
+  const handleClick = () => {
+    if (status === 'notConnected') {
+      connect();
+    }
+    if(status ==='unavailable'){
+      window.open('https://metamask.io/download.html', '_blank');
+    }
+
+  };
+
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          if (account && user) {
+            const { data } = await axios.post('https://nocapnetwork-api.vercel.app/wallet/create', { walletAddress: account, email: user.google.email })
+            if (data?.success) {
+              setWalletAddress(account)
+            }
+          }
+        }
+        catch (err) {
+
+        }
+      }
+    )()
+  }, [account, user])
+
+  useEffect(()=>{
+    if(walletAddress){
+      setActiveModal({
+        google: false,
+        wallet: false,
+        kyc: true
+      })
+    }
+  },[walletAddress])
+
 
   return (
     <>
@@ -54,10 +98,24 @@ export default function Wallet() {
                       </div>
                     </div>
                     <div className='mb-[74px]'>
-                    <div className='h-[52px] w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-md'>
-                        <img className='h-[32px] w-[32px]' src='Images/SVG/Plus.svg' />
+                    <div onClick={handleClick} className='h-[52px] cursor-pointer w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-md'>
+                        {status==='notConnected'&&<img className='h-[32px] w-[32px]' src='Images/SVG/Plus.svg' />}
                         <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
-                          Connect Wallet
+                          {
+                            status === 'connected' && account?.slice(0, 8) + '...' + account?.slice(-4)
+                          }
+                          {
+                            status === 'notConnected' && 'Connect Wallet'
+                          }
+                          {
+                            status === 'connecting' && 'Connecting...'
+                          }
+                          {
+                            status === 'unavailable' && 'Install Metamask'
+                          }
+                          {
+                            status === 'initializing' && 'Please wait...'
+                          }
                         </p>
                       </div>
                     </div>

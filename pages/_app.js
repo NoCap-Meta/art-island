@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MetaMaskProvider } from "metamask-react";
 import { ContextProvider } from 'utils/Context/index'
 import localFont from 'next/font/local'
 
@@ -25,9 +26,11 @@ export const MagnetMedium = localFont({
 export default function App({ Component, pageProps }) {
   return (
     <main>
-      <ContextProvider>
-        <Component {...pageProps} />
-      </ContextProvider>
+      <MetaMaskProvider>
+        <ContextProvider>
+          <Component {...pageProps} />
+        </ContextProvider>
+      </MetaMaskProvider>
     </main>
   )
 }
