@@ -96,13 +96,13 @@ const ArtistHero = () => {
           </p>
           <img className="cursor-pointer" src="Images/SVG/Copy.svg"/>
         </div>
-        <div className="flex items-end mt-[42px] w-[90vw] ">
-          <div className="flex items-end">
+        <div className="flex items-end mt-[42px] w-[90vw]  ">
+          <div className="flex xl:flex-nowrap flex-wrap justify-center items-end">
           {
             options.map((option, index)=>{
               return (
                 <>
-                <div key={option.name} onClick={()=>handleSelect(option.name)} className="flex cursor-pointer">
+                <div key={option.name} onClick={()=>handleSelect(option.name)} className="flex xl:mt-[0] mt-[1rem] cursor-pointer">
                   <div>
                     <p className={`${MagnetLight.className} whitespace-nowrap text-[20px] leading-[25px] ${option.selected?"":"opacity-50"}`}>{option.name}</p>
                     <div className={`w-full ${option.selected?"":"opacity-20"} h-[2px] mt-[15px] bg-black`}/>
@@ -131,7 +131,7 @@ const ArtistHero = () => {
           </div>
         </div>
 
-         {selectedTab==="Featured" && <div className="w-[90vw] flex gap-[40px] flex-wrap mt-[42px]">
+         {selectedTab==="Featured" && <div className="w-[90vw] flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]">
               {
                 Array.from({length:10}).map(()=>{
                   return <Card/>
@@ -144,8 +144,8 @@ const ArtistHero = () => {
                 <div className="w-[90vw] h-[3rem] mt-[36px] flex justify-end items-center rounded-lg bg-[rgba(255,255,255,0.5)] mb-[10px]">
                   <img src='Images/SVG/Chevron-small-down.svg' className='mr-[12px]'/>
                 </div>
-                <div className='flex flex-col mt-[1rem] w-[90vw]'>
-                  <div className='w-[100%] h-[40px] items-center border-b flex  border-[rgba(0,0,0,0.2)] '>
+                <div className='flex md:overflow-hidden overflow-scroll flex-col mt-[1rem] w-[90vw]'>
+                  <div className='md:w-[100%] w-[200%] h-[40px] items-center border-b flex  border-[rgba(0,0,0,0.2)] '>
                     <TableCell font={MagnetMedium.className} text='Event'/>
                     <TableCell font={MagnetMedium.className} text='Price'/>
                     <TableCell font={MagnetMedium.className} text='From'/>
@@ -155,7 +155,7 @@ const ArtistHero = () => {
                   {
                     Array.from({length:10}).map((_, index)=>{
                       return (
-                        <div className='w-[100%] h-[56px] items-center border-y flex border-[rgba(0,0,0,0.2)] '>
+                        <div className='md:w-[100%] w-[200%] h-[56px] items-center border-y flex border-[rgba(0,0,0,0.2)] '>
                           <TableCell text='Sale'>
                             <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
                           </TableCell>

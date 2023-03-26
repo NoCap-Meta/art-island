@@ -3,7 +3,7 @@ import { MagnetLight, MagnetRegular } from 'pages/_app';
 const Footer = () => {
   return (
     <>
-      <div className="h-[60vh] flex xl:flex-row flex-col xl:justify-between overflow-y-hidden xl:items-center bg-black w-[100vw]">
+      <div className="xl:h-[60vh] xl:pb-[0] pb-[2rem] flex xl:flex-row flex-col xl:justify-between overflow-y-hidden xl:items-center bg-black w-[100vw]">
         <div className='overflow-y-hidden pt-[56px]'>
           <div className="overflow-y-hidden ml-[1rem]">
             <div>

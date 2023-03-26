@@ -2,7 +2,7 @@ import { MagnetLight, MagnetRegular } from 'pages/_app';
 
 const Featured = () => {
   return (
-    <div className="w-[100vw] h-[100vh] flex xl:items-center xl:pt-[0] pt-[20px] justify-center bg-black">
+    <div className="w-[100vw] xl:h-[100vh] flex xl:items-center xl:pt-[0] pt-[20px] justify-center bg-black">
       <div className="xl:h-[80vh] pb-[20px] xl:justify-between w-[95vw] xl:items-end items-center flex xl:gap-[0] gap-[1rem] xl:flex-row flex-col">
         <div className="xl:h-[80vh] overflow-y-hidden">
           <div>
@@ -15,8 +15,8 @@ const Featured = () => {
           </div>
           <img src='Images/PNG/Success1.png' className='xl:block hidden' />
         </div>
-        <img src='Images/PNG/Featured1.png' className='xl:h-[100%] h-[35rem] xl:w-auto w-[50%]' />
-        <img src='Images/PNG/Featured2.png' className='xl:h-[512px] xl:w-auto h-[35rem] w-[50%]' />
+        <img src='Images/PNG/Featured1.png' className='xl:h-[100%] h-[20rem] xl:w-auto w-auto' />
+        <img src='Images/PNG/Featured2.png' className='xl:h-[512px] xl:w-auto h-[20rem] w-auto' />
       </div>
     </div>
   )
