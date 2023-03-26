@@ -1,20 +1,21 @@
 
 import { MagnetBold, MagnetMedium } from 'pages/_app';
+import { useState } from 'react';
 
 const RightContent = ({ title, content, image, time }) => {
   return (
-    <div className="w-[100vw] flex items-center gap-[170px] justify-start">
-      <div className="flex w-[40vw] gap-[20px]">
-        <div className="w-[143px] h-[2px] bg-black" />
+    <div className="w-[100vw] flex xl:flex-row flex-col xl:items-center xl:gap-[170px] xl:justify-start items-center">
+      <div className="flex xl:w-[40vw] w-[90%] gap-[20px]">
+        <div className="w-[143px] xl:flex hidden h-[2px] bg-black" />
         <div className='mt-[-8px]'>
-          <p className={`${MagnetMedium.className} text-[18px] tracking-[0.64em] leading-[160%]`}>{time}</p>
-          <p className={`${MagnetMedium.className} text-[72px] leading-[91px]`}>{title}</p>
-          <p className={`${MagnetMedium.className} text-[16px] text-justify w-[30vw] italic leading-[160%]`}>
+          <p className={`${MagnetMedium.className} text-[18px] xl:text-left text-center tracking-[0.64em] leading-[160%]`}>{time}</p>
+          <p className={`${MagnetMedium.className} xl:text-[72px] text-[48px]  xl:text-left text-center leading-[91px]`}>{title}</p>
+          <p className={`${MagnetMedium.className} text-[16px] xl:text-justify text-center xl:w-[30vw] italic xl:leading-[160%]`}>
             {content}
           </p>
         </div>
       </div>
-      <img src={image} className='ml-[5rem]' />
+      <img src={image} className='xl:ml-[5rem] xl:w-auto w-[80%] xl:mt-[0] mt-[2rem]' />
     </div>
   )
 }
@@ -38,12 +39,43 @@ const LeftContent = ({ title, content, image, time }) => {
 }
 
 const Journey = () => {
-  const demoContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.'
+  const [data, setData] = useState([
+    {
+      title: 'Our beginning',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      image: 'Images/PNG/Journey1.png',
+      time: 2019
+    },
+    {
+      title: 'How it all worked out?',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      image: 'Images/PNG/Journey2.png',
+      time: 2020
+    },
+    {
+      title: 'The final nail.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      image: 'Images/PNG/Journey3.png',
+      time: 2022
+    }
+  ])
   return (
     <div className="min-h-[100vh] pb-[172px] pt-[50px] bg-[#f5dfc2] flex flex-col gap-[128px] w-[100vw]">
-      <RightContent image={'Images/PNG/Journey1.png'} content={demoContent} title={'Our beginning'} time={2019} />
-      <LeftContent image={'Images/PNG/Journey2.png'} content={demoContent} title={'How it all worked out?'} time={2020} />
-      <RightContent image={'Images/PNG/Journey3.png'} content={demoContent} title={'The final nail.'} time={2022} />
+      {data.map((item, index) => {
+        return (
+          <div key={index}>
+            {index % 2 === 0 ? <RightContent image={item.image} content={item.content} title={item.title} time={item.time} /> : <div>
+              <div className='hidden xl:block'>
+                <LeftContent image={item.image} content={item.content} title={item.title} time={item.time} />
+              </div>
+              <div className='xl:hidden block'>
+                <RightContent image={item.image} content={item.content} title={item.title} time={item.time} />
+              </div>
+            </div> }
+            </div>
+        )
+      })}
+
     </div>
   )
 }

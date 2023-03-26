@@ -85,7 +85,7 @@ const Browse = () => {
   };
 
   return (
-    <div className="min-h-[100vh] bg-[#f5dfc2] w-[100vw]">
+    <div className="xl:min-h-[100vh] bg-[#f5dfc2] w-[100vw]">
       <div className="w-[100vw] pt-[128px]">
         <p className={`${MagnetLight.className} text-[72px] leading-[91px] text-center`}>
           Browse Collectibles

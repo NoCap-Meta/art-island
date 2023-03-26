@@ -20,14 +20,14 @@ const KycMethod = ()=>{
     <div className='flex gap-[10px] mt-[30px]'>
       <div onClick={
         ()=>{setSelected('adhar')}
-      } className={`flex ${selected==='adhar'?'opacity-100':'opacity-30'} rounded-md items-center justify-center h-[160px] w-[220px] border-2 border-black`}>
+      } className={`flex ${selected==='adhar'?'opacity-100':'opacity-30'} rounded-xl items-center justify-center h-[160px] w-[220px] border-2 border-black`}>
         <p className={`${MagnetMedium.className} text-[23px] leading-[29px]`}>
           AADHAR
         </p>
       </div>
       <div onClick={
         ()=>{setSelected('pan')}
-      } className={`flex rounded-md ${selected==='pan'?'opacity-100':'opacity-30'} items-center justify-center h-[160px] w-[220px] border-2 border-black`}>
+      } className={`flex rounded-xl ${selected==='pan'?'opacity-100':'opacity-30'} items-center justify-center h-[160px] w-[220px] border-2 border-black`}>
         <p className={`${MagnetMedium.className} text-[23px] leading-[29px]`}>
           PAN Card
         </p>
@@ -46,7 +46,7 @@ const VerifyDocument = ()=>{
     <div className='mt-[34px]'>
       <p className={`${MagnetMedium.className} text-[16px] leading-[32px] text-[rgba(19,19,20,0.5)]`}>Enter your Aadhar number below to receive an OTP which could help us verify you.</p>
       <div className='flex justify-center mt-[24px] gap-[10px]'>
-          <OtpInput value={number} isInputNum inputStyle={'h-[42px] text-center !w-[42px] bg-[#F5DFC2] border border-black rounded-md'} onChange={handleChange} numInputs={12} separator={<span>&nbsp;&nbsp;</span>} />
+          <OtpInput value={number} isInputNum inputStyle={'h-[42px] text-center !w-[42px] bg-[#F5DFC2] border border-black rounded-xl'} onChange={handleChange} numInputs={12} separator={<span>&nbsp;&nbsp;</span>} />
       </div>
     </div>
   )
@@ -63,7 +63,7 @@ const EnterOTP = ()=>{
     <div className='mt-[34px]'>
       <p className={`${MagnetMedium.className} text-[16px] leading-[32px] text-[rgba(19,19,20,0.5)]`}>Enter the OTP which you must have received on the mobile number attached with your Aadhar</p>
       <div className='flex justify-center mt-[24px] gap-[10px]'>
-          <OtpInput value={number} isInputNum inputStyle={'h-[42px] text-center !w-[42px] bg-[#F5DFC2] border border-black rounded-md'} onChange={handleChange} numInputs={6} separator={<span>&nbsp;&nbsp;</span>} />
+          <OtpInput value={number} isInputNum inputStyle={'h-[42px] text-center !w-[42px] bg-[#F5DFC2] border border-black rounded-xl'} onChange={handleChange} numInputs={6} separator={<span>&nbsp;&nbsp;</span>} />
       </div>
     </div>
   )
@@ -190,7 +190,7 @@ export default function KycModal() {
                     <div className='mb-[74px]'>
                     <div onClick={
                       content[step].onClick
-                    } className='h-[52px] w-[247px] flex cursor-pointer items-center gap-[8px] justify-center bg-black rounded-md'>
+                    } className='h-[52px] w-[247px] flex cursor-pointer items-center gap-[8px] justify-center bg-black rounded-xl'>
                         <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
                           {
                             content[step].buttonTitle

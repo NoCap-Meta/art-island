@@ -25,13 +25,13 @@ const NavBar = ({isLogined}) => {
           </p>
 
         </div>
-        <div className='flex gap-[5px] h-[70px]  items-center'>
+        <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>
           <img className='opacity-50' src='Images/SVG/Search.svg' />
           <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
             Search NFTs, Collections...
           </p>
         </div>
-        <div className='flex gap-[50px] h-[70px]  items-center'>
+        <div className='xl:flex hidden gap-[50px] h-[70px]  items-center'>
           <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
             Explore
           </p>
