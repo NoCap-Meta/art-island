@@ -6,10 +6,10 @@ const demoContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et
 const Content = ({ content, title }) => {
   return (
     <div>
-      <p className={`text-[24px] ${MagnetBold.className} leading-[30px] tracking-[0.72em] `}>
+      <p className={`text-[24px] ${MagnetBold.className} leading-[30px] xl:text-left text-center tracking-[0.72em] `}>
         {title}
       </p>
-      <p className={`text-[18px] mt-[12px] ${MagnetMedium.className} leading-[23px] w-[40vw] `}>
+      <p className={`text-[18px] mt-[12px] ${MagnetMedium.className} xl:text-left text-center leading-[23px] xl:w-[40vw] `}>
         {content}
       </p>
     </div>
@@ -19,7 +19,7 @@ const Content = ({ content, title }) => {
 const Details = () => {
   return (
     <div className="pb-[72px] flex justify-center w-[100vw] pt-[20px]">
-      <div className='w-[90vw] flex flex-col gap-[90px]'>
+      <div className='w-[90vw] xl:mt-[0] mt-[1rem] flex flex-col gap-[90px]'>
         <Content content={demoContent} title={'ARTIST'} />
         <Content content={demoContent} title={'COLLECTION'} />
       </div>

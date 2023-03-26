@@ -71,13 +71,13 @@ const ArtPageHero = () => {
     <div className="min-h-[100vh] w-[100vw]">
       <NavBar/>
       <div className="w-[100vw] mt-[2rem] flex justify-center">
-        <div className='w-[90vw] flex'>
-          <div className='w-[44.5vw] gap-[1rem] flex'>
-            <div className='w-[85px] flex flex-col gap-[5px]'>
+        <div className='w-[90vw] flex xl:flex-row flex-col'>
+          <div className='xl:w-[44.5vw] w-[90vw] gap-[1rem] flex xl:flex-row flex-col'>
+            <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
               {
                 image.map((item) => {
                   return (
-                    !item.selected && <div key={item.id} onClick={() => handleImage(item.id)} className='w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
+                    !item.selected && <div key={item.id} onClick={() => handleImage(item.id)} className='!w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
                       backgroundImage: `url(${item.image})`,
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'cover',
@@ -89,8 +89,8 @@ const ArtPageHero = () => {
               }
 
             </div>
-            <div className='h-[584px] flex flex-col justify-end rounded-xl border-[2px] border-black w-[505px]'>
-              <div className='w-[505px] h-[541px] border-t-[2px] border-black' style={{
+            <div className='h-[584px] flex flex-col justify-end rounded-xl border-[2px] border-black xl:w-[505px]'>
+              <div className='xl:w-[505px] h-[541px] border-t-[2px] border-black' style={{
                 backgroundImage: `url(${selectedImage})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
@@ -100,11 +100,11 @@ const ArtPageHero = () => {
               />
             </div>
           </div>
-          <div className='w-[44.5vw] flex flex-col'>
+          <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
             <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
               Jonas Nick Collection
             </p>
-            <div className='flex w-[100%] my-[-10px] justify-end gap-[1rem] h-[24px]'>
+            <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
               <img src='Images/SVG/Heart.svg' />
               <img src='Images/SVG/Share.svg' />
             </div>

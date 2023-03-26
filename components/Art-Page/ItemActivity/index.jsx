@@ -47,7 +47,7 @@ export const TableCell = ({children, text, font, right})=>{
   return (
     <div className='w-[20%] flex gap-[5px] items-center'>
       {!right && children}
-    {text &&<p className={`${font || MagnetLight.className} text-[18px] ml-[10px] leading-[23px]`}>
+    {text &&<p className={`${font || MagnetLight.className} whitespace-nowrap text-[18px] ml-[10px] leading-[23px]`}>
       {text}
     </p>}
     {right && children}
@@ -119,15 +119,15 @@ const ItemActivity = () => {
             </div>
           )
         }
-        <div className='flex flex-col  w-[90vw]'>
-          <div className='w-[100%] h-[40px] items-center border flex border-[rgba(0,0,0,0.2)] '>
+        <div className='flex flex-col md:overflow-hidden overflow-scroll  w-[90vw]'>
+          <div className='md:w-[100%] w-[200%] h-[40px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell font={MagnetMedium.className} text='Event'/>
             <TableCell font={MagnetMedium.className} text='Price'/>
             <TableCell font={MagnetMedium.className} text='From'/>
             <TableCell font={MagnetMedium.className} text='To'/>
             <TableCell font={MagnetMedium.className} text='Date'/>
           </div>
-          <div className='w-[100%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
+          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell text='Sale'>
               <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
             </TableCell>
@@ -138,7 +138,7 @@ const ItemActivity = () => {
               <img src="Images/SVG/Newscreen.svg" />
             </TableCell>
           </div>
-          <div className='w-[100%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
+          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell text='Minted'>
               <img src="Images/SVG/Star.svg" className='ml-[10px]' />
             </TableCell>
@@ -149,7 +149,7 @@ const ItemActivity = () => {
               <img src="Images/SVG/Newscreen.svg" />
             </TableCell>
           </div>
-          <div className='w-[100%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
+          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell text='Transfer'>
               <img src="Images/SVG/Refresh.svg" className='ml-[10px]' />
             </TableCell>
