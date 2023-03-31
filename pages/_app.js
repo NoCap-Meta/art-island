@@ -4,6 +4,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { MetaMaskProvider } from "metamask-react";
 import { ContextProvider } from 'utils/Context/index'
 import localFont from 'next/font/local'
+import 'rc-slider/assets/index.css';
+
 
 export const MagnetRegular = localFont({
   src: '../public/fonts/Magnat-HeadRegular.woff2',

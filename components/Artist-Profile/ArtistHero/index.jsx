@@ -1,6 +1,7 @@
 import { NavBar, ArtistHeader, TableCell } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
+import Slider from 'rc-slider';
 
 const Card = ()=>{
   const [image, setImage] = useState(null)
@@ -35,6 +36,132 @@ const Card = ()=>{
   )
 }
 
+const SearchBar = ({setFilterOpen}) => {
+  return (
+    <div className="w-[90vw] flex mt-[36px]">
+      <img onClick={()=>{
+        setFilterOpen(e=>!e)
+      }} src='Images/SVG/Filter.svg' className='mr-[12px] cursor-pointer'/>
+      <div className="relative">
+        <input placeholder="Search Items..." className="h-[2.5rem] bg-[rgba(255,255,255,0.5)] rounded-lg w-[60vw] outline-none pl-[3rem]"/>
+        <img src='Images/SVG/Search.svg' className='absolute top-[50%] left-[12px] transform -translate-y-1/2'/>
+      </div>
+      <div className="relative">
+        <input placeholder="Sort by" className="h-[2.5rem] bg-[rgba(255,255,255,0.5)] pr-[2rem] rounded-lg w-[15vw] ml-[1rem] outline-none pl-[3rem]"/>
+        <img src='Images/SVG/Refresh.svg' className='absolute top-[50%] scale-75 opacity-50 left-[25px] transform -translate-y-1/2'/>
+        <img src='Images/SVG/Chevron-small-down.svg' className='absolute top-[50%] right-[12px] transform -translate-y-1/2'/>
+      </div>
+    </div>
+  )
+}
+
+const Title = ({title, hide}) => {
+  return (
+    <div className="flex justify-between">
+        <p className={`${MagnetBold.className} text-[18px] leading-[25px]`}>
+          {title}
+        </p>
+        <img className={`${hide&&'opacity-0'}`} src="Images/SVG/Chevron-small-down.svg"/>
+      </div>
+  )
+}
+
+const RadioButton = ({name}) => {
+  const [selected, setSelected] = useState(false)
+  return (
+    <div onClick={
+      ()=>{
+        setSelected(e=>!e)
+      }
+    } className="flex items-center cursor-pointer gap-[8px]">
+          <div className="h-[16px] w-[16px] rounded-[4px] flex items-center justify-center border border-black">
+            {selected && <div className="h-[10px] w-[10px] rounded-[4px]" style={{
+              background: "#000000"
+            }}/>}
+
+          </div>
+          <p className={`${MagnetLight.className} text-[16px]`}>
+            {name}
+          </p>
+        </div>
+  )
+}
+
+const Filter = ()=>{
+  return <div className="pb-[20px] h-fit hidden md:flex justify-center w-[295px] mt-[42px] " style={{
+    background: 'linear-gradient(142.9deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.1) 100%)',
+    border: '1px solid #000000',
+    backdropFilter: 'blur(15px)',
+    borderRadius: '6px',
+  }}>
+    <div className="w-[90%]">
+    <div className=" pt-[20px]">
+      <Title title="Listing Type"/>
+      <div className="mt-[5px] flex flex-col gap-[8px] ml-[10px]">
+        <RadioButton name="Buy Now"/>
+        <RadioButton name="Auction"/>
+      </div>
+    </div>
+    <div className="pt-[20px]">
+      <Title title="Pricing" hide/>
+      <div>
+        <Slider max={5000} style={{
+          height: '20px',
+          paddingTop: '10px',
+          paddingLeft: '10px',
+        }} handleStyle={{
+          backgroundColor: "#000000",
+          opacity: 1,
+          border: "none",
+          bottom: "1px",
+          height: "15px",
+          width: "15px",
+        }} trackStyle={{
+          backgroundColor: "#000000",
+          height:'2px'
+        }} railStyle={{
+          background: 'rgba(0, 0, 0, 0.25)',
+          height:'2px',
+        }} range allowCross={false} onChange={
+          (e)=>{
+            console.log(e)
+          }
+        } defaultValue={[200, 600]}  />
+      </div>
+    </div>
+    <div className=" pt-[20px]">
+      <Title title="Collection"/>
+      <div className="mt-[5px] flex flex-col gap-[8px] ml-[10px]">
+        <RadioButton name="Freeway Collection"/>
+        <RadioButton name="Horn Break Collection"/>
+        <RadioButton name="Brown Birds Collection"/>
+      </div>
+    </div>
+    <div className=" pt-[20px]">
+      <Title title="Chains"/>
+      <div className="mt-[5px] flex flex-col gap-[8px] ml-[10px]">
+        <RadioButton name="Etherum"/>
+        <RadioButton name="Polygon"/>
+        <RadioButton name="Solana"/>
+      </div>
+    </div>
+    <div className=" pt-[20px]">
+      <Title title="Category"/>
+      <div className="mt-[5px] flex flex-col gap-[8px] ml-[10px]">
+        <RadioButton name="Art"/>
+        <RadioButton name="Celebrity"/>
+        <RadioButton name="Music"/>
+        <RadioButton name="Sports"/>
+        <RadioButton name="Gaming"/>
+        <RadioButton name="Crypto"/>
+
+      </div>
+    </div>
+    </div>
+
+  </div>
+}
+
 
 
 const ArtistHero = () => {
@@ -66,6 +193,7 @@ const ArtistHero = () => {
   ])
 
   const [selectedTab, setSeletctedTab] = useState("Featured")
+  const [filterOpen, setFilterOpen] = useState(false)
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -131,13 +259,20 @@ const ArtistHero = () => {
           </div>
         </div>
 
-         {selectedTab==="Featured" && <div className="w-[90vw] flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]">
-              {
-                Array.from({length:10}).map(()=>{
-                  return <Card/>
-                })
-              }
-          </div>}
+        <SearchBar setFilterOpen={setFilterOpen}/>
+
+       <div className="flex md:flex-row flex-col md:w-[90vw] md:items-start items-center gap-[2rem] md:justify-between">
+        {filterOpen && <Filter/>}
+        {selectedTab==="Featured" && <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+                {
+                  Array.from({length:10}).map((e, i)=>{
+                    return (<div key={i}>
+                      <Card/>
+                    </div>)
+                  })
+                }
+            </div>}
+        </div>
           {
             selectedTab==='Transaction History' && (
               <div>
