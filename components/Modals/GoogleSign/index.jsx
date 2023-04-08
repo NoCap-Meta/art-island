@@ -1,13 +1,18 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import {MagnetLight, MagnetMedium} from 'pages/_app.js'
-import Wallet from '../Wallet'
 import { useContext } from '@/utils/Context'
 import ModalNavigation from '../ModalNavigation'
 
 export default function SignIn() {
   const {activeModal, setActiveModal} = useContext()
   const isOpen = activeModal.google
+
+  let inDevEnvironment = false;
+
+  if (process && process.env.NODE_ENV === 'development') {
+    inDevEnvironment = true;
+  }
 
 
   function closeModal() {
@@ -56,6 +61,13 @@ export default function SignIn() {
                     </div>
                     <div className='mb-[74px]'>
                     <div onClick={()=>{
+                      if (inDevEnvironment) {
+                        console.log(
+                          'inDevEnvironment: ', inDevEnvironment, 'localhost:3000'
+                        )
+                        window.location.href = 'http://localhost:3000/auth/google'
+                        return
+                      }
                       window.location.href = 'https://nocapnetwork-api.vercel.app/auth/google'
                     }} className='h-[52px] cursor-pointer w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-xl'>
                         <img className='h-[32px] w-[32px]' src='Images/SVG/Google.svg' />

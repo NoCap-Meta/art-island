@@ -215,7 +215,6 @@ const ArtistHero = () => {
 
   return (
     <div>
-      <NavBar isLogined/>
       <div className="w-screen flex flex-col items-center">
         <ArtistHeader/>
         <div className="w-[90vw] flex mt-[20px] gap-[10px] items-center justify-center">

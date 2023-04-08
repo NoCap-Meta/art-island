@@ -11,7 +11,7 @@ export const ContextProvider = ({children}) => {
   })
 
   const [authToken, setAuthToken] = useState('')
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
 
   useEffect(()=>{
     const token = localStorage.getItem('token')

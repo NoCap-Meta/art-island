@@ -5,6 +5,7 @@ import { MetaMaskProvider } from "metamask-react";
 import { ContextProvider } from 'utils/Context/index'
 import localFont from 'next/font/local'
 import 'rc-slider/assets/index.css';
+import NavBar from 'components/Common/NavBar/index.jsx'
 
 
 export const MagnetRegular = localFont({
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }) {
     <main>
       <MetaMaskProvider>
         <ContextProvider>
+          <NavBar />
           <Component {...pageProps} />
         </ContextProvider>
       </MetaMaskProvider>

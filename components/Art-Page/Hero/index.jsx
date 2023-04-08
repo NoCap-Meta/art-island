@@ -69,7 +69,6 @@ const ArtPageHero = () => {
 
   return (
     <div className="min-h-[100vh] w-[100vw]">
-      <NavBar/>
       <div className="w-[100vw] mt-[2rem] flex justify-center">
         <div className='w-[90vw] flex xl:flex-row flex-col'>
           <div className='xl:w-[44.5vw] w-[90vw] gap-[1rem] flex xl:flex-row flex-col'>

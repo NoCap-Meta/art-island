@@ -3,8 +3,8 @@ import { NavBar } from '../Common'
 
 const Hero = () => {
   return (
+    <>
     <div className="min-h-[100vh] bg-[#f5dfc2] w-[100vw] pb-[125px]">
-      <NavBar isLogined/>
       <div className='xl:h-[70vh] h-[50vh] w-[100vw] flex items-center justify-center'>
         <p className={`${MagnetLight.className} xl:text-[72px] text-[48px] xl:leading-[91px] text-center`}>
           Thou art can and <span className={MagnetRegular.className}><i>will</i></span> save us ; it’s <br /> only a matter of time.
@@ -38,6 +38,7 @@ const Hero = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
