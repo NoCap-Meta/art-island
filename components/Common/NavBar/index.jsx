@@ -1,11 +1,15 @@
-import { SignIn, Wallet,KycModal } from "@/components"
+import { SignIn, Wallet,KycModal, Cart } from "@/components"
 import { useContext } from "@/utils/Context"
 import { MagnetBold, MagnetLight, MagnetRegular } from "pages/_app"
 import { useState } from 'react';
+import { Store } from "@/utils";
+
+const {useCartStore} = Store
 
 const NavBar = ({isLogined}) => {
   const {activeModal, setActiveModal, user, setUser} = useContext()
   const [isClicked, setIsClicked] = useState(false)
+  const {cartOpen,setCartOpen} = useCartStore()
 
   isLogined = user
 
@@ -60,7 +64,7 @@ const NavBar = ({isLogined}) => {
             </p>
             <div className="flex items-center gap-[10px]">
                <img onClick={handleClickProfile} src='Images/SVG/User.svg' />
-              <img src='Images/SVG/Menu.svg' />
+              <img onClick={()=> setCartOpen(!cartOpen)} src='Images/SVG/Menu.svg' />
             </div>
           </div>
         </div>
@@ -87,6 +91,7 @@ const NavBar = ({isLogined}) => {
               </div>
             </div>
         </div> 
+        <Cart/>
       </div>
     </>
   )

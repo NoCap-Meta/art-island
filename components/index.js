@@ -12,6 +12,8 @@ import { TableCell } from "./Art-Page/ItemActivity/index.jsx";
 import SignIn from './Modals/GoogleSign/index';
 import Wallet from './Modals/Wallet/index';
 import KycModal from './Modals/KycModal/index';
+import Cart from './Common/Cart/index';
+import CollectionStatsComponent from './CollectionStats/index';
 
 
 export const imageBackgroundOptions = {
@@ -38,5 +40,7 @@ export {
   TableCell,
   SignIn,
   Wallet,
-  KycModal
+  KycModal,
+  Cart,
+  CollectionStatsComponent
 };

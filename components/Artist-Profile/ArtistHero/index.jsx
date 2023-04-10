@@ -1,4 +1,4 @@
-import { NavBar, ArtistHeader, TableCell } from "components"
+import { ArtistHeader, TableCell } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
