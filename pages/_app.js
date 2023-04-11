@@ -6,6 +6,7 @@ import { ContextProvider } from 'utils/Context/index'
 import localFont from 'next/font/local'
 import 'rc-slider/assets/index.css';
 import NavBar from 'components/Common/NavBar/index.jsx'
+import "react-toggle/style.css"
 
 
 export const MagnetRegular = localFont({

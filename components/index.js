@@ -14,6 +14,7 @@ import Wallet from './Modals/Wallet/index';
 import KycModal from './Modals/KycModal/index';
 import Cart from './Common/Cart/index';
 import CollectionStatsComponent from './CollectionStats/index';
+import SettingsComponent from './SettingsPage/index.jsx';
 
 
 export const imageBackgroundOptions = {
@@ -42,5 +43,6 @@ export {
   Wallet,
   KycModal,
   Cart,
-  CollectionStatsComponent
+  CollectionStatsComponent,
+  SettingsComponent
 };
