@@ -7,6 +7,19 @@ import localFont from 'next/font/local'
 import 'rc-slider/assets/index.css';
 import NavBar from 'components/Common/NavBar/index.jsx'
 import "react-toggle/style.css"
+import AuthChecker from '../components/AuthChecker/index';
+import Web3 from 'web3';
+
+export let web3;
+if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+  // We are in the browser and metamask is running.
+  web3 = new Web3(window.ethereum);
+} else {
+  // We are on the server *OR* the user is not running metamask
+}
+
+
+
 
 
 export const MagnetRegular = localFont({
@@ -28,12 +41,16 @@ export const MagnetMedium = localFont({
 })
 
 export default function App({ Component, pageProps }) {
+
+
   return (
     <main>
       <MetaMaskProvider>
         <ContextProvider>
-          <NavBar />
-          <Component {...pageProps} />
+          <AuthChecker>
+            <NavBar />
+            <Component {...pageProps} />
+          </AuthChecker>
         </ContextProvider>
       </MetaMaskProvider>
     </main>

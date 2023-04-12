@@ -62,9 +62,6 @@ export default function SignIn() {
                     <div className='mb-[74px]'>
                     <div onClick={()=>{
                       if (inDevEnvironment) {
-                        console.log(
-                          'inDevEnvironment: ', inDevEnvironment, 'localhost:3000'
-                        )
                         window.location.href = 'http://localhost:3000/auth/google'
                         return
                       }

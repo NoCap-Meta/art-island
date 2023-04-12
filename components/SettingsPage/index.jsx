@@ -3,8 +3,18 @@ import ProfileSection from './components/Profile'
 import SideBar from './components/Sidebar'
 import NotificationSection from './components/Notifications/index';
 import AccountSupportSection from './components/AccountSupport/index';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const SettingsComponent = () => {
+  const router = useRouter()
+
+  useEffect(()=>{
+    if (!localStorage.getItem('token')) {
+      router.push('/')
+    }
+  },[])
+
   return (
     <div className='w-[90%]'>
       <div className='mt-[3rem]'>

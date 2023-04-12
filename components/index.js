@@ -15,6 +15,9 @@ import KycModal from './Modals/KycModal/index';
 import Cart from './Common/Cart/index';
 import CollectionStatsComponent from './CollectionStats/index';
 import SettingsComponent from './SettingsPage/index.jsx';
+import CreateItemComponent from './CreateItem/index';
+import CreateItemModal from './Modals/CreateItemModal/index';
+import AuthChecker from './AuthChecker/index';
 
 
 export const imageBackgroundOptions = {
@@ -44,5 +47,8 @@ export {
   KycModal,
   Cart,
   CollectionStatsComponent,
-  SettingsComponent
+  SettingsComponent,
+  CreateItemComponent,
+  CreateItemModal,
+  AuthChecker
 };

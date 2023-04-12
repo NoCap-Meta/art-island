@@ -3,6 +3,7 @@ import { useContext } from "@/utils/Context"
 import { MagnetBold, MagnetLight, MagnetRegular } from "pages/_app"
 import { useState } from 'react';
 import { Store } from "@/utils";
+import { useRouter } from 'next/router';
 
 const {useCartStore} = Store
 
@@ -10,6 +11,7 @@ const NavBar = ({isLogined}) => {
   const {activeModal, setActiveModal, user, setUser} = useContext()
   const [isClicked, setIsClicked] = useState(false)
   const {cartOpen,setCartOpen} = useCartStore()
+  const router = useRouter()
 
   isLogined = user
 
@@ -27,6 +29,7 @@ const NavBar = ({isLogined}) => {
     localStorage.removeItem('token')
     setUser(null)
     setIsClicked(false)
+    router.push('/')
   }
 
   const handleClickProfile = () => {
@@ -82,7 +85,10 @@ const NavBar = ({isLogined}) => {
               <div className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
               </div>
-              <div className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <div onClick={()=>{
+                router.push('/settings')
+                setIsClicked(false)
+              }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Settings</p>
               </div>
               <div onClick={handleLogout} className="h-[2.5rem] my-[0.5rem] cursor-pointer flex items-center  gap-[1rem]">
