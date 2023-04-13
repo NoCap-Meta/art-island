@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
+import { DropDownInput } from '../Common';
 
 
 const Table = ()=>{
@@ -261,15 +262,21 @@ const CollectionStatsComponent = () => {
             <div className={`w-full h-[2px] opacity-20 mt-[15px] bg-black`}/>
           </div>
       </div>
-      <div className='mt-[20px] justify-between flex w-[100%]'>
-          <div className='flex gap-[20px]'>
-            <div className='h-[2.5rem] w-[13rem] flex items-center relative justify-start rounded-md pr-[3rem] bg-[rgba(255,255,255,0.5)]'>
-              <p className={`${MagnetBold.className} text-[14px] leading-[18px] ml-[1rem] text-[#000000]`}>All Categories</p>
-              <img src="Images/SVG/Chevron-small-down.svg" className='absolute right-[10px]' alt="total sales"/>
-            </div>
-            <div className='h-[2.5rem] w-[30rem] flex items-center relative justify-start rounded-md pr-[3rem] bg-[rgba(255,255,255,0.5)]'>
-            <p className={`${MagnetBold.className} text-[14px] leading-[18px] ml-[1rem] text-[#000000]`}>All Chains</p>
-            </div>
+      <div className='mt-[20px] justify-between flex w-[100%] overflow-visible'>
+          <div className='flex gap-[20px] overflow-visible'>
+            <DropDownInput options={['All Categories', 'Favoruites', 'Starred']}/>
+            
+            <DropDownInput width={'w-[30rem]'} options={[
+              'All Chains',
+              'Ethereum',
+              'Binance Smart Chain',
+              'Polygon',
+              'Solana',
+              'Avalanche',
+              'Fantom',
+              'Harmony',
+              'xDai',
+            ]}/>
           </div>
           <div className='rounded-md overflow-hidden flex'>
             {

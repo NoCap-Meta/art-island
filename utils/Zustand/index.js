@@ -84,3 +84,41 @@ export const useWalletStore = create(set => ({
   }
 }))
 
+
+export const useArtistProfileOptionsStore = create(set => ({
+  artistProfileOptions: [
+    {
+      name: "Featured",
+      selected: true,
+    },
+    {
+      name: "Collected",
+      selected: false,
+    },
+    {
+      name: "Created",
+      selected: false,
+    },
+    {
+      name: "Favourites",
+      selected: false,
+    },
+    {
+      name: "Activity",
+      selected: false,
+    },
+    {
+      name: "Transaction History",
+      selected: false,
+    }
+  ],
+  setArtistProfileOptions: (value) => set(state => ({ artistProfileOptions: value }))
+}))
+
+export const useSelectedArtistProfileTab = create(set => ({
+  selectedArtistProfileTab: 'Featured',
+  setSelectedArtistProfileTab: (value) => set(state => ({ selectedArtistProfileTab: value }))
+}))
+
+
+

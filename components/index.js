@@ -6,7 +6,7 @@ import Footer from './Footer/index';
 import ArtPageHero from './Art-Page/Hero';
 import Details from './Art-Page/Details';
 import ItemActivity from './Art-Page/ItemActivity/index.jsx';
-import { ArtistHeader, NavBar } from './Common';
+import { ArtistHeader, NavBar, SEO, DropDownInput } from './Common';
 import ArtistHero from './Artist-Profile/ArtistHero/index';
 import { TableCell } from "./Art-Page/ItemActivity/index.jsx";
 import SignIn from './Modals/GoogleSign/index';
@@ -50,5 +50,7 @@ export {
   SettingsComponent,
   CreateItemComponent,
   CreateItemModal,
-  AuthChecker
+  AuthChecker,
+  SEO,
+  DropDownInput
 };

@@ -9,6 +9,7 @@ import NavBar from 'components/Common/NavBar/index.jsx'
 import "react-toggle/style.css"
 import AuthChecker from '../components/AuthChecker/index';
 import Web3 from 'web3';
+import { SEO } from '@/components';
 
 export let web3;
 if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <main>
+      <SEO title='NoCap.Network - Antique NFT Marketplace' />
       <MetaMaskProvider>
         <ContextProvider>
           <AuthChecker>

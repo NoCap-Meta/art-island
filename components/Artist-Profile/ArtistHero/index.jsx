@@ -2,6 +2,10 @@ import { ArtistHeader, TableCell } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
+import {Store} from "utils";
+import DropDownInput from '../../Common/DropDownInput/index';
+
+const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
 
 const Card = ()=>{
   const [image, setImage] = useState(null)
@@ -38,7 +42,7 @@ const Card = ()=>{
 
 const SearchBar = ({setFilterOpen}) => {
   return (
-    <div className="w-[90vw] flex mt-[36px]">
+    <div className="w-[90vw] overflow-visible gap-[1rem] flex mt-[36px]">
       <img onClick={()=>{
         setFilterOpen(e=>!e)
       }} src='Images/SVG/Filter.svg' className='mr-[12px] cursor-pointer'/>
@@ -46,11 +50,7 @@ const SearchBar = ({setFilterOpen}) => {
         <input placeholder="Search Items..." className="h-[2.5rem] bg-[rgba(255,255,255,0.5)] rounded-lg w-[60vw] outline-none pl-[3rem]"/>
         <img src='Images/SVG/Search.svg' className='absolute top-[50%] left-[12px] transform -translate-y-1/2'/>
       </div>
-      <div className="relative">
-        <input placeholder="Sort by" className="h-[2.5rem] bg-[rgba(255,255,255,0.5)] pr-[2rem] rounded-lg w-[15vw] ml-[1rem] outline-none pl-[3rem]"/>
-        <img src='Images/SVG/Refresh.svg' className='absolute top-[50%] scale-75 opacity-50 left-[25px] transform -translate-y-1/2'/>
-        <img src='Images/SVG/Chevron-small-down.svg' className='absolute top-[50%] right-[12px] transform -translate-y-1/2'/>
-      </div>
+      <DropDownInput preIcon={ <img src='Images/SVG/Refresh.svg' className='scale-75 opacity-50'/>} options={['Sort by', 'Price', 'Time']} width='w-[15vw]'/>
     </div>
   )
 }
@@ -165,34 +165,8 @@ const Filter = ()=>{
 
 
 const ArtistHero = () => {
-  const [options, setOptions] = useState([
-    {
-      name: "Featured",
-      selected:true,
-    },
-    {
-      name: "Collected",
-      selected:false,
-    },
-    {
-      name: "Created",
-      selected:false,
-    },
-    {
-      name: "Favourites",
-      selected:false,
-    },
-    {
-      name: "Activity",
-      selected:false,
-    },
-    {
-      name: "Transaction History",
-      selected:false,
-    }
-  ])
-
-  const [selectedTab, setSeletctedTab] = useState("Featured")
+  const {artistProfileOptions:options, setArtistProfileOptions:setOptions} = useArtistProfileOptionsStore()
+  const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
   const [filterOpen, setFilterOpen] = useState(false)
 
   const handleSelect = (name) => {

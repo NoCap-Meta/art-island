@@ -5,13 +5,15 @@ import { useState } from 'react';
 import { Store } from "@/utils";
 import { useRouter } from 'next/router';
 
-const {useCartStore} = Store
+const {useCartStore, useSelectedArtistProfileTab, useArtistProfileOptionsStore} = Store
 
 const NavBar = ({isLogined}) => {
   const {activeModal, setActiveModal, user, setUser} = useContext()
   const [isClicked, setIsClicked] = useState(false)
   const {cartOpen,setCartOpen} = useCartStore()
   const router = useRouter()
+  const {artistProfileOptions, setArtistProfileOptions} = useArtistProfileOptionsStore()
+  const {selectedArtistProfileTab,setSelectedArtistProfileTab} = useSelectedArtistProfileTab()
 
   isLogined = user
 
@@ -35,6 +37,29 @@ const NavBar = ({isLogined}) => {
   const handleClickProfile = () => {
     setIsClicked(!isClicked)
   }
+
+  const handleGoToProfile = (name)=>{
+                
+    setSelectedArtistProfileTab(name)
+    
+    let newArtistProfileOptions = artistProfileOptions.map((item)=>{
+      if(item.name === name){
+        return {
+          ...item,
+          selected: true
+        }
+      }else{
+        return {
+          ...item,
+          selected: false
+        }
+      }
+    })
+    setArtistProfileOptions(newArtistProfileOptions)
+    router.push('/artist-profile')
+    setIsClicked(false)
+  }
+
   return (
     <>
       <SignIn/>
@@ -44,29 +69,26 @@ const NavBar = ({isLogined}) => {
         <div className="w-[90vw] h-[70px] justify-between flex items-center">
           <div className="flex gap-[10px] h-[70px]  items-center">
             <img src='Images/SVG/Star.svg' />
-            <p className={`${MagnetBold.className} text-[24px] overflow-hidden leading-[29px] text-black`}>
+            <p onClick={()=>router.push('/')} className={`${MagnetBold.className} text-[24px] cursor-pointer overflow-hidden leading-[29px] text-black`}>
               ART ISLAND RODEO CLUB
             </p>
-
           </div>
           <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>
             <img className='opacity-50' src='Images/SVG/Search.svg' />
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
-              Search NFTs, Collections...
-            </p>
+            <input autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black opacity-50`} placeholder='Search NFTs, Collections...' />
           </div>
           <div className='xl:flex hidden gap-[50px] h-[70px]  items-center'>
             <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Explore
             </p>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={()=>router.push('/collectionstats')}  className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Stats
             </p>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={()=>router.push('/create-item')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Create
             </p>
             <div className="flex items-center gap-[10px]">
-               <img onClick={handleClickProfile} src='Images/SVG/User.svg' />
+              <img onClick={handleClickProfile} src='Images/SVG/User.svg' />
               <img onClick={()=> setCartOpen(!cartOpen)} src='Images/SVG/Menu.svg' />
             </div>
           </div>
@@ -76,13 +98,13 @@ const NavBar = ({isLogined}) => {
               <p className={`text-white ${MagnetRegular.className}`}>Connect Wallet</p>
             </div>
             <div className={`w-[80%] ${!isLogined &&'hidden'} pt-[0.5rem]`}>
-              <div className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <div onClick={()=>handleGoToProfile('Featured')}className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Profile</p>
               </div>
-              <div className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <div  className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Favourites</p>
               </div>
-              <div className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <div onClick={()=>handleGoToProfile('Transaction History')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
               </div>
               <div onClick={()=>{
