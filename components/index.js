@@ -19,6 +19,8 @@ import CreateItemComponent from './CreateItem/index';
 import CreateItemModal from './Modals/CreateItemModal/index';
 import AuthChecker from './AuthChecker/index';
 import ExplorePageComponent from './ExplorePageComponent/index';
+import { Filter, RadioButton, Title } from './Filter/index';
+import SearchPageComponent from "./SearchPageComponent";
 
 
 export const imageBackgroundOptions = {
@@ -54,5 +56,9 @@ export {
   AuthChecker,
   SEO,
   DropDownInput,
-  ExplorePageComponent
+  ExplorePageComponent,
+  Filter,
+  RadioButton,
+  Title,
+  SearchPageComponent
 };

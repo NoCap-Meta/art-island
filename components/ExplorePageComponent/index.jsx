@@ -2,45 +2,7 @@ import { MagnetBold, MagnetMedium, MagnetLight, MagnetRegular } from 'pages/_app
 import { useState } from 'react';
 import { imageBackgroundOptions } from 'components';
 import { Featured } from 'components';
-import Slider from "react-slick";
-import ItemCard  from '@/components/Common/ItemCard';
-
-const settings = {
-  // infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  cssEase: "linear",
-  centerMode: true,
-  //custom left dot
-  // centerPadding: '5%',
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        infinite: true,
-        dots: false
-      }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        initialSlide: 2
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1
-      }
-    }
-  ]
-};
+import { FooterCommon, TopCollectionSection } from '../Common';
 
 const TableHeader = ()=>{
   return (
@@ -67,24 +29,6 @@ const TableRow = ()=>{
       </div>
       <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[10vw]`}>0.1 ETH</p>
       <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[5vw]`}>464</p>
-    </div>
-  )
-}
-
-const TopCollectionSection = ({title})=>{
-  return (
-    <div className='w-[90vw] mt-[3rem]'>
-      <p className={`${MagnetBold.className} text-[#000000]  text-[24px]`}>{title}</p>
-      <div className='w-[90vw] mt-[5px]'>
-      <Slider {...settings}>
-        {
-          [1,2,3,4,5,6,7,8,9,10].map((item)=>{  
-            return <ItemCard/>
-          } 
-          )
-        }
-      </Slider>
-      </div>
     </div>
   )
 }
@@ -242,15 +186,7 @@ const ExplorePageComponent = () => {
         <TopCollectionSection title='Trending in Membership'/>
         <TopCollectionSection title='Explore Categories'/>
       </div>
-      <div className='w-[90vw] justify-between flex items-center h-[4rem] mt-[3rem] border-t border-[rgba(0,0,0,0.5)]'>
-        <div>
-          <p className={`${MagnetRegular.className} opacity-50 text-[#000000] text-[16px]`}>© NoCap Meta, Mumbai IN</p>
-        </div>
-        <div className='flex gap-[2rem]'>
-          <p className={`${MagnetRegular.className} opacity-50 text-[#000000] text-[16px]`}>Terms of Service</p>
-          <p className={`${MagnetRegular.className} opacity-50 text-[#000000] text-[16px]`}>Privacy Policy</p>
-        </div>
-      </div>
+     <FooterCommon/>
     </>
   )
 }

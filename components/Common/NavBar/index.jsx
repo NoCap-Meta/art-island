@@ -11,6 +11,7 @@ const NavBar = ({isLogined}) => {
   const {activeModal, setActiveModal, user, setUser} = useContext()
   const [isClicked, setIsClicked] = useState(false)
   const {cartOpen,setCartOpen} = useCartStore()
+  const [searchInput, setSearchInput] = useState('')
   const router = useRouter()
   const {artistProfileOptions, setArtistProfileOptions} = useArtistProfileOptionsStore()
   const {selectedArtistProfileTab,setSelectedArtistProfileTab} = useSelectedArtistProfileTab()
@@ -60,6 +61,12 @@ const NavBar = ({isLogined}) => {
     setIsClicked(false)
   }
 
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    let keyword = searchInput.split(' ').join(',')
+    router.push(`/search?keyword=${keyword}`)
+  }
+
   return (
     <>
       <SignIn/>
@@ -74,8 +81,10 @@ const NavBar = ({isLogined}) => {
             </p>
           </div>
           <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>
-            <img className='opacity-50' src='Images/SVG/Search.svg' />
-            <input autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black opacity-50`} placeholder='Search NFTs, Collections...' />
+            <img onClick={(e)=>handleSubmit(e)} className='opacity-50 cursor-pointer' src='Images/SVG/Search.svg' />
+            <form onSubmit={(e)=>handleSubmit(e)}>
+              <input value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black opacity-50`} placeholder='Search NFTs, Collections...' />
+            </form>
           </div>
           <div className='xl:flex hidden gap-[50px] h-[70px]  items-center'>
             <p onClick={()=>router.push('/explore')} className={`text-[18px] leading-[23px] cursor-pointer opacity-50 ${MagnetLight.className}`}>
