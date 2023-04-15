@@ -78,7 +78,7 @@ const NavBar = ({isLogined}) => {
             <input autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black opacity-50`} placeholder='Search NFTs, Collections...' />
           </div>
           <div className='xl:flex hidden gap-[50px] h-[70px]  items-center'>
-            <p className={`text-[18px] leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={()=>router.push('/explore')} className={`text-[18px] leading-[23px] cursor-pointer opacity-50 ${MagnetLight.className}`}>
               Explore
             </p>
             <p onClick={()=>router.push('/collectionstats')}  className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>

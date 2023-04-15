@@ -4,41 +4,11 @@ import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
 import {Store} from "utils";
 import DropDownInput from '../../Common/DropDownInput/index';
+import ItemCard from "@/components/Common/ItemCard";
 
 const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
 
-const Card = ()=>{
-  const [image, setImage] = useState(null)
-  useEffect(()=>{
-    const getRandomImage = async ()=>{
-      const response = await fetch("https://source.unsplash.com/random/300x300/?3drenders")
-      const data = await response.blob()
-      setImage(URL.createObjectURL(data))
-    }
-    getRandomImage()
-  },[])
-  return (
-    <div style={{
-      background: "rgba(255,255,255,0.5)"
-    }} className="rounded-lg w-[295px]  overflow-hidden">
-      <img src={image} className='h-[295px] rounded-lg w-[295px]'/>
-      <div className="h-[114px] w-[295px]">
-        <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
-          Deranged Music
-        </p>
-        <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
-          Musical Birds Freeway Collection
-        </p>
-        <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-        15.2 ETH
-        </p>
-        <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
-          Best Offer : 14.1 ETH
-        </p>
-      </div>
-    </div>
-  )
-}
+
 
 const SearchBar = ({setFilterOpen}) => {
   return (
@@ -240,7 +210,7 @@ const ArtistHero = () => {
                 {
                   Array.from({length:10}).map((e, i)=>{
                     return (<div key={i}>
-                      <Card/>
+                      <ItemCard/>
                     </div>)
                   })
                 }

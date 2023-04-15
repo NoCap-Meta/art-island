@@ -18,6 +18,7 @@ import SettingsComponent from './SettingsPage/index.jsx';
 import CreateItemComponent from './CreateItem/index';
 import CreateItemModal from './Modals/CreateItemModal/index';
 import AuthChecker from './AuthChecker/index';
+import ExplorePageComponent from './ExplorePageComponent/index';
 
 
 export const imageBackgroundOptions = {
@@ -52,5 +53,6 @@ export {
   CreateItemModal,
   AuthChecker,
   SEO,
-  DropDownInput
+  DropDownInput,
+  ExplorePageComponent
 };
