@@ -20,9 +20,6 @@ if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
 }
 
 
-
-
-
 export const MagnetRegular = localFont({
   src: '../public/fonts/Magnat-HeadRegular.woff2',
 

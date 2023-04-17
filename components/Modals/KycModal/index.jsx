@@ -120,9 +120,15 @@ export default function KycModal() {
       onClick: ()=>{
         let copyContent = [...content]
         copyContent[4].buttonTitle = 'Submit'
-        copyContent[4].onClick = ()=>{}
+        copyContent[4].onClick = ()=>{
+          localStorage.setItem("kyc", "true")
+          setActiveModal({
+            google: false,
+            wallet: false,
+            kyc: false
+          })
+        }
         setContent(copyContent)
-
       }
     }
 

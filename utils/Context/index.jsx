@@ -1,4 +1,5 @@
 import {createContext, useState, useContext as useCon, useEffect} from 'react'
+import { web3 } from '@/pages/_app';
 import jwt_decode from "jwt-decode";
 const Context = createContext()
 
@@ -14,12 +15,36 @@ export const ContextProvider = ({children}) => {
   const [user, setUser] = useState(null)
 
   useEffect(()=>{
-    const token = localStorage.getItem('token')
-    if(token){
-      setAuthToken(token)
-      const decoded = jwt_decode(token)
-      setUser(decoded?.user)
+   
+    const check = async()=>{
+      const token = localStorage.getItem('token')
+      if(token){
+        setAuthToken(token)
+        const decoded = jwt_decode(token)
+        setUser(decoded?.user)
+        const accounts = await web3.eth.getAccounts()
+        //if no accounts
+        if(!accounts || accounts.length === 0){
+          setActiveModal({
+            ...activeModal,
+            wallet: true
+          })
+        }else if(accounts.length>0){
+          //localstore get kyc
+          const kyc = localStorage.getItem('kyc')
+          if(!kyc){
+            setActiveModal({
+              ...activeModal,
+              kyc: true
+            })
+          }
+        }
+      }
+      
     }
+
+    check()
+
   },[])
 
   return (

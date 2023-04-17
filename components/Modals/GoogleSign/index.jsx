@@ -62,7 +62,7 @@ export default function SignIn() {
                     <div className='mb-[74px]'>
                     <div onClick={()=>{
                       if (inDevEnvironment) {
-                        window.location.href = 'http://localhost:3000/auth/google'
+                        window.location.href = 'http://localhost:8080/auth/google'
                         return
                       }
                       window.location.href = 'https://nocapnetwork-api.vercel.app/auth/google'

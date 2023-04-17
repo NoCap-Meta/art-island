@@ -21,6 +21,8 @@ import AuthChecker from './AuthChecker/index';
 import ExplorePageComponent from './ExplorePageComponent/index';
 import { Filter, RadioButton, Title } from './Filter/index';
 import SearchPageComponent from "./SearchPageComponent";
+import MyCollectionsComponent from './MyCollections/index';
+import CreateCollectionComponent from './CreateCollection/index';
 
 
 export const imageBackgroundOptions = {
@@ -60,5 +62,7 @@ export {
   Filter,
   RadioButton,
   Title,
-  SearchPageComponent
+  SearchPageComponent,
+  MyCollectionsComponent,
+  CreateCollectionComponent
 };

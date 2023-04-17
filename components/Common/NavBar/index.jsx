@@ -117,6 +117,12 @@ const NavBar = ({isLogined}) => {
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
               </div>
               <div onClick={()=>{
+                router.push('/my-collections')
+                setIsClicked(false)
+              }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Collections</p>
+              </div>
+              <div onClick={()=>{
                 router.push('/settings')
                 setIsClicked(false)
               }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
