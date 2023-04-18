@@ -8,12 +8,6 @@ export default function SignIn() {
   const {activeModal, setActiveModal} = useContext()
   const isOpen = activeModal.google
 
-  let inDevEnvironment = false;
-
-  if (process && process.env.NODE_ENV === 'development') {
-    inDevEnvironment = true;
-  }
-
 
   function closeModal() {
     setActiveModal({
@@ -61,10 +55,6 @@ export default function SignIn() {
                     </div>
                     <div className='mb-[74px]'>
                     <div onClick={()=>{
-                      if (inDevEnvironment) {
-                        window.location.href = 'http://localhost:8080/auth/google'
-                        return
-                      }
                       window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
                     }} className='h-[52px] cursor-pointer w-[247px] flex items-center gap-[8px] justify-center bg-black rounded-xl'>
                         <img className='h-[32px] w-[32px]' src='Images/SVG/Google.svg' />

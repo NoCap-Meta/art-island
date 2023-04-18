@@ -54,3 +54,7 @@ input[type=number] {
 .react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb {
     box-shadow: none !important;
 }
+
+.featured .slick-slider{
+    overflow: visible !important;
+}
