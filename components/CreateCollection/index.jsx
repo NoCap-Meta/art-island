@@ -63,8 +63,10 @@ const CreateCollectionComponent = () => {
         category: formData.category,
       }
     })
-    const signed = await web3.eth.sendTransaction(data.txObject); 
-    console.log(signed)
+    const signed = await await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [data.txObject]
+    });
   }
 
   return (
