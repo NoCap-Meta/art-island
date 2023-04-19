@@ -1,14 +1,27 @@
 import { MagnetBold, MagnetLight, MagnetMedium } from '@/pages/_app'
 import { Store } from '@/utils'
-import { useRouter } from 'next/router'
 import ItemCard from '../Common/ItemCard'
 import CreateCollectionModal from '../Modals/CreateCollection'
+import { useContext } from '@/utils/Context';
+import { useEffect } from 'react';
 
 const {useCollectionModalStore} = Store
 
 const MyCollectionsComponent = () => {
-  const {collectionModalOpen, setCollectionModalOpen} = useCollectionModalStore()
-  const router = useRouter()
+  const { setCollectionModalOpen} = useCollectionModalStore()
+  const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
+
+  useEffect(()=>{
+    //check token
+    const token = localStorage.getItem('token')
+    if(!token){
+      setActiveLoginModal({
+        ...activeModal,
+        google: true
+      })
+    }
+  })
+  
   return (
     <div className='w-[70%] mt-[3rem]'>
       <div className=' w-[100%] justify-between'>

@@ -6,6 +6,7 @@ import InputField from '@/components/Common/InputField'
 import { DropDownInput } from '@/components/Common'
 import axios from 'axios'
 import { web3 } from 'pages/_app.js'
+import { useContext } from '@/utils/Context';
 
 const {useCollectionModalStore} = Store
 
@@ -31,6 +32,7 @@ const dropdownOptions = [{
 export default function CreateCollectionModal() {
   const {collectionModalOpen:isOpen, setCollectionModalOpen:setActiveModal} = useCollectionModalStore()
   const [file, setFile] = useState(null)
+  const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const fileRef = useRef(null)
   const [previewSource, setPreviewSource] = useState('')
   const [formData, setFormData] = useState({
@@ -61,7 +63,16 @@ export default function CreateCollectionModal() {
   }
 
   const handleUpload = async () => {
-    if (!localStorage.getItem('token') || !file) return;
+    if (!localStorage.getItem('token')) {
+      setActiveLoginModal({
+        ...activeModal,
+        google: true
+      })
+      return
+    }
+
+    if(!file) return
+
     const formData = new FormData()
     formData.append('file', file)
     try {
@@ -87,6 +98,10 @@ export default function CreateCollectionModal() {
     const location = await handleUpload()
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0|| !location){
+      setActiveLoginModal({
+        ...activeModal,
+        wallet: true
+      })
       return
     }
     const submitData = {...formData,createrAddress: accounts[0], logo:location}

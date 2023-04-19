@@ -3,6 +3,8 @@ import InputField from "../Common/InputField"
 import Toggle from 'react-toggle'
 import { Store } from "@/utils"
 import { CreateItemModal } from ".."
+import { useContext } from '@/utils/Context';
+import { useEffect } from "react"
 
 const {useCreateItemStore} = Store
 
@@ -35,6 +37,19 @@ const Property = ({name, desc, imageName, toggle, addable}) => {
 }
 
 const CreateItemComponent = () => {
+  const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
+
+  useEffect(()=>{
+    //check token
+    const token = localStorage.getItem('token')
+    if(!token){
+      setActiveLoginModal({
+        ...activeModal,
+        google: true
+      })
+    }
+  })
+
   return (
     <div className='w-[70%] mt-[3rem]'>
       <p className={`text-[40px] ${MagnetBold.className} h-[3rem] leading-[41px] text-[#000000]`}>Create New Item</p>
