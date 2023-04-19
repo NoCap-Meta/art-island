@@ -1,7 +1,7 @@
 import { MagnetBold, MagnetLight } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const ItemCard = ()=>{
+const ItemCard = ({isCollection})=>{
   const [image, setImage] = useState(null)
   useEffect(()=>{
     const getRandomImage = async ()=>{
@@ -16,20 +16,22 @@ const ItemCard = ()=>{
     <div style={{
       background: "rgba(255,255,255,0.5)"
     }} className="rounded-lg w-[295px]  overflow-hidden">
-      <img src={image} className='h-[295px] rounded-lg w-[295px]'/>
-      <div className="h-[114px] w-[295px]">
+      <img src={image} className='h-auto  rounded-lg w-[295px]'/>
+      <div className="h-auto pb-[1rem] w-[295px]">
         <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
           Deranged Music
         </p>
         <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
           Musical Birds Freeway Collection
         </p>
-        <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-        15.2 ETH
-        </p>
-        <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
-          Best Offer : 14.1 ETH
-        </p>
+        {!isCollection && <>
+          <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
+          15.2 ETH
+          </p>
+          <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
+            Best Offer : 14.1 ETH
+          </p>
+        </>}
       </div>
     </div>
   )

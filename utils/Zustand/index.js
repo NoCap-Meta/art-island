@@ -120,5 +120,11 @@ export const useSelectedArtistProfileTab = create(set => ({
   setSelectedArtistProfileTab: (value) => set(state => ({ selectedArtistProfileTab: value }))
 }))
 
+//state to manage collection modal open
+export const useCollectionModalStore = create(set => ({
+  collectionModalOpen: false,
+  setCollectionModalOpen: (value) => set(state => ({ collectionModalOpen: value }))
+}))
+
 
 
