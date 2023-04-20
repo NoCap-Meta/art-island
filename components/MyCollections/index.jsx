@@ -1,15 +1,28 @@
-import { MagnetBold, MagnetLight, MagnetMedium } from '@/pages/_app'
+import { MagnetBold, MagnetLight, MagnetMedium, web3 } from '@/pages/_app'
 import { Store } from '@/utils'
 import ItemCard from '../Common/ItemCard'
 import CreateCollectionModal from '../Modals/CreateCollection'
 import { useContext } from '@/utils/Context';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const {useCollectionModalStore} = Store
 
 const MyCollectionsComponent = () => {
-  const { setCollectionModalOpen} = useCollectionModalStore()
+  const {collectionModalOpen, setCollectionModalOpen} = useCollectionModalStore()
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
+  const [myCollections, setMyCollections] = useState([])
+
+  const getCollection = async ()=>{
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      if(data.success){
+        setMyCollections(data.collection)
+      }
+  }
 
   useEffect(()=>{
     //check token
@@ -21,6 +34,46 @@ const MyCollectionsComponent = () => {
       })
     }
   })
+
+  const handleSubmit = async (item) => {
+    //check if account is there
+    const accounts = await web3.eth.getAccounts()
+    if(!accounts || accounts.length === 0){
+      return
+    }
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/artist/create-transaction`, {
+      from:accounts[0],
+      args: {
+        name: item.name,
+        symbol: item.symbol,
+        createrAddress: accounts[0],
+        royalty: +item.royalty*100,
+        token: item.token,
+      }
+    })
+    const signed = await await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [data.txObject]
+    });
+
+    if(signed){
+      const {data} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection/${item._id}`, {
+        isDeployed: true
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      if(data.success){
+        getCollection()
+      }
+    }
+
+  }
+
+  useEffect(()=>{
+    getCollection()
+  },[collectionModalOpen])
   
   return (
     <div className='w-[70%] mt-[3rem]'>
@@ -33,8 +86,9 @@ const MyCollectionsComponent = () => {
       </div>
       <div className='w-[100%] mt-[3rem] flex gap-[2rem] flex-wrap'>
         {
-          [1,2,3].map((item, index) => {
-            return <ItemCard isCollection key={index} />
+          myCollections.map((item, index) => {
+            let status = item.isDeployed? 'Deployed': item.isApproved? 'Deploy Contract': 'Pending Approval'
+            return <ItemCard onCollectionClick={() =>item.isApproved && !item.isDeployed &&  handleSubmit(item)} isCollection key={index} collectionStatus={status} />
           })
         }
       </div>

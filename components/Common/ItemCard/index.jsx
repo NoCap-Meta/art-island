@@ -1,7 +1,7 @@
 import { MagnetBold, MagnetLight } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const ItemCard = ({isCollection})=>{
+const ItemCard = ({isCollection,onCollectionClick,collectionStatus})=>{
   const [image, setImage] = useState(null)
   useEffect(()=>{
     const getRandomImage = async ()=>{
@@ -32,6 +32,16 @@ const ItemCard = ({isCollection})=>{
             Best Offer : 14.1 ETH
           </p>
         </>}
+        <div className='flex w-[100%] justify-center'>
+
+        {
+          isCollection && (
+            <button onClick={onCollectionClick} className="w-[90%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px] font-bold mt-[12px]">
+              {collectionStatus}
+            </button>
+          )
+        }
+        </div>
       </div>
     </div>
   )
