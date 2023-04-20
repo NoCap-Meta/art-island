@@ -79,7 +79,8 @@ export default function CreateCollectionModal() {
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload/upload-s3`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'boundary': '----WebKitFormBoundary7MA4YWxkTrZu0gW'
         }
       })
       console.log('File uploaded successfully!', data.data)
@@ -87,7 +88,6 @@ export default function CreateCollectionModal() {
         ...formData,
         logo: data.data.Location
       })
-      console.log(data.data.Location)
       return data.data.Location
     } catch (error) {
       console.error('Error uploading file:', error)
@@ -97,13 +97,16 @@ export default function CreateCollectionModal() {
   const handleSubmit = async ()=>{
     const location = await handleUpload()
     const accounts = await web3.eth.getAccounts()
-    if(!accounts || accounts.length === 0|| !location){
+    if(!accounts || accounts.length === 0){
       setActiveLoginModal({
         ...activeModal,
         wallet: true
       })
       return
     }
+
+    if(!location) return;
+
     const submitData = {...formData,createrAddress: accounts[0], logo:location}
     try {
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection`,submitData ,
