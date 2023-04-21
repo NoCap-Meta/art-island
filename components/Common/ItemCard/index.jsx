@@ -18,13 +18,13 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item})=>{
     <div style={{
       background: "rgba(255,255,255,0.5)"
     }} className="rounded-lg w-[295px]  overflow-hidden">
-      <img src={item.logo || image} className='h-[295px]  rounded-lg w-[295px]'/>
+      <img src={(item && item.logo) || image} className='h-[295px]  rounded-lg w-[295px]'/>
       <div className="h-[auto] pb-[1rem] w-[295px]">
         <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
-          {item.name || 'Deranged Music'}
+          {(item && item.name) || 'Deranged Music'}
         </p>
         <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
-          {item.symbol|| 'Musical Birds Freeway Collection'}
+          {(item && item.symbol)|| 'Musical Birds Freeway Collection'}
         </p>
         {!isCollection && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
