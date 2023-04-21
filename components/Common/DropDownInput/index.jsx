@@ -1,9 +1,19 @@
 import { MagnetBold } from '@/pages/_app'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const DropDownInput = ({options, width, preIcon, setValue})=>{
+const DropDownInput = ({options, width, preIcon, setValue, value})=>{
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(options[0])
+
+  useEffect(()=>{
+    if(value){
+      const selected = options.find(option=>option.value==value)
+      if(selected){
+        setSelected(selected)
+      }
+    }
+  },[value, options])
+
   return (
     <>
       {options && typeof options[0]=='string' && <div className='relative overflow-visible'>

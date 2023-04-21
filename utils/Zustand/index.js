@@ -48,7 +48,7 @@ export const useUserStore = create(set => ({
           user: {
             displayName,
             username,
-            shortBio: bio,
+            bio: bio,
             walletAddress,
             email: google.email,
             profilePic: google.profilePic,
@@ -124,6 +124,39 @@ export const useSelectedArtistProfileTab = create(set => ({
 export const useCollectionModalStore = create(set => ({
   collectionModalOpen: false,
   setCollectionModalOpen: (value) => set(state => ({ collectionModalOpen: value }))
+}))
+
+//state to manage item modal data
+export const useItemModalStore = create(set => ({
+  itemModalData: {
+    image: '',
+    name: '',
+    externalLink: '',
+    desc: '',
+    collectionId: '',
+    createrAddress: '',
+    blockchain: '',
+    supply: '',
+    freezeMetadata: false,
+    properties: [],
+    levels: [],
+    stats: [],
+    hasUnlockableContent: false,
+    hasSensitiveContent: false,
+  },
+  setItemModalData: (value) => set(state => ({ itemModalData: value }))
+}))
+
+//state to open state of item level modal
+export const useItemLevelModalStore = create(set => ({
+  itemLevelModalOpen: false,
+  setItemLevelModalOpen: (value) => set(state => ({ itemLevelModalOpen: value }))
+}))
+
+//state to manage open status of item stats modal
+export const useItemStatsModalStore = create(set => ({
+  itemStatsModalOpen: false,
+  setItemStatsModalOpen: (value) => set(state => ({ itemStatsModalOpen: value }))
 }))
 
 

@@ -4,39 +4,40 @@ import {MagnetBold, MagnetLight, MagnetMedium, MagnetRegular} from 'pages/_app.j
 import {Store} from '@/utils'
 import InputField from '@/components/Common/InputField'
 
-const {useCreateItemStore, useItemModalStore} = Store
+const {useItemLevelModalStore, useItemModalStore} = Store
 
 let inDevEnvironment = false;
 
 
-const Field = ({onDelete, index, onTypeChange, onNameChange, typeValue, nameValue})=>{
+const Field = ({onDelete, index, onTypeChange, onNameChange, typeValue, nameValue, onMaxChange, maxValue})=>{
   return (
-    <div className='flex w-[100%] justify-between'>
+    <div className='flex w-[100%] items-center justify-between'>
       <div className='flex items-end gap-[1rem]'>
         <img onClick={()=>onDelete(index)} src='Images/SVG/Cross-Black.svg' className='h-[18px] cursor-pointer mb-[0.8rem] w-[18px]' alt='plus' />
-        <InputField onChange={(e)=>onTypeChange(e)} value={typeValue} width={'w-[11rem]'} placeholder='Character' >Type</InputField>
+        <InputField onChange={(e)=>onNameChange(e)} value={nameValue} width={'w-[11rem]'} placeholder='Speed' >Name</InputField>
       </div>
-      <InputField onChange={(e)=>onNameChange(e)} value={nameValue} width={'w-[11rem]'} placeholder='Male' >Name</InputField>
+      <InputField onChange={(e)=>onTypeChange(e)} value={typeValue} width={'w-[3rem]'} placeholder='0' >Value</InputField>
+      <p className={`${MagnetMedium.className} opacity-50 text-[16px] `}><br/><br/>of</p>
+      <InputField onChange={(e)=>onMaxChange(e)} value={maxValue} width={'w-[3rem]'} placeholder='0' ><br /></InputField>
     </div>
   )
 }
 
-export default function CreateItemModal() {
-  const {createItemModalState:isOpen,
-    setCreateItemModalState:setActiveModal} = useCreateItemStore()
-    const [fieldArray,setFieldArray] = useState([0])
+export default function AddLevelsModals() {
+  const {itemLevelModalOpen:isOpen,
+    setItemLevelModalOpen:setActiveModal} = useItemLevelModalStore()
     const {itemModalData,setItemModalData} = useItemModalStore()
 
 
   const handleDeleteField = (index)=>{
-    const newArray = itemModalData.properties.filter((item,i)=>{
+    const newArray = itemModalData.levels.filter((item,i)=>{
       return i!==index
     }
     )
 
     setItemModalData({
       ...itemModalData,
-      properties:newArray
+      levels:newArray
     })
   }
 
@@ -50,24 +51,25 @@ export default function CreateItemModal() {
   }
 
   const handleAddField = ()=>{
-    const newArray = [...itemModalData.properties, {
-      type:'',
-      name:''
+    const newArray = [...itemModalData.levels, {
+      name:'',
+      value:0,
+      max:0
     }]
 
     setItemModalData({
       ...itemModalData,
-      properties:newArray
+      levels:newArray
     })
 
   }
 
   const onTypeChange = (e, index)=>{
-    const newArray = itemModalData.properties.map((item,i)=>{
+    const newArray = itemModalData.levels.map((item,i)=>{
       if(i===index){
         return {
           ...item,
-          type:e.target.value
+          value:e.target.value
         }
       }
       return item
@@ -75,12 +77,12 @@ export default function CreateItemModal() {
 
     setItemModalData({
       ...itemModalData,
-      properties:newArray
+      levels:newArray
     })
   }
 
   const onNameChange = (e, index)=>{
-    const newArray = itemModalData.properties.map((item,i)=>{
+    const newArray = itemModalData.levels.map((item,i)=>{
       if(i===index){
         return {
           ...item,
@@ -92,9 +94,27 @@ export default function CreateItemModal() {
 
     setItemModalData({
       ...itemModalData,
-      properties:newArray
+      levels:newArray
     })
   }
+
+  const onMaxChange = (e, index)=>{
+    const newArray = itemModalData.levels.map((item,i)=>{
+      if(i===index){
+        return {
+          ...item,
+          max:e.target.value
+        }
+      }
+      return item
+    })
+
+    setItemModalData({
+      ...itemModalData,
+      levels:newArray
+    })
+  }
+
   
 
   return (
@@ -139,8 +159,8 @@ export default function CreateItemModal() {
                       </p>
                       <div className='w-[100%]'>
                         {
-                          itemModalData.properties.map((item,index)=>{
-                            return <Field onTypeChange={(e)=>onTypeChange(e, index)} typeValue={item.type} onNameChange={e=>onNameChange(e, index)} nameValue={item.name} index={index} onDelete={()=>handleDeleteField(index)} key={index} />
+                          itemModalData.levels.map((item,index)=>{
+                            return <Field maxValue={item.max} onMaxChange={e=>onMaxChange(e, index)} onTypeChange={(e)=>onTypeChange(e, index)} typeValue={item.value} onNameChange={e=>onNameChange(e, index)} nameValue={item.name} index={index} onDelete={()=>handleDeleteField(index)} key={index} />
                           })
                         }
                       </div>

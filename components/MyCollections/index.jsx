@@ -5,6 +5,7 @@ import CreateCollectionModal from '../Modals/CreateCollection'
 import { useContext } from '@/utils/Context';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const {useCollectionModalStore} = Store
 
@@ -12,6 +13,7 @@ const MyCollectionsComponent = () => {
   const {collectionModalOpen, setCollectionModalOpen} = useCollectionModalStore()
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const [myCollections, setMyCollections] = useState([])
+  const router = useRouter()
 
   const getCollection = async ()=>{
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
@@ -87,8 +89,15 @@ const MyCollectionsComponent = () => {
       <div className='w-[100%] mt-[3rem] flex gap-[2rem] flex-wrap'>
         {
           myCollections.map((item, index) => {
-            let status = item.isDeployed? 'Deployed': item.isApproved? 'Deploy Contract': 'Pending Approval'
-            return <ItemCard onCollectionClick={() =>item.isApproved && !item.isDeployed &&  handleSubmit(item)} isCollection key={index} collectionStatus={status} />
+            let status = item.isDeployed? 'Deployed': item.isApproved? 'Deploy Contract': 'Add Items'
+            return <ItemCard item={item} onCollectionClick={() =>!item.isApproved ? (()=>{
+              router.push({
+                pathname: '/create-item',
+                query: {
+                  collectionId: item._id
+                }
+              })
+            })() : !item.isDeployed && handleSubmit(item)} isCollection key={index} collectionStatus={status} />
           })
         }
       </div>

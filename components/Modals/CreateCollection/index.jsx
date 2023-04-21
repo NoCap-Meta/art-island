@@ -107,6 +107,10 @@ export default function CreateCollectionModal() {
 
     if(!location) return;
 
+   if(formData.name.length === 0 || formData.symbol.length === 0 || formData.royalty.length === 0 || formData.token.length === 0 || formData.tokenType.length === 0){
+      return
+    }
+  
     const submitData = {...formData,createrAddress: accounts[0], logo:location}
     try {
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection`,submitData ,
@@ -118,7 +122,8 @@ export default function CreateCollectionModal() {
   }
   catch (error) {
     console.log(error)
-  }}
+  }
+}
 
 
   return (

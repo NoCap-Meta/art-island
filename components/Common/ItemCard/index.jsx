@@ -1,7 +1,7 @@
 import { MagnetBold, MagnetLight } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const ItemCard = ({isCollection,onCollectionClick,collectionStatus})=>{
+const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item})=>{
   const [image, setImage] = useState(null)
   useEffect(()=>{
     const getRandomImage = async ()=>{
@@ -9,20 +9,22 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus})=>{
       const data = await response.blob()
       setImage(URL.createObjectURL(data))
     }
-    getRandomImage()
+    if(!item || !item.logo){
+      getRandomImage()
+    }
   },[])
 
   return (
     <div style={{
       background: "rgba(255,255,255,0.5)"
     }} className="rounded-lg w-[295px]  overflow-hidden">
-      <img src={image} className='h-auto  rounded-lg w-[295px]'/>
-      <div className="h-auto pb-[1rem] w-[295px]">
+      <img src={item.logo || image} className='h-[295px]  rounded-lg w-[295px]'/>
+      <div className="h-[auto] pb-[1rem] w-[295px]">
         <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
-          Deranged Music
+          {item.name || 'Deranged Music'}
         </p>
         <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
-          Musical Birds Freeway Collection
+          {item.symbol|| 'Musical Birds Freeway Collection'}
         </p>
         {!isCollection && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>

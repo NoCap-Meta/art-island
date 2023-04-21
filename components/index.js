@@ -23,6 +23,8 @@ import { Filter, RadioButton, Title } from './Filter/index';
 import SearchPageComponent from "./SearchPageComponent";
 import MyCollectionsComponent from './MyCollections/index';
 import CreateCollectionComponent from './CreateCollection/index';
+import AddLevelsModals from './Modals/CreateItemModal/AddLevelsModal';
+import AddStatsModal from './Modals/CreateItemModal/AddStatsModal';
 
 
 export const imageBackgroundOptions = {
@@ -64,5 +66,7 @@ export {
   Title,
   SearchPageComponent,
   MyCollectionsComponent,
-  CreateCollectionComponent
+  CreateCollectionComponent,
+  AddLevelsModals,
+  AddStatsModal
 };
