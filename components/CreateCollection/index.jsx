@@ -4,9 +4,10 @@ import Toggle from 'react-toggle'
 import { Store } from "@/utils"
 import { CreateItemModal, DropDownInput } from ".."
 import { useRef, useState } from "react"
-import { web3 } from "@/pages/_app"
+import { web3,ethersProvider } from "@/pages/_app"
 const {useCreateItemStore} = Store
 import axios from 'axios'
+import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 
 const Property = ({name, desc, imageName, toggle, addable}) => {
   const {setCreateItemModalState} = useCreateItemStore()
@@ -53,20 +54,62 @@ const CreateCollectionComponent = () => {
     if(!accounts || accounts.length === 0){
       return
     }
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/artist/create-transaction`, {
-      from:accounts[0],
-      args: {
-        name: formData.name,
-        symbol: formData.symbol,
-        createrAddress: accounts[0],
-        royality: +formData.royality*100,
-        category: formData.category,
+    const account = accounts[0]
+    //getContract instance
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/get-contract-instance`, {
+      //headers
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
-    const signed = await await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [data.txObject]
-    });
+
+    let contract = null
+
+    if(data.success){
+      contract = data.noCapFactoryContract
+    }
+
+    const signer = await ethersProvider.getSigner()
+
+    const newVoucher = new NoCapVoucher({
+      _contract: contract,
+      _signer: signer
+    })
+
+    const voucher = await newVoucher.createVoucher( account, '0xA600eA51AF053D791613034b3803AF39530280A2', 123, 1, 1, 1000000, true, account, 2000, 'https://google.com' )
+
+    const {data:verifyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
+      voucher
+      }, {
+      //headers
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+      })
+
+    const {data:buyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/buy-nft`, {
+      value: '0.00001',
+      voucher,
+      isPrimary:true,
+      currency:'0x0000000000000000000000000000000000000001'
+    },{
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    if(buyData.success){
+      const {txObject} = buyData
+      txObject.value = `${txObject.value}`
+      console.log(txObject)
+
+      const signer = await ethersProvider.getSigner()
+      const tx = await signer.sendTransaction(txObject)
+      const receipt = await tx.wait()
+      console.log(receipt)
+
+    }
+
   }
 
   return (
@@ -97,7 +140,7 @@ const CreateCollectionComponent = () => {
             ...formData,
             symbol: e.target.value
           })
-        }} desc={'The token symbol is shown on the block explorer when others view your smart contract.'} placeholder={'NCM'}>Token symbol</InputField>
+        }} desc={`The token symbol is shown on the block explorer when others view your smart contract.`} placeholder={'NCM'}>Token symbol</InputField>
         <InputField value={formData.royality} onChange={(e)=>{
           setFormData({
             ...formData,

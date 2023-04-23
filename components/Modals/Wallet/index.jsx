@@ -36,6 +36,7 @@ export default function Wallet() {
       }
       setConnectionStatus('connecting'); 
       await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await window.ethereum.enable();
       const accounts = await web3.eth.getAccounts();
       if (accounts.length > 0) {
         setWalletAddress(accounts[0]);

@@ -75,9 +75,9 @@ const NavBar = ({isLogined}) => {
       <div className="w-[100vw] bg-[#f5dfc2] relative overflow-visible flex justify-center">
         <div className="w-[90vw] h-[70px] justify-between flex items-center">
           <div className="flex gap-[10px] h-[70px]  items-center">
-            <img src='Images/SVG/Star.svg' />
+            <img src='Images/PNG/NoCap.png' className='h-[3rem]' />
             <p onClick={()=>router.push('/')} className={`${MagnetBold.className} text-[24px] cursor-pointer overflow-hidden leading-[29px] text-black`}>
-              ART ISLAND RODEO CLUB
+              NoCap.Network
             </p>
           </div>
           <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>

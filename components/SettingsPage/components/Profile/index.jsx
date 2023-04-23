@@ -3,10 +3,11 @@ import { MagnetMedium } from 'pages/_app';
 import { Transition } from '@headlessui/react'
 import { Store } from '@/utils';
 import InputField from '@/components/Common/InputField';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { web3 } from 'pages/_app';
 import axios from 'axios';
 import { useContext } from '@/utils/Context';
+import { useRef } from 'react';
 const {useTabStore, useUserStore} = Store
 
 
@@ -15,6 +16,8 @@ const ProfileSection = () => {
   const {selectedTab} = useTabStore()
   const {user, setUser} = useUserStore()
   const {setActiveModal:setActiveLoginModal,activeModal} = useContext()
+  const [isImageHover, setisImageOver] = useState(false)
+  const fileRef = useRef(null)
 
   const handleInputChange = (e,field)=>{
     setUser({
@@ -80,6 +83,36 @@ const ProfileSection = () => {
     }
   }
 
+  const handleFileChange = async (e)=>{
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload/upload-s3`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'boundary': '----WebKitFormBoundary7MA4YWxkTrZu0gW'
+        }
+      })
+      console.log('File uploaded successfully!', data.data)
+      const profilePic =  data.data.Location
+      const {data:updatedUser} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`,{
+        profilePic
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      if(updatedUser?.success){
+        setUser()
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error)
+    }
+  }
+  
+
   return (
     <Transition
     show={selectedTab === 'Profile'}
@@ -91,11 +124,16 @@ const ProfileSection = () => {
           backgroundImage: `url(${'Images/WEBP/hero.webp'})`,
           ...imageBackgroundOptions
         }}>
-          <div className="h-[130px] w-[130px] rounded-full" style={{
+          <div onMouseEnter={()=>setisImageOver(true)} onMouseLeave={()=>setisImageOver(false)} className="h-[130px] relative w-[130px] rounded-full" style={{
               backgroundImage: `url(${user?.profilePic || 'Images/WEBP/ArtistProfile.webp'})`,
               ...imageBackgroundOptions,
-              boxShadow: "0px 4px 40px #000000"
-          }}/>
+              boxShadow: "0px 4px 40px #000000",
+          }}>
+            <input onChange={handleFileChange} accept={"image/png, image/jpeg, image/jpg"} ref={fileRef} type='file' className='hidden' />
+          <img onClick={()=>fileRef.current.click()} src='Images/SVG/Upload.svg' className={`absolute transition-all duration-300 ${isImageHover?'opacity-100':'opacity-0'} left-[43%] top-[45%] h-[1rem] z-[5]`}/>
+            <div onClick={()=>fileRef.current.click()} className={`flex w-full transition-all duration-300 h-full ${isImageHover?'opacity-20':'opacity-0'} bg-black`}>
+            </div>
+          </div>
       </div>
       <InputField onChange={(e)=>handleInputChange(e,'displayName')} value={user?.displayName} placeholder='Enter your display name' type='text'>Display Name</InputField>
       <InputField onChange={(e)=>handleInputChange(e,'username')} value={user?.username} preIcon={<img src='Images/SVG/At.svg'/>} placeholder='enter your username' type='email'>Username</InputField>

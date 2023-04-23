@@ -1,3 +1,4 @@
 import * as Store from './Zustand'
+import { useGetWalletAddress } from './Extras/useGetWalletAddress';
 
-export { Store }
+export { Store, useGetWalletAddress }

@@ -50,16 +50,11 @@ const ArtistHero = () => {
 
   return (
     <div>
-      <div className="w-screen flex flex-col items-center">
+      <div className="flex flex-col items-center w-screen">
         <ArtistHeader/>
-        <div className="w-[90vw] flex mt-[20px] gap-[10px] items-center justify-center">
-          <p className={`text-center ${MagnetLight.className} text-[20px] leading-[25px]`}>
-            0xE852...EI8531
-          </p>
-          <img className="cursor-pointer" src="Images/SVG/Copy.svg"/>
-        </div>
+      
         <div className="flex items-end mt-[42px] w-[90vw]  ">
-          <div className="flex xl:flex-nowrap flex-wrap justify-center items-end">
+          <div className="flex flex-wrap items-end justify-center xl:flex-nowrap">
           {
             options.map((option, index)=>{
               return (
@@ -82,11 +77,11 @@ const ArtistHero = () => {
             <div className="pl-[40px] w-full flex justify-between">
               <div className="flex">
                 <p className={`${MagnetLight.className} opacity-50 whitespace-nowrap text-[20px] leading-[25px]`}>More</p>
-                <img className=" opacity-50" src="Images/SVG/Chevron-small-down.svg"/>
+                <img className="opacity-50 " src="Images/SVG/Chevron-small-down.svg"/>
               </div>
               <div className="flex gap-[10px]">
                 <img src="Images/SVG/Grid.svg"/>
-                <img className=" opacity-50" src="Images/SVG/GridH.svg"/>
+                <img className="opacity-50 " src="Images/SVG/GridH.svg"/>
               </div>
             </div>
             <div className={`w-full h-[2px] opacity-20 mt-[15px] bg-black`}/>
@@ -110,9 +105,9 @@ const ArtistHero = () => {
           {
             selectedTab==='Transaction History' && (
               <div>
-                <div className="w-[90vw] h-[3rem] mt-[36px] flex justify-end items-center rounded-lg bg-[rgba(255,255,255,0.5)] mb-[10px]">
+                {/* <div className="w-[90vw] h-[3rem] mt-[36px] flex justify-end items-center rounded-lg bg-[rgba(255,255,255,0.5)] mb-[10px]">
                   <img src='Images/SVG/Chevron-small-down.svg' className='mr-[12px]'/>
-                </div>
+                </div> */}
                 <div className='flex md:overflow-hidden overflow-scroll flex-col mt-[1rem] w-[90vw]'>
                   <div className='md:w-[100%] w-[200%] h-[40px] items-center border-b flex  border-[rgba(0,0,0,0.2)] '>
                     <TableCell font={MagnetMedium.className} text='Event'/>
