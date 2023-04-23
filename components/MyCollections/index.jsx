@@ -1,4 +1,4 @@
-import { MagnetBold, MagnetLight, MagnetMedium, web3 } from '@/pages/_app'
+import { MagnetBold, MagnetLight, MagnetMedium, web3, ethersProvider } from '@/pages/_app'
 import { Store } from '@/utils'
 import ItemCard from '../Common/ItemCard'
 import CreateCollectionModal from '../Modals/CreateCollection'
@@ -58,9 +58,26 @@ const MyCollectionsComponent = () => {
       params: [data.txObject]
     });
 
+    let receipt = null;
+    while (receipt === null) {
+      receipt = await window.ethereum.request({
+        method: 'eth_getTransactionReceipt',
+        params: [signed],
+      });
+
+      // Wait for 1 second before trying again
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+
+    if(receipt){
+      const deployedCollectionAddress = receipt.logs[0].address
+   
+
     if(signed){
       const {data} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection/${item._id}`, {
-        isDeployed: true
+        isDeployed: true,
+        deployedCollectionAddress
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -71,7 +88,7 @@ const MyCollectionsComponent = () => {
       }
     }
 
-  }
+  } }
 
   useEffect(()=>{
     getCollection()

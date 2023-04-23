@@ -76,7 +76,7 @@ const CreateCollectionComponent = () => {
       _signer: signer
     })
 
-    const voucher = await newVoucher.createVoucher( account, '0xA600eA51AF053D791613034b3803AF39530280A2', 123, 1, 1, 1000000, true, account, 2000, 'https://google.com' )
+    const voucher = await newVoucher.createVoucher( account, '0xEEdF42C3a1c618317Bb19F9dD182C7e455748443', 123, 1, 1, 1000000, true, account, 2000, 'https://google.com' )
 
     const {data:verifyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
       voucher
@@ -103,10 +103,10 @@ const CreateCollectionComponent = () => {
       txObject.value = `${txObject.value}`
       console.log(txObject)
 
-      const signer = await ethersProvider.getSigner()
-      const tx = await signer.sendTransaction(txObject)
-      const receipt = await tx.wait()
-      console.log(receipt)
+      const signed = await await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [txObject],
+      });
 
     }
 

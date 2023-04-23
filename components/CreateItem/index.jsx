@@ -99,18 +99,24 @@ const CreateItemComponent = () => {
 
   useEffect(()=>{
     //fetch collections
+
     const fetchCollection = async ()=>{
-      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
+      setCollections([{
+        name: 'Loading your deployed collections...',
+        value:''
+      }])
+      const address = await getAccount()
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/deployd-collections/${address}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
 
       if(data.success){
-        const newCollections = data.collection.map((collection)=>{
+        const newCollections = data.collections.map((collection)=>{
           return {
-            name: collection.name,
-            value: collection._id
+            name: collection,
+            value: collection
           }
         })
         setCollections(newCollections)
@@ -132,9 +138,11 @@ const CreateItemComponent = () => {
           createrAddress: accounts[0]
         })
       }
+
+      return accounts[0]
     }
 
-    getAccount()
+    
 
     fetchCollection()
   },[])
