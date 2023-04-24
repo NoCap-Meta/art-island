@@ -2,14 +2,14 @@ import { MagnetBold, MagnetMedium, web3 } from "@/pages/_app"
 import InputField from "../Common/InputField"
 import Toggle from 'react-toggle'
 import { Store } from "@/utils"
-import { CreateItemModal, DropDownInput, AddLevelsModals, AddStatsModal } from ".."
+import { CreateItemModal, DropDownInput, AddLevelsModals, AddStatsModal, CaptchaModal, ItemSubmittedModal } from ".."
 import { useContext } from '@/utils/Context';
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
 
 
-const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore} = Store
+const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
 
 const Property = ({name, desc, imageName, toggle, addable, keyValue, onOpenClick}) => {
   const {itemModalData,setItemModalData} = useItemModalStore()
@@ -48,9 +48,11 @@ const Property = ({name, desc, imageName, toggle, addable, keyValue, onOpenClick
 
 const CreateItemComponent = () => {
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
+  const {setCaptchaModalOpen} = useCaptchaModalStore()
   const {setItemLevelModalOpen} = useItemLevelModalStore()
   const {setItemStatsModalOpen} = useItemStatsModalStore()
   const {setCreateItemModalState} = useCreateItemStore()
+  const {itemSubmittedModalOpen,setItemSubmittedModalOpen} = useItemSubmittedModal()
   const [buttonTitle, setButtonTitle] = useState('Submit Item for Review')
   const fileRef = useRef(null)
   const [collections, setCollections] = useState([{
@@ -231,7 +233,8 @@ const CreateItemComponent = () => {
 
     if(data.success){
       setButtonTitle('Item Submitted')
-      setCreateItemModalState(false)
+      setCaptchaModalOpen(false)
+      setItemSubmittedModalOpen(true)
     }
 
 
@@ -314,7 +317,7 @@ const CreateItemComponent = () => {
           itemModalData.freezeMetadata ? '1' : '0'
         } desc={'Freezing your metadata will allow you to permanently lock and store all of this item\'s content in decentralized file storage.'} placeholder={'1'}>Freeze Metadata</InputField>
 
-        <button onClick={handleSubmit} disabled={
+        <button onClick={()=>setCaptchaModalOpen(true)} disabled={
           isButtonDisabled
         } className={`mt-[3rem] ${isButtonDisabled && 'opacity-50'} ${MagnetMedium.className} w-[13rem] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>{
           buttonTitle
@@ -324,6 +327,8 @@ const CreateItemComponent = () => {
       <CreateItemModal/>
       <AddLevelsModals/>
       <AddStatsModal/>
+      <CaptchaModal onVerify={handleSubmit}/>
+      <ItemSubmittedModal image={previewImage}/>
     </div>
   )
 }

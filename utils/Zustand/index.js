@@ -159,5 +159,19 @@ export const useItemStatsModalStore = create(set => ({
   setItemStatsModalOpen: (value) => set(state => ({ itemStatsModalOpen: value }))
 }))
 
+//state to manage captcha modal state
+export const useCaptchaModalStore = create(set => ({
+  captchaModalOpen: false,
+  setCaptchaModalOpen: (value) => set(state => ({ captchaModalOpen: value }))
+}))
+
+//state to manage itemsubmitted modal 
+export const useItemSubmittedModal = create(set => ({
+  itemSubmittedModalOpen: false,
+  setItemSubmittedModalOpen: (value) => set(state => ({ itemSubmittedModalOpen: value }))
+}))
+
+
+
 
 

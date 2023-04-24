@@ -76,16 +76,31 @@ const CreateCollectionComponent = () => {
       _signer: signer
     })
 
-    const voucher = await newVoucher.createVoucher( account, '0xf57c398ca6eb1831e03806728008127904a7b95d', 1, 4, 1, 1000000, true, account, 200, 'https://google.com' )
+    const voucher = await newVoucher.createVoucher( account, '0xb3d530d5e3310d95dd2fafb8271028a1c0ad1760', 1, 4, 1, 1000000, true, account, 200, 'https://google.com' )
 
     const {data:verifyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
       voucher
       }, {
-      //headers
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }})
+
+      //get total amount
+    const {data:totalAmountData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/calculate-total-amount`, {
+      voucher,
+      isPrimary:true,
+    },{
       headers:{
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-      })
+    })
+
+    if(totalAmountData.success){
+      console.log(totalAmountData)
+    }else{
+      return
+    }
+    
 
     const {data:buyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/buy-nft`, {
       value: '0.00000000000102',

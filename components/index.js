@@ -25,6 +25,8 @@ import MyCollectionsComponent from './MyCollections/index';
 import CreateCollectionComponent from './CreateCollection/index';
 import AddLevelsModals from './Modals/CreateItemModal/AddLevelsModal';
 import AddStatsModal from './Modals/CreateItemModal/AddStatsModal';
+import CaptchaModal from './Modals/CaptchaModal/index';
+import ItemSubmittedModal from './Modals/ItemSubmittedModal/index';
 
 
 export const imageBackgroundOptions = {
@@ -68,5 +70,7 @@ export {
   MyCollectionsComponent,
   CreateCollectionComponent,
   AddLevelsModals,
-  AddStatsModal
+  AddStatsModal,
+  CaptchaModal,
+  ItemSubmittedModal
 };

@@ -5,6 +5,7 @@ import Slider from 'rc-slider';
 import {Store} from "utils";
 import DropDownInput from '../../Common/DropDownInput/index';
 import ItemCard from "@/components/Common/ItemCard";
+import axios from "axios";
 
 const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
 
@@ -29,6 +30,7 @@ const ArtistHero = () => {
   const {artistProfileOptions:options, setArtistProfileOptions:setOptions} = useArtistProfileOptionsStore()
   const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
   const [filterOpen, setFilterOpen] = useState(false)
+  const [myItems, setMyItems] = useState([])
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -47,6 +49,22 @@ const ArtistHero = () => {
     setSeletctedTab(name)
     setOptions(newOptions)
   }
+
+  useEffect(()=>{
+    const getItems = async ()=>{
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
+      if(data.success){
+        setMyItems(data.items)
+      }
+    }
+
+    getItems()
+  },[])
 
   return (
     <div>
@@ -134,6 +152,20 @@ const ArtistHero = () => {
                     })
                   }
                 </div>
+              </div>
+            )
+          }
+          {
+            selectedTab==='Created' && (
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+                {
+                  myItems.map((item, i)=>{
+                    let status = item.isDeployed? 'Deployed': item.collectionApproved ? item.deployedCollectionAddress? 'Deploy Contract': 'Collection not deployed': 'Pending Approval'
+                    return <div key={i}>
+                      <ItemCard item={item} isCollection collectionStatus={status}  />
+                    </div>
+                  }
+                )}
               </div>
             )
           }
