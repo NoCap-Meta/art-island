@@ -11,20 +11,8 @@ import { useContext } from '@/utils/Context';
 const {useCollectionModalStore} = Store
 
 const dropdownOptions = [{
-  name: 'Yato',
+  name: 'USDT',
   value: '0x66D9512e6Cf45ba95586a8E7E1544Cef71521f08'
-},
-{
-  name: 'Saitama',
-  value: '0xDeDDbF4a30C99Cb20E85806873ba603E6bA376CD'
-},
-{
-  name: 'Goku',
-  value: '0xF35871678B04E56a17531D92589BD62863CcF5FA'
-},
-{
-  name: 'Vegeta',
-  value: '0x06662846f8a08f74402A2d9e17A0b1aBCcE7A504',
 },
 ]
 
@@ -35,6 +23,7 @@ export default function CreateCollectionModal() {
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const fileRef = useRef(null)
   const [previewSource, setPreviewSource] = useState('')
+  const [buttonTitle, setButtonTitle] = useState('Submit for Review')
   const [formData, setFormData] = useState({
     name: '',
     symbol: '',
@@ -95,6 +84,7 @@ export default function CreateCollectionModal() {
   };
 
   const handleSubmit = async ()=>{
+    setButtonTitle('Submitting...')
     const location = await handleUpload()
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){
@@ -107,7 +97,7 @@ export default function CreateCollectionModal() {
 
     if(!location) return;
 
-   if(formData.name.length === 0 || formData.symbol.length === 0 || formData.royalty.length === 0 || formData.token.length === 0 || formData.tokenType.length === 0){
+   if(formData.name.length === 0 || formData.symbol.length === 0  || formData.token.length === 0 ){
       return
     }
   
@@ -117,13 +107,18 @@ export default function CreateCollectionModal() {
       {headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}})
 
       if(data.success){
-        setActiveModal(false)
+        setButtonTitle('Submitted')
+        setTimeout(()=>{
+          closeModal()
+        }, 1000)
       }
   }
   catch (error) {
     console.log(error)
   }
 }
+
+let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0  || formData?.token?.length === 0 || file === null || buttonTitle === 'Submitting...'
 
 
   return (
@@ -143,7 +138,7 @@ export default function CreateCollectionModal() {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -197,16 +192,13 @@ export default function CreateCollectionModal() {
                             </p>
                             <DropDownInput setValue={(value)=>handleChange(value, 'token', true)} width={'w-[100%]'} options={dropdownOptions}>Category</DropDownInput>
                         </div>
-                        <div className="mt-[1rem] overflow-visible">
-                            <p className={`${MagnetMedium.className} mb-[5px] text-[16px] text-left`}>
-                              Token Type
-                            </p>
-                            <DropDownInput setValue={(value)=>handleChange(value, 'tokenType', true)} width={'w-[100%]'} options={[{name:'Single', value:'single'},{name:'Multiple', value:'multi'} ]}>Category</DropDownInput>
-                        </div>
-                        <InputField value={formData.royalty} onChange={(e)=>handleChange(e,'royalty')}  placeholder={'How much royality you want'}>Royality</InputField>
                       </div>
                     </div>
-                    <button onClick={handleSubmit} className={`mt-[3rem] ${MagnetMedium.className} w-[100%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>Submit for Review</button>
+                    <button onClick={handleSubmit} disabled={
+                      isDisabled
+                    } className={`mt-[3rem] ${MagnetMedium.className} ${isDisabled && 'opacity-50'} w-[100%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>
+                      {buttonTitle}
+                    </button>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -114,7 +114,7 @@ export default function CreateItemModal() {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -148,7 +148,9 @@ export default function CreateItemModal() {
                         <button onClick={()=>handleAddField()} className={`mt-[1rem] ${MagnetMedium.className} w-[6rem] h-[40px] rounded-md border border-black text-[16px]`}>Add more</button>
                       </div>
                     </div>
-                    <button className={`mt-[3rem] ${MagnetMedium.className} w-[100%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>Save</button>
+                    <button onClick={()=>{
+                      setActiveModal(false)
+                    }} className={`mt-[3rem] ${MagnetMedium.className} w-[100%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>Save</button>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

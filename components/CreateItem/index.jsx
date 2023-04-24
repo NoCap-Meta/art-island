@@ -51,6 +51,7 @@ const CreateItemComponent = () => {
   const {setItemLevelModalOpen} = useItemLevelModalStore()
   const {setItemStatsModalOpen} = useItemStatsModalStore()
   const {setCreateItemModalState} = useCreateItemStore()
+  const [buttonTitle, setButtonTitle] = useState('Submit Item for Review')
   const fileRef = useRef(null)
   const [collections, setCollections] = useState([{
     name: 'Select Collection',
@@ -60,6 +61,8 @@ const CreateItemComponent = () => {
   const [file, setFile] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
   const router = useRouter()
+
+  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null
 
   useEffect(()=>{
     const token = localStorage.getItem('token')
@@ -212,6 +215,7 @@ const CreateItemComponent = () => {
   };
 
   const handleSubmit = async ()=>{
+    setButtonTitle('Submitting...')
     const imageUrl = await handleUpload()
 
     if(!imageUrl) return
@@ -226,6 +230,7 @@ const CreateItemComponent = () => {
     })
 
     if(data.success){
+      setButtonTitle('Item Submitted')
       setCreateItemModalState(false)
     }
 
@@ -309,7 +314,12 @@ const CreateItemComponent = () => {
           itemModalData.freezeMetadata ? '1' : '0'
         } desc={'Freezing your metadata will allow you to permanently lock and store all of this item\'s content in decentralized file storage.'} placeholder={'1'}>Freeze Metadata</InputField>
 
-        <button onClick={handleSubmit} className={`mt-[3rem] ${MagnetMedium.className} w-[13rem] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>Submit Item for Review</button>
+        <button onClick={handleSubmit} disabled={
+          isButtonDisabled
+        } className={`mt-[3rem] ${isButtonDisabled && 'opacity-50'} ${MagnetMedium.className} w-[13rem] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>{
+          buttonTitle
+        }
+        </button>
       </div>
       <CreateItemModal/>
       <AddLevelsModals/>

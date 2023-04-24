@@ -93,7 +93,7 @@ const NavBar = ({isLogined}) => {
             <p onClick={()=>router.push('/collectionstats')}  className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Stats
             </p>
-            <p onClick={()=>router.push('/create-item')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={()=>router.push('/my-collections')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Create
             </p>
             <div className="flex items-center gap-[10px]">
