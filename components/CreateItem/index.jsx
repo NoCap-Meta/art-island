@@ -106,17 +106,25 @@ const CreateItemComponent = () => {
         value:''
       }])
       const address = await getAccount()
-      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/deployd-collections/${address}`, {
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
 
+      if(data.success && data.collection.length<1){
+        setCollections([{
+          name: 'You have not deployed any collection yet',
+          value:''
+        }])
+        return
+      }
+
       if(data.success){
-        const newCollections = data.collections.map((collection)=>{
+        const newCollections = data.collection.map((collection)=>{
           return {
-            name: collection,
-            value: collection
+            name: collection.name,
+            value: collection._id
           }
         })
         setCollections(newCollections)

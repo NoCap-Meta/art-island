@@ -76,7 +76,7 @@ const CreateCollectionComponent = () => {
       _signer: signer
     })
 
-    const voucher = await newVoucher.createVoucher( account, '0xEEdF42C3a1c618317Bb19F9dD182C7e455748443', 123, 1, 1, 1000000, true, account, 2000, 'https://google.com' )
+    const voucher = await newVoucher.createVoucher( account, '0xf57c398ca6eb1831e03806728008127904a7b95d', 1, 4, 1, 1000000, true, account, 200, 'https://google.com' )
 
     const {data:verifyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
       voucher
@@ -88,7 +88,7 @@ const CreateCollectionComponent = () => {
       })
 
     const {data:buyData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/buy-nft`, {
-      value: '0.00001',
+      value: '0.00000000000102',
       voucher,
       isPrimary:true,
       currency:'0x0000000000000000000000000000000000000001'

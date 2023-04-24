@@ -43,16 +43,20 @@ const MyCollectionsComponent = () => {
     if(!accounts || accounts.length === 0){
       return
     }
+
+    const args = {
+      name: item.name,
+      symbol: item.symbol,
+      createrAddress: accounts[0],
+      royalty: +item.royalty*100,
+    }
+    console.log(args)
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/artist/create-transaction`, {
       from:accounts[0],
-      args: {
-        name: item.name,
-        symbol: item.symbol,
-        createrAddress: accounts[0],
-        royalty: +item.royalty*100,
-        token: item.token,
-      }
+      args 
     })
+
+    console.log(data.txObject)
     const signed = await await window.ethereum.request({
       method: 'eth_sendTransaction',
       params: [data.txObject]
@@ -76,8 +80,8 @@ const MyCollectionsComponent = () => {
 
     if(signed){
       const {data} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection/${item._id}`, {
-        isDeployed: true,
-        deployedCollectionAddress
+        deployedCollectionAddress,
+        isDeployed: true
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
