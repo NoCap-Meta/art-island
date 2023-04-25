@@ -1,8 +1,9 @@
 import { MagnetBold, MagnetMedium, MagnetLight, MagnetRegular } from 'pages/_app';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { imageBackgroundOptions } from 'components';
 import { Featured } from 'components';
 import { FooterCommon, TopCollectionSection } from '../Common';
+import axios from 'axios';
 
 const TableHeader = ()=>{
   return (
@@ -35,6 +36,7 @@ const TableRow = ()=>{
 
 const ExplorePageComponent = () => {
   const [selectedTab, setSeletctedTab] = useState("Trending")
+  const [deployedItems, setDeployedItems] = useState([])
   const [options, setOptions] = useState([
     {
       name: "Trending",
@@ -90,6 +92,16 @@ const ExplorePageComponent = () => {
     setOptions(newOptions)
   }
 
+  const getItems = async () => {
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/deployed`)
+    setDeployedItems(data.items)
+
+  }
+
+  useEffect(()=>{
+    getItems()
+  }, [])
+
   const handleSelect = (navigation) => {
     const newNavigations = navigations.map((nav) => {
       if (nav.name === navigation.name) {
@@ -135,7 +147,7 @@ const ExplorePageComponent = () => {
 
         <div>
           <div className="flex items-end mt-[42px] w-[90vw]">
-              <div className="flex xl:flex-nowrap flex-wrap justify-center items-end">
+              <div className="flex flex-wrap items-end justify-center xl:flex-nowrap">
               {
                 options.map((option, index)=>{
                   return (
@@ -180,11 +192,7 @@ const ExplorePageComponent = () => {
         <Featured/>
       </div>
       <div className='explore'>
-        <TopCollectionSection title='Notable Collections'/>
-        <TopCollectionSection title='Trending in Gaming'/>
-        <TopCollectionSection title='Trending in Photography'/>
-        <TopCollectionSection title='Trending in Membership'/>
-        <TopCollectionSection title='Explore Categories'/>
+        <TopCollectionSection items={deployedItems} title='Available Items'/>
       </div>
      <FooterCommon/>
     </>

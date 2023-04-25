@@ -64,8 +64,7 @@ const CreateItemComponent = () => {
   const [previewImage, setPreviewImage] = useState(null)
   const router = useRouter()
 
-  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null
-
+  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null || itemModalData?.collectionId?.length<1 || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions || +itemModalData?.royalty==0
   useEffect(()=>{
     const token = localStorage.getItem('token')
     if(!token){
@@ -240,6 +239,21 @@ const CreateItemComponent = () => {
 
   }
 
+  const handleNumberInput = (e, type, max, min)=>{
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    if(max && +e.target.value>max){
+      e.target.value = max
+    }
+    if(min && +e.target.value<min){
+      e.target.value = min
+    }
+    handleFormDataChange(e, type)
+  }
+  const handleDecicalInput = (e, type)=>{
+    e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    handleFormDataChange(e, type)
+  }
+
 
   return (
     <div className='w-[70%] mt-[3rem]'>
@@ -260,6 +274,11 @@ const CreateItemComponent = () => {
             <input accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
         </div>
         <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
+        <InputField onChange={(e)=>handleFormDataChange(e, 'tokenId')} placeholder={'ID for your Item'}>Item ID</InputField>
+        <InputField onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Maximum Fractions'}>Max Fractions</InputField>
+        <InputField onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Number of Fractions'}>Fractions</InputField>
+        <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
+        <InputField onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField>
         <InputField onChange={(e)=>handleFormDataChange(e, 'externalLink')} desc={'NoCap Network will include a link to this URL on this item\'s detail page, so that users can click to learn more about it. You are welcome to link to your own webpage with more details.'} placeholder={'Item Name'}>External Link</InputField>
         <InputField onChange={(e)=>handleFormDataChange(e, 'desc')} isArea={true} desc={'The description will be included on the item\'s detail page underneath its image. Markdown syntax is supported.'} placeholder={'Provide a detailed description of your item...'}>Description</InputField>
         <div className="mt-[1rem] overflow-visible ">
@@ -273,14 +292,6 @@ const CreateItemComponent = () => {
         <Property onOpenClick={()=>setItemStatsModalOpen(true)} name={'Stats'} desc={'Numerical traits that just show as numbers'} addable imageName={'Chart'}/>
         <Property keyValue={'hasUnlockableContent'} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
         <Property keyValue={'hasSensitiveContent'} name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
-
-        <InputField onChange={(e)=>{
-          //take the value and extract only numbers
-          e.target.value = e.target.value.replace(/[^0-9]/g, '');
-          handleFormDataChange(e, 'supply')
-        }} value={
-          itemModalData.supply
-        } desc={'The number of items that can be minted. No gas cost to you!'} placeholder={'Supply'}>Supply</InputField>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Blockchain</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>
@@ -288,35 +299,12 @@ const CreateItemComponent = () => {
           </p>
           <DropDownInput value={itemModalData.blockchain}  setValue={(e)=>handleFormDataChange(e, 'blockchain', true)} width='w-[100%] mb-[2rem]' options={[
             {
-              name: 'Ethereum',
-              value: 'ethereum'
-            },
-            {
               name: 'Polygon',
               value: 'polygon'
             },
-            {
-              name: 'Binance Smart Chain',
-              value: 'bsc'
-            },
           ]}></DropDownInput>
         </div>
-        <InputField onChange={(e)=>{
-          if(e.target.value === '1'|| e.target.value === 1|| e.target.value === true|| e.target.value === '01'){
-            setItemModalData({
-              ...itemModalData,
-              freezeMetadata: true
-            })
-          }else{
-            setItemModalData({
-              ...itemModalData,
-              freezeMetadata: false
-            })
-          }
-        }} value={
-          itemModalData.freezeMetadata ? '1' : '0'
-        } desc={'Freezing your metadata will allow you to permanently lock and store all of this item\'s content in decentralized file storage.'} placeholder={'1'}>Freeze Metadata</InputField>
-
+        
         <button onClick={()=>setCaptchaModalOpen(true)} disabled={
           isButtonDisabled
         } className={`mt-[3rem] ${isButtonDisabled && 'opacity-50'} ${MagnetMedium.className} w-[13rem] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>{

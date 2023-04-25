@@ -143,6 +143,10 @@ export const useItemModalStore = create(set => ({
     stats: [],
     hasUnlockableContent: false,
     hasSensitiveContent: false,
+    pricePerFraction: 0,
+    fractions: 0,
+    tokenId: '',
+    royalty: 0
   },
   setItemModalData: (value) => set(state => ({ itemModalData: value }))
 }))

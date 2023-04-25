@@ -40,15 +40,18 @@ const settings = {
   ]
 };
 
-const TopCollectionSection = ({title})=>{
+const TopCollectionSection = ({title, items})=>{
+  if(items && items.length<4){
+    settings.slidesToShow = items.length
+  }
   return (
     <div className='w-[90vw] mt-[3rem]'>
       <p className={`${MagnetBold.className} text-[#000000]  text-[24px]`}>{title}</p>
       <div className='w-[90vw] mt-[5px]'>
       <Slider {...settings}>
         {
-          [1,2,3,4,5,6,7,8,9,10].map((item)=>{  
-            return <ItemCard/>
+          ((items && items.length)>0?items:[1,2,3,4,5,6,7,8,9,10]).map((item)=>{  
+            return <ItemCard item={item} isItem={items && items.length>0}/>
           } 
           )
         }

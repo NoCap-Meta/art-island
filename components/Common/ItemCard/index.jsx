@@ -1,10 +1,8 @@
-import { MagnetBold, MagnetLight } from '@/pages/_app'
+import { MagnetBold, MagnetLight, web3 } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item})=>{
+const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisabled, isItem})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
-
-  let isDisabled = (collectionStatus === ('Deployed' || 'Pending Approval'))
 
   return (
     <div style={{
@@ -20,10 +18,10 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item})=>{
         </p>
         {!isCollection && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-          15.2 ETH
+          {isItem && item  && (item.pricePerFraction).toFixed(10) +  ' ETH'||'15.2 ETH'}
           </p>
           <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
-            Best Offer : 14.1 ETH
+            {(isItem && item && `Available ${item.fractions-item.tokenBuyed} of ${item.fractions}`)||'Available 20 of 100'}
           </p>
         </>}
         <div className='flex w-[100%] justify-center'>

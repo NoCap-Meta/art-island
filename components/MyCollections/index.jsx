@@ -111,7 +111,8 @@ const MyCollectionsComponent = () => {
         {
           myCollections.map((item, index) => {
             let status = item.isDeployed? 'Deployed': item.isApproved? 'Deploy Contract': 'Add Items'
-            return <ItemCard item={item} onCollectionClick={() =>!item.isApproved ? (()=>{
+            let isDisabled = status === 'Deployed'
+            return <ItemCard isDisabled={isDisabled} item={item} onCollectionClick={() =>!item.isApproved ? (()=>{
               router.push({
                 pathname: '/create-item',
                 query: {

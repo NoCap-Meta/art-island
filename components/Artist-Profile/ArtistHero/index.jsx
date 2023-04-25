@@ -6,6 +6,7 @@ import {Store} from "utils";
 import DropDownInput from '../../Common/DropDownInput/index';
 import ItemCard from "@/components/Common/ItemCard";
 import axios from "axios";
+import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
 
 const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
 
@@ -25,6 +26,14 @@ const SearchBar = ({setFilterOpen}) => {
     </div>
   )
 }
+
+const DeployItemCard = ({item, handleDeployItem}) => {
+  const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy Contract': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
+  let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status==='Deploying...')
+  return <div>
+    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isCollection collectionStatus={status}  />
+  </div>
+} 
 
 const ArtistHero = () => {
   const {artistProfileOptions:options, setArtistProfileOptions:setOptions} = useArtistProfileOptionsStore()
@@ -50,21 +59,27 @@ const ArtistHero = () => {
     setOptions(newOptions)
   }
 
-  useEffect(()=>{
-    const getItems = async ()=>{
-      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/me`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-
-      if(data.success){
-        setMyItems(data.items)
+  const getItems = async ()=>{
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
+    })
+
+    if(data.success){
+      setMyItems(data.items)
     }
+  }
+
+
+  useEffect(()=>{
 
     getItems()
   },[])
+
+  const handleDeployItem = async (item, setStatus) => {
+    await handleBuyPrimaryNFT(item, getItems, setStatus)
+  }
 
   return (
     <div>
@@ -160,10 +175,11 @@ const ArtistHero = () => {
               <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   myItems.map((item, i)=>{
-                    let status = item.isDeployed? 'Deployed': item.collectionApproved ? item.deployedCollectionAddress? 'Deploy Contract': 'Collection not deployed': 'Pending Approval'
-                    return <div key={i}>
-                      <ItemCard item={item} isCollection collectionStatus={status}  />
-                    </div>
+                    return (
+                      <div key={i}>
+                        <DeployItemCard handleDeployItem={handleDeployItem} item={item} />
+                      </div>
+                    )
                   }
                 )}
               </div>
