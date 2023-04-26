@@ -11,6 +11,7 @@ import AuthChecker from '../components/AuthChecker/index';
 import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { SEO } from '@/components';
+import axios from 'axios';
 
 
 
@@ -25,6 +26,16 @@ if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
   getWeb3();
 }
 
+export async function convertMaticToUsd(amount) {
+  try {
+    const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd');
+    const maticPrice = response.data['matic-network']['usd'];
+    const usdValue = +amount * maticPrice;
+    return usdValue.toFixed(2);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export const MagnetRegular = localFont({
   src: '../public/fonts/Magnat-HeadRegular.woff2',

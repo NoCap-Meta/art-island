@@ -31,7 +31,8 @@ export const useUserStore = create(set => ({
     walletAddress: '',
     website: '',
     twitter: '',
-    instagram: ''
+    instagram: '',
+    boughtItems: [],
   },
   setUser: async (value) => {
     if (!value) {
@@ -43,7 +44,7 @@ export const useUserStore = create(set => ({
       })
 
       if (data.success) {
-        const { displayName, username, bio, walletAddress, google, socials } = data.user
+        const { displayName, username, bio, walletAddress, google, socials, boughtItems } = data.user
         set(state => ({
           user: {
             displayName,
@@ -54,7 +55,8 @@ export const useUserStore = create(set => ({
             profilePic: google.profilePic,
             website: socials.website,
             twitter: socials.twitter,
-            instagram: socials.instagram
+            instagram: socials.instagram,
+            boughtItems
           }
         }))
       }

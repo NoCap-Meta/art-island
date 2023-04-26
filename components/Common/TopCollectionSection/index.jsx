@@ -3,6 +3,9 @@ import { MagnetBold } from 'pages/_app';
 import ItemCard from '../ItemCard';
 import Slider from 'react-slick';
 import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser';
+import { Store } from '@/utils';
+
+const {useUserStore} = Store
 
 const settings = {
   // infinite: true,
@@ -42,9 +45,10 @@ const settings = {
 };
 
 const BuyItemCard = ({item, items})=>{
+  const {user, setUser} = useUserStore()
   const [status, setStatus] = useState('Buy')
   return (
-    <ItemCard collectionStatus={status} onItemBuy={()=>handleBuyNFTUser(item, ()=>{}, setStatus)} item={item} isItem={items && items.length>0}/>
+    <ItemCard collectionStatus={status} onItemBuy={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user)} item={item} isItem={items && items.length>0}/>
   )
 }
 

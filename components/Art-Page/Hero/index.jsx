@@ -18,7 +18,8 @@ const PropertiesCard = () => {
   )
 }
 
-const ArtPageHero = () => {
+
+const ArtPageHero = ({item}) => {
   const [selectedImage, setSelectedImage] = useState('Images/PNG/Gallery1.png')
   const [image, setImage] = useState([
     {
@@ -72,7 +73,7 @@ const ArtPageHero = () => {
       <div className="w-[100vw] mt-[2rem] flex justify-center">
         <div className='w-[90vw] flex xl:flex-row flex-col'>
           <div className='xl:w-[44.5vw] w-[90vw] gap-[1rem] flex xl:flex-row flex-col'>
-            <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
+            {/* <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
               {
                 image.map((item) => {
                   return (
@@ -87,10 +88,10 @@ const ArtPageHero = () => {
                 })
               }
 
-            </div>
+            </div> */}
             <div className='h-[584px] flex flex-col justify-end rounded-xl border-[2px] border-black xl:w-[505px]'>
               <div className='xl:w-[505px] h-[541px] border-t-[2px] border-black' style={{
-                backgroundImage: `url(${selectedImage})`,
+                backgroundImage: `url(${item ? item.image :selectedImage})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -101,24 +102,32 @@ const ArtPageHero = () => {
           </div>
           <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
             <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
-              Jonas Nick Collection
+              {
+                item ? item.collection.name + ' Collection': 'Sample Collection'
+              }
             </p>
             <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
               <img src='Images/SVG/Heart.svg' />
               <img src='Images/SVG/Share.svg' />
             </div>
             <p className={`${MagnetBold.className} text-[36px] leading-[46px]`}>
-              Freedom Transaction NFT
+              {
+                item ? item.name : 'Sample Item'
+              }
             </p>
             <p className={`${MagnetLight.className} text-[16px] opacity-50 leading-[20px]`}>
-              Owned by @nickjonascreator
+              Created by {
+                item && item.collection.createrAddress
+              }
             </p>
             <div className={`w-[100%] rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
               <p className={`${MagnetLight.className} text-[16px] opacity-50 italic`}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.
+                {
+                  item && item.desc
+                }
               </p>
             </div>
-            <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
+            {/* <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Eye-open.svg' />
                 <p className={`${MagnetMedium.className} text-[20px]`}>
@@ -131,17 +140,21 @@ const ArtPageHero = () => {
                   14 favourites
                 </p>
               </div>
-            </div>
+            </div> */}
             <div className='mt-[28px]'>
               <p className={`${MagnetMedium.className} text-[18px] opacity-50 leading-[23px]`}>
                 Current Price
               </p>
               <div className='flex gap-[10px] items-end mt-[6px]'>
                 <p className={`${MagnetBold.className} text-[36px] leading-[46px]`}>
-                  0.25 ETH
+                  {
+                    item && item.pricePerFraction + ' Matic'
+                  }
                 </p>
                 <p className={`${MagnetMedium.className} text-[18px] mb-[5px] opacity-50 leading-[23px]`}>
-                  $437.14
+                  {
+                    item && '$'+item.usdPrice
+                  }
                 </p>
               </div>
             </div>

@@ -1,8 +1,10 @@
 import { MagnetBold, MagnetLight, web3 } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
 
 const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
+  const router = useRouter()
 
   return (
     <div style={{
@@ -18,10 +20,10 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisa
         </p>
         {!isCollection && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-          {isItem && item  && (item.pricePerFraction).toFixed(10) +  ' ETH'||'15.2 ETH'}
+          {isItem && item  && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") +  ' ETH'||'15.2 ETH'}
           </p>
           <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
-            {(isItem && item && `Available ${item.fractions-item.tokenBuyed} of ${item.fractions}`)||'Available 20 of 100'}
+            {(isItem && item && `Available ${item.maxFractions-item.tokenBuyed} of ${item.maxFractions}`)||'Available 20 of 100'}
           </p>
         </>}
         <div className='flex w-[100%] justify-center'>
@@ -35,9 +37,14 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisa
         }
         {
           isItem && (
-            <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+            <div className='w-[100%] flex justify-center gap-[1rem]'>
+              <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>
+              <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              View
+            </button>
+            </div>
           )
         }
         </div>

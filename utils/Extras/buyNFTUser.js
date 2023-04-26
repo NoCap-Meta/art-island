@@ -2,9 +2,9 @@ import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 
-export const handleBuyNFTUser = async (item, getItems, setStatus) => {
+export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user) => {
   setStatus('Deploying...')
-  if (item && (item.tokenBuyed === item.fractions)) {
+  if (item && (item.tokenBuyed === item.maxFractions)) {
     setStatus('Sold Out')
     return
   }
@@ -80,6 +80,17 @@ export const handleBuyNFTUser = async (item, getItems, setStatus) => {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         })
+        console.log(user)
+        const { data: updatedUser } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+          boughtItems: [...user.boughtItems, item._id]
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        if (updatedUser?.success) {
+          setUser()
+        }
 
         if (data.success) {
           setStatus('Purchased')
