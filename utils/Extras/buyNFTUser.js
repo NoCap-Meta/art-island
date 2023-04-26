@@ -14,7 +14,6 @@ export const handleBuyNFTUser = async (item, getItems, setStatus) => {
     return
   }
   const account = accounts[0]
-
   const voucher = item.voucher
 
   //get total amount
@@ -38,7 +37,8 @@ export const handleBuyNFTUser = async (item, getItems, setStatus) => {
     value: web3.utils.fromWei(totalAmountData.totalAmount[1], 'ether'),
     voucher,
     isPrimary: true,
-    currency: '0x0000000000000000000000000000000000000001'
+    currency: '0x0000000000000000000000000000000000000001',
+    buyer: account
   }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`

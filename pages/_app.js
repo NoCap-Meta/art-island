@@ -12,14 +12,17 @@ import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { SEO } from '@/components';
 
+
+
 export let web3;
 export let ethersProvider;
 if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-  await window.ethereum.request({ method: 'eth_requestAccounts' });
-  web3 = new Web3(window.ethereum);
-  ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-} else {
-  // We are on the server *OR* the user is not running metamask
+  const getWeb3 = async () => {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    web3 = new Web3(window.ethereum);
+    ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+  }
+  getWeb3();
 }
 
 
