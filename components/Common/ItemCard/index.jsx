@@ -1,7 +1,7 @@
 import { MagnetBold, MagnetLight, web3 } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisabled, isItem})=>{
+const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
 
   return (
@@ -29,6 +29,13 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisa
         {
           isCollection && (
             <button disabled={isDisabled} onClick={onCollectionClick} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              {collectionStatus}
+            </button>
+          )
+        }
+        {
+          isItem && (
+            <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>
           )
