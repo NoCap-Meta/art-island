@@ -22,6 +22,7 @@ export const ContextProvider = ({children}) => {
         setAuthToken(token)
         const decoded = jwt_decode(token)
         setUser(decoded?.user)
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
         const accounts = await web3.eth.getAccounts()
         //if no accounts
         if(!accounts || accounts.length === 0){

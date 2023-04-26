@@ -8,6 +8,7 @@ export const useGetWalletAddress = () => {
 
     //using useMemo in getWalletAddress
     const getWalletAddress = useCallback(async () => {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
         const accounts = await web3.eth.getAccounts()
         const authToken = localStorage.getItem('token')
         if (!authToken) {

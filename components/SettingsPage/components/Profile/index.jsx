@@ -28,6 +28,7 @@ const ProfileSection = () => {
 
   useEffect(()=>{
     const getAccount = async ()=>{
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       setUser({
         ...user,
@@ -47,6 +48,7 @@ const ProfileSection = () => {
       return
     }
     const getAccount = async ()=>{
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length === 0){
         setActiveLoginModal({

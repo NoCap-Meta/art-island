@@ -77,6 +77,7 @@ const CreateItemComponent = () => {
 
     //check web3 account
     const getAccount = async ()=>{
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length<1){
         setActiveLoginModal({

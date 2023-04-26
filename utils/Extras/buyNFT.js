@@ -8,6 +8,7 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     setStatus('Sold Out')
     return
   }
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
   const accounts = await web3.eth.getAccounts()
   if (!accounts || accounts.length === 0) {
     return

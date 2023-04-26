@@ -40,7 +40,6 @@ const NavBar = ({isLogined}) => {
   }
 
   const handleGoToProfile = (name)=>{
-                
     setSelectedArtistProfileTab(name)
     
     let newArtistProfileOptions = artistProfileOptions.map((item)=>{

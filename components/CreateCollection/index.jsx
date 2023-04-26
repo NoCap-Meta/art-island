@@ -50,6 +50,7 @@ const CreateCollectionComponent = () => {
 
   const handleSubmit = async () => {
     //check if account is there
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){
       return

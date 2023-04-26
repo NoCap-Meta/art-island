@@ -71,6 +71,7 @@ export const useWalletStore = create(set => ({
   setWalletAddress: async (value) => {
     //get account from metamask
     if (!value && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       web3.eth.getAccounts().then(accounts => {
         set(state => ({ walletAddress: accounts[0] }))
       })

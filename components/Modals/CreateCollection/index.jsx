@@ -86,6 +86,7 @@ export default function CreateCollectionModal() {
   const handleSubmit = async ()=>{
     setButtonTitle('Submitting...')
     const location = await handleUpload()
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){
       setActiveLoginModal({

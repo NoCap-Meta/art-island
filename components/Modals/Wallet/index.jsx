@@ -87,7 +87,7 @@ export default function Wallet() {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -98,7 +98,7 @@ export default function Wallet() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className=" transform overflow-hidden bg-[#F5DFC2] justify-between flex flex-col items-center h-[75vh] w-[70vw] p-6 text-left align-middle shadow-xl transition-all">
-                    <div className=' flex flex-col items-center'>
+                    <div className='flex flex-col items-center '>
                       <ModalNavigation/>
                       <div className='w-[80%] mt-[23px] flex items-center flex-col'>
                         <p className={`${MagnetLight.className} text-[72px] leading-[91px] text-center`}>
