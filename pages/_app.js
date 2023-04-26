@@ -15,7 +15,7 @@ import { SEO } from '@/components';
 export let web3;
 export let ethersProvider;
 if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-  // We are in the browser and metamask is running.
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
   web3 = new Web3(window.ethereum);
   ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
 } else {
