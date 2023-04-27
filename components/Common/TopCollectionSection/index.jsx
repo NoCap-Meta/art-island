@@ -48,21 +48,23 @@ const BuyItemCard = ({item, items})=>{
   const {user, setUser} = useUserStore()
   const [status, setStatus] = useState('Buy')
   return (
-    <ItemCard collectionStatus={status} onItemBuy={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user)} item={item} isItem={items && items.length>0}/>
+    <ItemCard collectionStatus={status} onItemBuy={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)} item={item} isItem={items && items.length>0}/>
   )
 }
 
 const TopCollectionSection = ({title, items})=>{
   if(items && items.length<4){
     settings.slidesToShow = items.length
+  }else{
+    settings.slidesToShow = 4
   }
   return (
     <div className='w-[90vw] mt-[3rem]'>
       <p className={`${MagnetBold.className} text-[#000000]  text-[24px]`}>{title}</p>
-      <div className='w-[90vw] mt-[5px]'>
+      {items && items.length>4 && <div className='w-[90vw] mt-[5px]'>
       <Slider {...settings}>
         {
-          ((items && items.length)>0?items:[1,2,3,4,5,6,7,8,9,10]).map((item)=>{  
+          items.map((item)=>{  
             return (
               <BuyItemCard item={item} items={items}/>
             )
@@ -70,7 +72,17 @@ const TopCollectionSection = ({title, items})=>{
           )
         }
       </Slider>
-      </div>
+      </div>}
+      {items && items.length<=4 && <div className='w-[90vw] mt-[5px] flex gap-[2rem]'>
+        {
+          items.map((item)=>{  
+            return (
+              <BuyItemCard item={item} items={items}/>
+            )
+          } 
+          )
+        }
+      </div>}
     </div>
   )
 }

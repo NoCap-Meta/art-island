@@ -2,7 +2,7 @@ import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 
-export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user) => {
+export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user, fractions) => {
   setStatus('Deploying...')
   if (item && (item.tokenBuyed === item.maxFractions)) {
     setStatus('Sold Out')
@@ -20,6 +20,7 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user)
   const { data: totalAmountData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/calculate-total-amount`, {
     voucher,
     isPrimary: true,
+    fractions
   }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -36,6 +37,7 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user)
   const { data: buyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/buy-nft`, {
     value: web3.utils.fromWei(totalAmountData.totalAmount[1], 'ether'),
     voucher,
+    fractions,
     isPrimary: true,
     currency: '0x0000000000000000000000000000000000000001',
     buyer: account

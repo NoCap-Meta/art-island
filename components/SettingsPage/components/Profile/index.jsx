@@ -71,11 +71,12 @@ const ProfileSection = () => {
     })
 
     if(data?.success){
-      const { displayName, username, bio, walletAddress, google, socials } = data.user
+      const { displayName, username, bio, google, socials,boughtItems } = data.user
       setUser({
         displayName,
         username,
         shortBio: bio,
+        boughtItems,
         email: google.email,
         profilePic: google.profilePic,
         website: socials.website,

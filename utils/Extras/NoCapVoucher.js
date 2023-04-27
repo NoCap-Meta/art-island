@@ -9,6 +9,7 @@ class NoCapVoucher {
   constructor(data) {
     const { _contract } = data;
     this.contract = _contract;
+    console.log(_contract._address)
   }
 
   async _signingDomain() {
@@ -26,13 +27,12 @@ class NoCapVoucher {
   }
 
 
-  async createVoucher(seller, NFTAddress, tokenId, maxFractions, fractions, pricePerFraction, toMint, royaltyKeeper, royaltyFees, tokenURI) {
+  async createVoucher(seller, NFTAddress, tokenId, maxFractions, pricePerFraction, toMint, royaltyKeeper, royaltyFees, tokenURI) {
     const voucher = {
       seller,
       NFTAddress,
       tokenId,
       maxFractions,
-      fractions,
       pricePerFraction,
       toMint,
       royaltyKeeper,
@@ -47,7 +47,6 @@ class NoCapVoucher {
         { name: "NFTAddress", type: "address" },
         { name: "tokenId", type: "uint256" },
         { name: "maxFractions", type: "uint256" },
-        { name: "fractions", type: "uint256" },
         { name: "pricePerFraction", type: "uint256" },
         { name: "toMint", type: "bool" },
         { name: "royaltyKeeper", type: "address" },

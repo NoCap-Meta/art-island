@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { web3 } from '@/pages/_app';
+import { convertMaticToUsd, web3 } from '@/pages/_app';
 
 //manage cart open
 export const useCartStore = create(set => ({
@@ -24,6 +24,7 @@ export const useCreateItemStore = create(set => ({
 export const useUserStore = create(set => ({
   user: {
     displayName: '',
+    id: '',
     username: '',
     shortBio: '',
     profilePic: '',
@@ -44,11 +45,12 @@ export const useUserStore = create(set => ({
       })
 
       if (data.success) {
-        const { displayName, username, bio, walletAddress, google, socials, boughtItems } = data.user
+        const { displayName, username, _id, bio, walletAddress, google, socials, boughtItems } = data.user
         set(state => ({
           user: {
             displayName,
             username,
+            id: _id,
             bio: bio,
             walletAddress,
             email: google.email,
@@ -176,6 +178,22 @@ export const useCaptchaModalStore = create(set => ({
 export const useItemSubmittedModal = create(set => ({
   itemSubmittedModalOpen: false,
   setItemSubmittedModalOpen: (value) => set(state => ({ itemSubmittedModalOpen: value }))
+}))
+
+//state to manage selected item
+export const useSelectedItemStore = create(set => ({
+  selectedItem: null,
+  setSelectedItem: async (id, value) => {
+    if (value) {
+      set(state => ({ selectedItem: value }))
+    } else {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
+      if (data.success) {
+        const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
+        set({ selectedItem: { ...data.item, usdPrice } })
+      }
+    }
+  }
 }))
 
 

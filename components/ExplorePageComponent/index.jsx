@@ -37,6 +37,8 @@ const TableRow = ()=>{
 const ExplorePageComponent = () => {
   const [selectedTab, setSeletctedTab] = useState("Trending")
   const [deployedItems, setDeployedItems] = useState([])
+  const [showingItems, setShowingItems] = useState([])
+  const [selectedNavigation, setSelectedNavigation] = useState('')
   const [options, setOptions] = useState([
     {
       name: "Trending",
@@ -51,28 +53,32 @@ const ExplorePageComponent = () => {
     {
       name: 'All',
       isActive: true,
+      value:''
     },
     {
       name: 'Art',
       isActive: false,
-    },
-    {
-      name: 'Gaming',
-      isActive: false,
+      value:'art'
     },
     {
       name: 'Photography',
       isActive: false,
-    },
-    {
-      name: 'Membership',
-      isActive: false,
-    },
-    {
-      name: 'PFPs',
-      isActive: false,
-    },
+      value:'photography'
+    }
   ])
+
+  useEffect(()=>{
+      if(deployedItems.length>0){
+        const newShowingItems = deployedItems.filter((item)=>{
+          if(selectedNavigation === ''){
+            return true
+          }else{
+            return item.category === selectedNavigation
+          }
+        })
+        setShowingItems(newShowingItems)
+      }
+  },[deployedItems,selectedNavigation])
 
   const handleSelectTab = (name) => {
     const newOptions = options.map((option)=>{
@@ -95,7 +101,6 @@ const ExplorePageComponent = () => {
   const getItems = async () => {
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/deployed`)
     setDeployedItems(data.items)
-
   }
 
   useEffect(()=>{
@@ -117,6 +122,7 @@ const ExplorePageComponent = () => {
       }
     })
     setNavigations(newNavigations)
+    setSelectedNavigation(navigation.value)
   }
 
   return (
@@ -192,7 +198,7 @@ const ExplorePageComponent = () => {
         <Featured/>
       </div>
       <div className='explore'>
-        <TopCollectionSection items={deployedItems} title='Available Items'/>
+        <TopCollectionSection items={showingItems} title='Available Items'/>
       </div>
      <FooterCommon/>
     </>

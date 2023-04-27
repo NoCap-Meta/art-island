@@ -3,26 +3,17 @@ import { convertMaticToUsd, MagnetMedium } from 'pages/_app';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Store } from 'utils';
 
-const ArtPage = () => {
+const { useSelectedItemStore } = Store
+
+const ArtPage = ({ item }) => {
   const router = useRouter()
-  const { id } = router.query
-  const [item, setItem] = useState(null)
+  const { selectedItem, setSelectedItem } = useSelectedItemStore()
 
   useEffect(() => {
-    const getItem = async () => {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
-      if (data.success) {
-        const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
-
-        setItem({ ...data.item, usdPrice })
-      }
-    }
-
-    if (id) {
-      getItem()
-    }
-  }, [id])
+    setSelectedItem(router.query.id, item)
+  }, [])
 
   return (
     <div>
@@ -34,5 +25,25 @@ const ArtPage = () => {
     </div>
   )
 }
+
+export const getServerSideProps = async (context) => {
+  const { id } = context.query
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
+  console.log(data)
+  if (data.success) {
+    const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
+    return {
+      props: {
+        item: { ...data.item, usdPrice }
+      }
+    }
+  }
+  return {
+    props: {
+      item: null
+    }
+  }
+}
+
 
 export default ArtPage

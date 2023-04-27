@@ -1,6 +1,12 @@
+import { useContext } from '@/utils/Context'
+import { Store } from '@/utils'
+import axios from 'axios'
 import { NavBar } from 'components'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app'
 import { useState } from 'react'
+import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser'
+
+const {useUserStore,useSelectedItemStore} = Store
 
 const PropertiesCard = () => {
   return (
@@ -19,52 +25,33 @@ const PropertiesCard = () => {
 }
 
 
-const ArtPageHero = ({item}) => {
+const ArtPageHero = () => {
   const [selectedImage, setSelectedImage] = useState('Images/PNG/Gallery1.png')
-  const [image, setImage] = useState([
-    {
-      id: 1,
-      image: 'Images/PNG/Gallery1.png',
-      selected: true
-    },
-    {
-      id: 2,
-      image: 'Images/PNG/Gallery2.png',
-      selected: false
-    },
-    {
-      id: 3,
-      image: 'Images/PNG/Gallery3.png',
-      selected: false
-    },
-    {
-      id: 4,
-      image: 'Images/PNG/Gallery4.png',
-      selected: false
-    },
-    {
-      id: 5,
-      image: 'Images/PNG/Gallery5.png',
-      selected: false
-    }
-  ])
+  const {activeModal, setActiveModal} = useContext()
+  const {selectedItem:item, setSelectedItem} = useSelectedItemStore()
+  const {user, setUser} = useUserStore()
+  const [status, setStatus] = useState('Buy Now')
 
-  const handleImage = (id) => {
-    const newImage = image.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          selected: true
+  let isLiked = item && item.likedUsers.includes(user.id)
+
+  const handleLike = async ()=>{
+    //search for user token
+    if(!localStorage.getItem('token')){
+      setActiveModal({
+        ...activeModal,
+        google:true
+      })
+    }else{
+      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/like/${item._id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-      } else {
-        return {
-          ...item,
-          selected: false
-        }
+      })
+
+      if(data.success){
+        setSelectedItem(item._id)
       }
-    })
-    setImage(newImage)
-    setSelectedImage(newImage[id - 1].image)
+    }
   }
 
 
@@ -103,16 +90,16 @@ const ArtPageHero = ({item}) => {
           <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
             <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
               {
-                item ? item.collection.name + ' Collection': 'Sample Collection'
+                item ? item.collection.name + ' Collection': ''
               }
             </p>
             <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
-              <img src='Images/SVG/Heart.svg' />
-              <img src='Images/SVG/Share.svg' />
+              <img src={isLiked ?'Images/SVG/HeartFilled.svg' : 'Images/SVG/Heart.svg'} className={`cursor-pointer`} onClick={handleLike} />
+              {/* <img src='Images/SVG/Share.svg' /> */}
             </div>
             <p className={`${MagnetBold.className} text-[36px] leading-[46px]`}>
               {
-                item ? item.name : 'Sample Item'
+                item ? item.name : ''
               }
             </p>
             <p className={`${MagnetLight.className} text-[16px] opacity-50 leading-[20px]`}>
@@ -127,20 +114,20 @@ const ArtPageHero = ({item}) => {
                 }
               </p>
             </div>
-            {/* <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
+            <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Eye-open.svg' />
                 <p className={`${MagnetMedium.className} text-[20px]`}>
-                  243 views
+                  Available {item && (item.maxFractions - item.tokenBuyed)} of {item && item.maxFractions}
                 </p>
               </div>
               <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Heart.svg' />
                 <p className={`${MagnetMedium.className} text-[20px]`}>
-                  14 favourites
+                  {item && item.likes} favourites
                 </p>
               </div>
-            </div> */}
+            </div>
             <div className='mt-[28px]'>
               <p className={`${MagnetMedium.className} text-[18px] opacity-50 leading-[23px]`}>
                 Current Price
@@ -159,10 +146,10 @@ const ArtPageHero = ({item}) => {
               </div>
             </div>
             <div className='mt-[20px]'>
-              <div className='w-[247px] h-[52px] bg-black flex items-center gap-[10px] rounded-xl justify-center'>
+              <div onClick={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)} className='w-[247px] h-[52px] bg-black cursor-pointer flex items-center gap-[10px] rounded-xl justify-center'>
                 <img src='Images/SVG/Cart.svg' />
                 <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
-                  Buy Now
+                  {status}
                 </p>
               </div>
               <div className='w-[100%] flex justify-between mt-[20px]'>

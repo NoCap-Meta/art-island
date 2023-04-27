@@ -15,6 +15,15 @@ const dropdownOptions = [{
   value: '0x66D9512e6Cf45ba95586a8E7E1544Cef71521f08'
 },
 ]
+const categoryOptions = [{
+  name: 'Art',
+  value: 'art'
+},
+{
+  name:'Photography',
+  value:'photography'
+}
+]
 
 
 export default function CreateCollectionModal() {
@@ -30,7 +39,8 @@ export default function CreateCollectionModal() {
     royalty: '',
     token: dropdownOptions[0].value,
     tokenType: 'single',
-    logo:''
+    logo:'',
+    category:categoryOptions[0].value
   })
 
   function closeModal() {
@@ -192,6 +202,12 @@ let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0 
                               Select Token
                             </p>
                             <DropDownInput setValue={(value)=>handleChange(value, 'token', true)} width={'w-[100%]'} options={dropdownOptions}>Category</DropDownInput>
+                        </div>
+                        <div className="mt-[1rem] overflow-visible">
+                            <p className={`${MagnetMedium.className} mb-[5px] text-[16px] text-left`}>
+                              Category
+                            </p>
+                            <DropDownInput setValue={(value)=>handleChange(value, 'category', true)} width={'w-[100%]'} options={categoryOptions}>Category</DropDownInput>
                         </div>
                       </div>
                     </div>

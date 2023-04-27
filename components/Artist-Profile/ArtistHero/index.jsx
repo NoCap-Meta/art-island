@@ -8,7 +8,7 @@ import ItemCard from "@/components/Common/ItemCard";
 import axios from "axios";
 import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
 
-const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
+const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore} = Store
 
 
 
@@ -31,7 +31,7 @@ const DeployItemCard = ({item, handleDeployItem}) => {
   const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy Contract': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status==='Deploying...')
   return <div>
-    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isCollection collectionStatus={status}  />
+    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isItem collectionStatus={status}  />
   </div>
 } 
 
@@ -40,6 +40,9 @@ const ArtistHero = () => {
   const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
   const [filterOpen, setFilterOpen] = useState(false)
   const [myItems, setMyItems] = useState([])
+  const [boughtItems, setBoughtItems] = useState([])
+  const [likedItems, setLikedItems] = useState([])
+  const {user, setUser} = useUserStore()
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -65,6 +68,19 @@ const ArtistHero = () => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
+    const {data:likedItems} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/liked-items`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    const {data: boughtData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/get-items-by-ids`,{
+      ids: user.boughtItems
+    })
+
+    setLikedItems(likedItems.items)
+
+    setBoughtItems(boughtData.items)
 
     if(data.success){
       setMyItems(data.items)
@@ -126,13 +142,13 @@ const ArtistHero = () => {
       <div className="flex md:flex-row flex-col md:w-[90vw] md:items-start items-center gap-[2rem] md:justify-between">
         {filterOpen && <Filter/>}
         {selectedTab==="Featured" && <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
-                {
+                {/* {
                   Array.from({length:10}).map((e, i)=>{
                     return (<div key={i}>
                       <ItemCard/>
                     </div>)
                   })
-                }
+                } */}
             </div>}
         </div>
           {
@@ -178,6 +194,36 @@ const ArtistHero = () => {
                     return (
                       <div key={i}>
                         <DeployItemCard handleDeployItem={handleDeployItem} item={item} />
+                      </div>
+                    )
+                  }
+                )}
+              </div>
+            )
+          }
+          {
+            selectedTab==='Collected' && (
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+                {
+                  boughtItems.map((item, i)=>{
+                    return (
+                      <div key={i}>
+                        <ItemCard item={item}/>
+                      </div>
+                    )
+                  }
+                )}
+              </div>
+            )
+          }
+          {
+            selectedTab==='Favourites' && (
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+                {
+                  likedItems.map((item, i)=>{
+                    return (
+                      <div key={i}>
+                        <ItemCard item={item}/>
                       </div>
                     )
                   }

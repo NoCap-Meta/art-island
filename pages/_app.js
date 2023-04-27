@@ -18,12 +18,10 @@ import axios from 'axios';
 export let web3;
 export let ethersProvider;
 if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-  const getWeb3 = async () => {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    web3 = new Web3(window.ethereum);
-    ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-  }
-  getWeb3();
+
+  web3 = new Web3(window.ethereum);
+  ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+
 }
 
 export async function convertMaticToUsd(amount) {

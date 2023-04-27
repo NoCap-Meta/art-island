@@ -18,7 +18,7 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisa
         <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
           {(item && (item.symbol||item.externalLink))|| 'Musical Birds Freeway Collection'}
         </p>
-        {!isCollection && <>
+        {!isCollection && isItem && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
           {isItem && item  && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") +  ' ETH'||'15.2 ETH'}
           </p>

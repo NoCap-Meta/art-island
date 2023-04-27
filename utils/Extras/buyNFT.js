@@ -52,7 +52,7 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
 
 
 
-  const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, 12, item.maxFractions, item.fractions, item.pricePerFraction * (10 ** 18), true, account, +item.royalty * 100, item.ipfsLink || item.ipfsLink || ipfsLink.url)
+  const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, 12, item.maxFractions, item.pricePerFraction * (10 ** 18), true, account, +item.royalty * 100, item.ipfsLink || ipfsLink.url)
 
   const { data: verifyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
     voucher
