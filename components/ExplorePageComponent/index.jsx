@@ -135,7 +135,7 @@ const ExplorePageComponent = () => {
             })
           }
         </div>
-        <div style={{
+        {/* <div style={{
           ...imageBackgroundOptions,
           backgroundImage: 'url(Images/PNG/HeroImage.png)',
         }} className='w-[90vw] mt-[2rem] overflow-visible rounded-lg flex px-[2rem] items-end pb-[2rem] h-[50vh]'>
@@ -149,8 +149,10 @@ const ExplorePageComponent = () => {
               <p className={`${MagnetRegular.className} overflow-visible text-white tracking-wide text-[16px]`}>View Collection</p>
             </button>
           </div>
+        </div> */}
+        <div className='explore'>
+          <TopCollectionSection items={showingItems} title='Available Items'/>
         </div>
-
         <div>
           <div className="flex items-end mt-[42px] w-[90vw]">
               <div className="flex flex-wrap items-end justify-center xl:flex-nowrap">
@@ -173,7 +175,7 @@ const ExplorePageComponent = () => {
               }
               </div>
               <div className="w-[80vw]">
-                <div className={`w-full h-[2px] opacity-20 mt-[15px] bg-black`}/>
+                <div className={`w-full h-[2px] opacity-20 bg-black`}/>
               </div>
           </div>
           <div className='flex w-[90vw] mt-[2rem] gap-[5rem]'>
@@ -197,9 +199,7 @@ const ExplorePageComponent = () => {
       <div className='mt-[2rem]'>
         <Featured/>
       </div>
-      <div className='explore'>
-        <TopCollectionSection items={showingItems} title='Available Items'/>
-      </div>
+      
      <FooterCommon/>
     </>
   )

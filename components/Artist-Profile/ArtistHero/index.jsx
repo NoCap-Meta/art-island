@@ -28,10 +28,10 @@ const SearchBar = ({setFilterOpen}) => {
 }
 
 const DeployItemCard = ({item, handleDeployItem}) => {
-  const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy Contract': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
+  const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status==='Deploying...')
   return <div>
-    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isItem collectionStatus={status}  />
+    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isCollection collectionStatus={status}  />
   </div>
 } 
 
