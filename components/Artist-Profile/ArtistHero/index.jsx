@@ -1,4 +1,4 @@
-import { ArtistHeader, TableCell, Filter } from "components"
+import { ArtistHeader, TableCell, Filter,DeliverModal } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
@@ -8,7 +8,7 @@ import ItemCard from "@/components/Common/ItemCard";
 import axios from "axios";
 import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
 
-const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore} = Store
+const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore,useDeliverableModalStore} = Store
 
 
 
@@ -43,6 +43,7 @@ const ArtistHero = () => {
   const [boughtItems, setBoughtItems] = useState([])
   const [likedItems, setLikedItems] = useState([])
   const {user, setUser} = useUserStore()
+  const {deliverableModalOpen, setDeliverableModalOpen} = useDeliverableModalStore()
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -206,9 +207,10 @@ const ArtistHero = () => {
               <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   boughtItems.map((item, i)=>{
+                    const status = 'Deliver'
                     return (
                       <div key={i}>
-                        <ItemCard item={item}/>
+                        <ItemCard onItemBuy={()=>setDeliverableModalOpen(true)} collectionStatus={status} isBoughtItem item={item}/>
                       </div>
                     )
                   }
@@ -232,6 +234,7 @@ const ArtistHero = () => {
             )
           }
       </div>
+      <DeliverModal/>
     </div>
   )
 }

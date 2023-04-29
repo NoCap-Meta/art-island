@@ -64,7 +64,12 @@ const ExplorePageComponent = () => {
       name: 'Photography',
       isActive: false,
       value:'photography'
-    }
+    },
+    {
+      name: 'Real Estate',
+      isActive: false,
+      value:'real-estate'
+    },
   ])
 
   useEffect(()=>{

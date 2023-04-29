@@ -1,7 +1,7 @@
 import { MagnetBold } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 
-const DropDownInput = ({options, width, preIcon, setValue, value})=>{
+const DropDownInput = ({options, width, preIcon, setValue, value, onChange=()=>{}})=>{
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(options[0])
 
@@ -29,6 +29,7 @@ const DropDownInput = ({options, width, preIcon, setValue, value})=>{
               options.map((option, index)=>{
                 return (
                   <p onClick={()=>{
+                    onChange(option)
                     setSelected(option)
                     setIsOpen(false)
                   }} key={index} className={`${MagnetBold.className} w-[100%] cursor-pointer text-[14px] h-[2.5rem] flex items-center leading-[18px] ml-[1rem] text-[#000000]`}>{option}</p>
@@ -52,6 +53,7 @@ const DropDownInput = ({options, width, preIcon, setValue, value})=>{
                 return (
                   <p onClick={()=>{
                     setSelected(option)
+                    onChange(option.value)
                     setValue(option.value)
                     setIsOpen(false)
                   }} key={index} className={`${MagnetBold.className} w-[100%] cursor-pointer text-[14px] h-[2.5rem] flex items-center leading-[18px] ml-[1rem] text-[#000000]`}>{option.name}</p>

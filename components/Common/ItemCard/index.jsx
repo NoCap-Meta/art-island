@@ -2,7 +2,7 @@ import { MagnetBold, MagnetLight, web3 } from '@/pages/_app'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 
-const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisabled, isItem, onItemBuy})=>{
+const ItemCard = ({isCollection,onCollectionClick,collectionStatus,isBoughtItem, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
   const router = useRouter()
 
@@ -48,6 +48,18 @@ const ItemCard = ({isCollection,onCollectionClick,collectionStatus, item, isDisa
             </button>
               <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               View
+            </button>
+            </div>
+          )
+        }
+         {
+          isBoughtItem && (
+            <div className='w-[100%] flex justify-center gap-[1rem]'>
+            <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              {collectionStatus}
+            </button>
+              <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              Relist
             </button>
             </div>
           )

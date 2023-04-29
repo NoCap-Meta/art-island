@@ -1,93 +1,10 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { DropDownInput } from '../Common';
+import axios from 'axios';
 
 
-const Table = ()=>{
-  const [data, setData] = useState([
-    {
-      id:1,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:2,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'-22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:3,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:4,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:5,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'-22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:6,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:7,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'-22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:8,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:9,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'-22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    },
-    {
-      id:10,
-      collection:'Musical Birds Freeway Collection ',
-      volume:'10.9 ETH',
-      change:'22.7%',
-      price:'0.2 ETH',
-      sales:'464'
-    }
-  ])
-
-
+const Table = ({data=[]})=>{
   return (
     <>
       <div className='w-[100%] justify-between flex'>
@@ -132,7 +49,7 @@ const TableRow = ({item})=>{
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>{item.id}</p>
         </div>
         <div className='w-[25%] flex gap-[1rem] items-center'>
-          <img src='Images/PNG/Gallery4.png' className='w-[55px] rounded-md h-[55px]'/>
+          <img src={item.image} className='w-[55px] rounded-md h-[55px]'/>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
             {item.collection}
           </p>
@@ -160,7 +77,7 @@ const TableRow = ({item})=>{
           </p>
         </div>
         <div className='w-[5%]'>
-          <img src='Images/SVG/Star1.svg' className='w-[20px] h-[20px]'/>
+          {/* <img src='Images/SVG/Star1.svg' className='w-[20px] h-[20px]'/> */}
         </div>
     </div>
   )
@@ -168,6 +85,10 @@ const TableRow = ({item})=>{
 
 const CollectionStatsComponent = () => {
   const [selectedTab, setSeletctedTab] = useState("Trending")
+  const [categories, setCategories] = useState(['All'])
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [visibleData, setVisibleData] = useState([])
+  const [data, setData] = useState([])
   const [options, setOptions] = useState([
     {
       name: "Trending",
@@ -181,22 +102,27 @@ const CollectionStatsComponent = () => {
 
   const [timePeriod, setTimePeriod] = useState([
     {
-      name:"1H",
-      selected:true
-    },
-    {
-      name:"6H",
-      selected:false
-    },
-    {
       name:"24H",
-      selected:false
+      selected:true
     },
     {
       name:"7D",
       selected:false
     }
   ])
+
+  useEffect(()=>{
+    if(data.length > 0){
+      const newData = data.filter((item)=>{
+        if(selectedCategory === 'All'){
+          return true
+        }else{
+          return item.category === selectedCategory.toLowerCase()
+        }
+      })
+      setVisibleData(newData)
+    }
+  },[selectedCategory, data])
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -233,13 +159,44 @@ const CollectionStatsComponent = () => {
     setTimePeriod(newTimePeriod)
 
   }
+
+  useEffect(()=>{
+    const getCollections = async ()=>{
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`)
+      const {items} = data
+      const newData = items.map((item, index)=>{
+        if(!item.isDeployed) return null
+        return {
+          id:index+1,
+          collection:item.name,
+          volume:item.maxFractions,
+          change:'0%',
+          price:`${item.pricePerFraction} ETH`,
+          sales:item.tokenBuyed,
+          image: item.image,
+          category:item.collection.category
+        }
+      })
+      setData(newData)
+
+      let categories = [...new Set(items.map((item)=>item.collection.category))]
+      categories = categories.map((item)=>item.charAt(0).toUpperCase() + item.slice(1))
+      categories =categories.filter((item)=>item!==null && item!==undefined && item!=='')
+      categories.unshift('All')
+      setCategories(categories)
+    }
+
+    //
+
+    getCollections()
+  },[])
   return (
     <div className='w-[90vw]'>
       <div className='mt-[3rem] w-[100%]'>
         <p className={`text-[40px] ${MagnetBold.className} h-[3rem] leading-[41px] text-[#000000]`}>Collection Stats</p>
       </div>
       <div className="flex items-end mt-[42px] w-[90vw]">
-          <div className="flex xl:flex-nowrap flex-wrap justify-center items-end">
+          <div className="flex flex-wrap items-end justify-center xl:flex-nowrap">
           {
             options.map((option, index)=>{
               return (
@@ -264,21 +221,14 @@ const CollectionStatsComponent = () => {
       </div>
       <div className='mt-[20px] justify-between flex w-[100%] overflow-visible'>
           <div className='flex gap-[20px] overflow-visible'>
-            <DropDownInput options={['All Categories', 'Favoruites', 'Starred']}/>
+            <DropDownInput onChange={(e)=>setSelectedCategory(e)} options={categories}/>
             
             <DropDownInput width={'w-[30rem]'} options={[
               'All Chains',
-              'Ethereum',
-              'Binance Smart Chain',
               'Polygon',
-              'Solana',
-              'Avalanche',
-              'Fantom',
-              'Harmony',
-              'xDai',
             ]}/>
           </div>
-          <div className='rounded-md overflow-hidden flex'>
+          <div className='flex overflow-hidden rounded-md'>
             {
               timePeriod.map((e)=>{
                 return (
@@ -292,7 +242,7 @@ const CollectionStatsComponent = () => {
           </div>
       </div>
       <div className='mt-[42px]  w-[100%]'>
-        <Table/>
+        <Table data={visibleData}/>
       </div>
     </div>
   )

@@ -27,6 +27,7 @@ import AddLevelsModals from './Modals/CreateItemModal/AddLevelsModal';
 import AddStatsModal from './Modals/CreateItemModal/AddStatsModal';
 import CaptchaModal from './Modals/CaptchaModal/index';
 import ItemSubmittedModal from './Modals/ItemSubmittedModal/index';
+import DeliverModal from './Modals/DeliverModal/index';
 
 
 export const imageBackgroundOptions = {
@@ -72,5 +73,6 @@ export {
   AddLevelsModals,
   AddStatsModal,
   CaptchaModal,
-  ItemSubmittedModal
+  ItemSubmittedModal,
+  DeliverModal
 };

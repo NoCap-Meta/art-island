@@ -196,6 +196,12 @@ export const useSelectedItemStore = create(set => ({
   }
 }))
 
+//state to manage open state of deliverable modal
+export const useDeliverableModalStore = create(set => ({
+  deliverableModalOpen: false,
+  setDeliverableModalOpen: (value) => set(state => ({ deliverableModalOpen: value }))
+}))
+
 
 
 
