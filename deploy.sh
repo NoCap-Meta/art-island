@@ -17,6 +17,12 @@ npm install || { echo "Error: Could not install dependencies"; exit 1; }
 echo "Building the project"
 npm run build || { echo "Error: Could not build the project"; exit 1; }
 
+echo "Installing PM2"
+npm install pm2 -g
+pm2 ressurect
+pm2 save
+
+
 echo "Restarting the server with PM2"
 pm2 restart nocap || { echo "Error: Could not restart the server"; exit 1; }
 
