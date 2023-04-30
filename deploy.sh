@@ -18,7 +18,7 @@ echo "Building the project"
 npm run build || { echo "Error: Could not build the project"; exit 1; }
 
 echo "Installing PM2"
-npm install pm2 -g
+sudo npm install pm2 -g
 pm2 ressurect
 pm2 save
 
