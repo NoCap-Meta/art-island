@@ -22,6 +22,10 @@ const categoryOptions = [{
 {
   name:'Photography',
   value:'photography'
+},
+{
+  name:'Real Estate',
+  value:'real-estate'
 }
 ]
 

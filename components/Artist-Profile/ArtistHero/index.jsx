@@ -31,7 +31,7 @@ const DeployItemCard = ({item, handleDeployItem}) => {
   const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status==='Deploying...')
   return <div>
-    <ItemCard onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isCollection collectionStatus={status}  />
+    <ItemCard isDeliverable={item.maxFractions===1} onCollectionClick={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isCollection collectionStatus={status}  />
   </div>
 } 
 
@@ -44,6 +44,7 @@ const ArtistHero = () => {
   const [likedItems, setLikedItems] = useState([])
   const {user, setUser} = useUserStore()
   const {deliverableModalOpen, setDeliverableModalOpen} = useDeliverableModalStore()
+  const [selectedItem, setSelectedItem] = useState({})
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -210,7 +211,10 @@ const ArtistHero = () => {
                     const status = 'Deliver'
                     return (
                       <div key={i}>
-                        <ItemCard onItemBuy={()=>setDeliverableModalOpen(true)} collectionStatus={status} isBoughtItem item={item}/>
+                        <ItemCard onItemBuy={()=>{
+                          setSelectedItem(item)
+                          setDeliverableModalOpen(true)
+                        }} collectionStatus={status} isBoughtItem item={item}/>
                       </div>
                     )
                   }
@@ -234,7 +238,7 @@ const ArtistHero = () => {
             )
           }
       </div>
-      <DeliverModal/>
+      <DeliverModal item={selectedItem}/>
     </div>
   )
 }
