@@ -102,7 +102,7 @@ const CollectionStatsComponent = () => {
 
   const [timePeriod, setTimePeriod] = useState([
     {
-      name:"24H",
+      name:"1D",
       selected:true
     },
     {
