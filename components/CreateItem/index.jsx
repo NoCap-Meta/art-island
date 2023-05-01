@@ -11,8 +11,9 @@ import { useRouter } from "next/router"
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
 
-const Property = ({name, desc, imageName, toggle, addable, keyValue, onOpenClick}) => {
+const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, onOpenClick,hasUploadable}) => {
   const {itemModalData,setItemModalData} = useItemModalStore()
+  const fileRef = useRef(null)
 
   return (
     <div className="w-[100%] border-b pb-[10px] border-[rgb(0,0,0,0.5)] mt-[1rem] items-center flex justify-between">
@@ -23,6 +24,15 @@ const Property = ({name, desc, imageName, toggle, addable, keyValue, onOpenClick
               <p className={`text-[14px] ${MagnetMedium.className} opacity-50 text-[#000000]`}>{desc}</p>
             </div>
           </div>
+          <div className='flex gap-[1rem] items-center'>
+          {
+          hasUploadable && <div onClick={()=>fileRef.current.click()} className="h-[50px] w-[50px] border flex items-center justify-center border-[rgb(0,0,0,0.5)] rounded-md">
+            <input hidden type={'file'} onChange={onChange} ref={fileRef} accept={
+              'image/*,.pdf,.zip'
+            } />
+            <img src="Images/SVG/Plus-Black.svg" className="w-[24px] h-[24px]"/>
+          </div>
+        }
           {toggle && <Toggle
         defaultChecked={false}
         onChange={(e)=>{
@@ -37,11 +47,13 @@ const Property = ({name, desc, imageName, toggle, addable, keyValue, onOpenClick
           unchecked: null,
         }}
         />}
+        </div>
         {
           addable && <div onClick={onOpenClick} className="h-[50px] w-[50px] border flex items-center justify-center border-[rgb(0,0,0,0.5)] rounded-md">
             <img src="Images/SVG/Plus-Black.svg" className="w-[24px] h-[24px]"/>
           </div>
         }
+        
         </div>
   )
 }
@@ -59,12 +71,14 @@ const CreateItemComponent = () => {
     name: 'Select Collection',
     value:''
   }])
+  const [tokenType, setTokenType] = useState('single')
   const {itemModalData,setItemModalData} = useItemModalStore()
   const [file, setFile] = useState(null)
   const [files, setFiles] = useState([])
   const [previewImage, setPreviewImage] = useState(null)
   const [previewImages, setPreviewImages] = useState([])
   const router = useRouter()
+  const [unlockableFiles, setUnlockableFiles] = useState([])
 
   let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null || itemModalData?.collectionId?.length<1 || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions || +itemModalData?.royalty==0
   useEffect(()=>{
@@ -224,7 +238,6 @@ const CreateItemComponent = () => {
       console.log('File uploaded successfully!', data.data)
       setItemModalData({
         ...itemModalData,
-        image: data.data.Location
       })
       return data.data.Location
     } catch (error) {
@@ -233,7 +246,7 @@ const CreateItemComponent = () => {
   };
 
   //handleAllFileUpload
-  const handleAllFileUpload = async () => {
+  const handleAllFileUpload = async (files) => {
     if (!localStorage.getItem('token')) {
       setActiveLoginModal({
         ...activeModal,
@@ -261,8 +274,6 @@ const CreateItemComponent = () => {
       console.log('File uploaded successfully!', data.data)
       setItemModalData({
         ...itemModalData,
-        image: data.data[0].Location,
-        allImages: data.data.map((image)=>image.Location)
       })
       return {imageUrl:data.data[0].Location, allImages: data.data.map((image)=>image.Location)}
     } catch (error) {
@@ -272,7 +283,14 @@ const CreateItemComponent = () => {
 
   const handleSubmit = async ()=>{
     setButtonTitle('Submitting...')
-    const {imageUrl, allImages} = await handleAllFileUpload()
+    const {imageUrl, allImages} = await handleAllFileUpload(files)
+
+    if(itemModalData.hasUnlockableContent && !unlockableFiles && unlockableFiles.length<0){
+      setButtonTitle('Submit')
+      return
+    }
+
+    const {allImages:allUnlockableFiles} = await handleAllFileUpload(unlockableFiles)
 
     if(!imageUrl) return
     const tokenID = Math.floor(Date.now() * Math.random())
@@ -281,6 +299,7 @@ const CreateItemComponent = () => {
       tokenId: tokenID,
       image: imageUrl,
       allImages: allImages,
+      unlockableFiles: allUnlockableFiles,
     }, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -333,9 +352,39 @@ const CreateItemComponent = () => {
             <input multiple={true} accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
         </div>
         <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
-        {/* <InputField type={'number'} onChange={(e)=>handleFormDataChange(e, 'tokenId')} placeholder={'ID for your Item'}>Item ID</InputField> */}
-        <InputField onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Maximum Fractions'}>Max Fractions</InputField>
-        <InputField onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Number of Fractions'}>Fractions</InputField>
+        <div className="mt-[1rem] overflow-visible ">
+          <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Token Type</p>
+          <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>Will it be a single token or multiple token</p>
+          <DropDownInput value={tokenType} onChange={e=>{
+            if(e==='single'){
+              console.log({
+                ...itemModalData,
+                maxFractions: '1',
+                fractions: '1'
+              })
+              setItemModalData({
+                ...itemModalData,
+                maxFractions: 1,
+                fractions: 1
+              })
+              
+            }else{
+              setItemModalData({
+                ...itemModalData,
+                maxFractions: '',
+                fractions: ''
+              })
+            }
+            setTokenType(e)
+          }} width='w-[100%]' options={[
+            'single',
+            'multiple'
+          ]}></DropDownInput>
+        </div>
+        <div className={`${tokenType==='single' && 'opacity-50'}`}>
+          <InputField disabled={tokenType==='single'} value={itemModalData.maxFractions} onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Tokens to Create'}>Maximum Supply</InputField>
+          <InputField disabled={tokenType==='single'} value={itemModalData.fractions} onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Tokens that can be minted'}>Maximum Mintable Tokens</InputField>
+        </div>
         <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
         <InputField onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField>
         <InputField onChange={(e)=>handleFormDataChange(e, 'externalLink')} desc={'NoCap Network will include a link to this URL on this item\'s detail page, so that users can click to learn more about it. You are welcome to link to your own webpage with more details.'} placeholder={'Item Name'}>External Link</InputField>
@@ -349,7 +398,7 @@ const CreateItemComponent = () => {
         <Property onOpenClick={()=>setCreateItemModalState(true)} name={'Properties'} desc={'Textual traits that show up as rectangles'} addable imageName={'List'}/>
         <Property onOpenClick={()=>setItemLevelModalOpen(true)} name={'Levels'} desc={'Numerical traits that show as a progress bar'} addable imageName={'Star1'}/>
         <Property onOpenClick={()=>setItemStatsModalOpen(true)} name={'Stats'} desc={'Numerical traits that just show as numbers'} addable imageName={'Chart'}/>
-        <Property keyValue={'hasUnlockableContent'} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
+        <Property keyValue={'hasUnlockableContent'} onChange={e=>setUnlockableFiles(e.target.files)} hasUploadable={itemModalData.hasUnlockableContent} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
         <Property keyValue={'hasSensitiveContent'} name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Blockchain</p>

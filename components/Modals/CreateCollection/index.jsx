@@ -133,7 +133,15 @@ useEffect(()=>{
 
     if(data.success){
       if(data.categories.length>0){
-        setCategoryOptions(data.categories)
+        let options = data.categories.map((category)=>{
+          if(category.isActive){
+            return category
+          }
+        })
+
+        options = options.filter((option)=>option!==undefined)
+
+        setCategoryOptions(options)
       }else{
         setCategoryOptions([{
           name:'Not Available',

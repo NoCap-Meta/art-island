@@ -53,10 +53,10 @@ const DropDownInput = ({options, width, preIcon, setValue, value, onChange=()=>{
                 return (
                   <p onClick={()=>{
                     setSelected(option)
-                    onChange(option.value)
-                    setValue(option.value)
+                    onChange(option?.value)
+                    setValue(option?.value)
                     setIsOpen(false)
-                  }} key={index} className={`${MagnetBold.className} w-[100%] cursor-pointer text-[14px] h-[2.5rem] flex items-center leading-[18px] ml-[1rem] text-[#000000]`}>{option.name}</p>
+                  }} key={index} className={`${MagnetBold.className} w-[100%] cursor-pointer text-[14px] h-[2.5rem] flex items-center leading-[18px] ml-[1rem] text-[#000000]`}>{option?.name}</p>
                 )
               }
               )
