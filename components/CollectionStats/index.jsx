@@ -51,7 +51,7 @@ const TableRow = ({item})=>{
         <div className='w-[25%] flex gap-[1rem] items-center'>
           <img src={item?.image} className='w-[55px] rounded-md h-[55px]'/>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
-            {item.collection}
+            {item?.collection}
           </p>
         </div>
         <div className='w-[10%]'>
@@ -201,10 +201,10 @@ const CollectionStatsComponent = () => {
             options.map((option, index)=>{
               return (
                 <>
-                <div key={option.name} onClick={()=>handleSelect(option.name)} className="flex xl:mt-[0] mt-[1rem] cursor-pointer">
+                <div key={option?.name} onClick={()=>handleSelect(option?.name)} className="flex xl:mt-[0] mt-[1rem] cursor-pointer">
                   <div>
                     <p className={`${MagnetLight.className} whitespace-nowrap text-[20px] leading-[25px] ${option.selected?"":"opacity-50"}`}>{option.name}</p>
-                    <div className={`w-full ${option.selected?"":"opacity-20"} h-[2px] mt-[15px] bg-black`}/>
+                    <div className={`w-full ${option?.selected?"":"opacity-20"} h-[2px] mt-[15px] bg-black`}/>
                   </div>
                 </div>
                 {
