@@ -4,6 +4,7 @@ import axios from "axios"
 
 export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user, fractions) => {
   setStatus('Deploying...')
+  console.log(item, item.is)
   if (item && (item.tokenBuyed === item.maxFractions)) {
     setStatus('Sold Out')
     return
@@ -19,7 +20,7 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
   //get total amount
   const { data: totalAmountData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/calculate-total-amount`, {
     voucher,
-    isPrimary: true,
+    isPrimary: item.isRelist ? false : true,
     fractions
   }, {
     headers: {
@@ -38,7 +39,7 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
     value: web3.utils.fromWei(totalAmountData.totalAmount[1], 'ether'),
     voucher,
     fractions,
-    isPrimary: true,
+    isPrimary: item.isRelist ? false : true,
     currency: '0x0000000000000000000000000000000000000001',
     buyer: account
   }, {

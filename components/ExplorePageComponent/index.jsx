@@ -9,27 +9,27 @@ const TableHeader = ()=>{
   return (
     <div className='flex gap-[1rem] w-[40vw]'>
       <div className='w-[5vw]'/>
-      <p className={`${MagnetRegular.className} text-[#000000] opacity-50 w-[20vw] text-[16px]`}>COLLECTION</p>
+      <p className={`${MagnetRegular.className} text-[#000000] opacity-50 w-[20vw] text-[16px]`}>ITEM</p>
       <p className={`${MagnetRegular.className} text-[#000000] opacity-50 w-[10vw] text-[16px]`}>FLOOR PRICE</p>
       <p className={`${MagnetRegular.className} text-[#000000] opacity-50 w-[5vw] text-[16px]`}>VOLUME</p>
     </div>
   )
 }
 
-const TableRow = ()=>{
+const TableRow = ({item, idx})=>{
   return (
     <div className='flex gap-[1rem] mt-[1rem] items-center w-[40vw]'>
       <div className='w-[5vw]'>
-        <p className={`${MagnetRegular.className} text-[#000000] text-[16px]`}>1</p>
+        <p className={`${MagnetRegular.className} text-[#000000] text-[16px]`}>{idx+1}</p>
       </div>
       <div className='w-[20vw] flex gap-[5px] items-center'>
-        <img src='Images/PNG/Gallery4.png' className='w-[55px] rounded-md h-[55px]'/>
+        <img src={item.image} className='w-[55px] rounded-md h-[55px]'/>
         <p className={`${MagnetRegular.className} text-[#000000] text-[16px]`}>
-          Collection Name...
+          {item.name}
         </p>
       </div>
-      <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[10vw]`}>0.1 ETH</p>
-      <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[5vw]`}>464</p>
+      <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[10vw]`}>{item.pricePerFraction} ETH</p>
+      <p className={`${MagnetRegular.className} text-[#000000] text-[16px] w-[5vw]`}>{item.maxFractions}</p>
     </div>
   )
 }
@@ -186,18 +186,26 @@ const ExplorePageComponent = () => {
           <div className='flex w-[90vw] mt-[2rem] gap-[5rem]'>
             <div>
               <TableHeader/>
-              <TableRow/>
-              <TableRow/>
-              <TableRow/>
-              <TableRow/>
+              {
+                deployedItems.map((item, index)=>{
+                  if(index<4){
+                    return <TableRow key={item._id} idx={index} item={item}/>
+                  }
+                }
+                )
+              }
             </div>
-            <div>
+            {deployedItems.length>4 && <div>
               <TableHeader/>
-              <TableRow/>
-              <TableRow/>
-              <TableRow/>
-              <TableRow/>
-            </div>
+              {
+                deployedItems.map((item, index)=>{
+                  if(index>=4 && index<8){
+                    return <TableRow idx={index} key={item.id} item={item}/>
+                  }
+                }
+                )
+              }
+            </div>}
           </div>
         </div>
       </div>

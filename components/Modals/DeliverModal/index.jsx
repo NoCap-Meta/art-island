@@ -12,20 +12,6 @@ import Autocomplete  from 'react-google-autocomplete'
 
 const {useDeliverableModalStore, useUserStore} = Store
 
-const dropdownOptions = [{
-  name: 'USDT',
-  value: '0x66D9512e6Cf45ba95586a8E7E1544Cef71521f08'
-},
-]
-const categoryOptions = [{
-  name: 'Art',
-  value: 'art'
-},
-{
-  name:'Photography',
-  value:'photography'
-}
-]
 
 
 export default function DeliverModal({item}) {
@@ -86,7 +72,7 @@ export default function DeliverModal({item}) {
     }
 }
 
-let isDisabled = false || buttonTitle === 'Submitting...'
+let isDisabled = formData.address===null || buttonTitle === 'Submitting...' || formData.firstName === '' || formData.lastName === '' || formData.phoneNumber === '' || formData.apartmentNumber === '' || !item
 
 
   return (

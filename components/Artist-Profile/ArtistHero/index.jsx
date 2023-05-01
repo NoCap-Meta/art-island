@@ -1,4 +1,4 @@
-import { ArtistHeader, TableCell, Filter,DeliverModal } from "components"
+import { ArtistHeader, TableCell, Filter,DeliverModal, RelistModal } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
@@ -35,6 +35,26 @@ const DeployItemCard = ({item, handleDeployItem}) => {
   </div>
 } 
 
+const CollectedItemCard = ({item, i}) => {
+  const [status, setStatus] = useState('Buy')
+  const [isOpen, setIsOpen] = useState(false)
+  const {deliverableModalOpen, setDeliverableModalOpen} = useDeliverableModalStore()
+  const handleReList = async () => {
+    setIsOpen(true)
+  }
+  
+
+  return (
+    <div>
+      <ItemCard onItemBuy={()=>{
+          setSelectedItem(item)
+          setDeliverableModalOpen(true)
+        }} relistHandler={()=>handleReList()} collectionStatus={status} isBoughtItem item={item}/>
+        <RelistModal item={item} isOpen={isOpen} setIsOpen={setIsOpen}/>
+      </div>
+  )
+}
+
 const ArtistHero = () => {
   const {artistProfileOptions:options, setArtistProfileOptions:setOptions} = useArtistProfileOptionsStore()
   const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
@@ -43,7 +63,7 @@ const ArtistHero = () => {
   const [boughtItems, setBoughtItems] = useState([])
   const [likedItems, setLikedItems] = useState([])
   const {user, setUser} = useUserStore()
-  const {deliverableModalOpen, setDeliverableModalOpen} = useDeliverableModalStore()
+  
   const [selectedItem, setSelectedItem] = useState({})
 
   const handleSelect = (name) => {
@@ -208,13 +228,10 @@ const ArtistHero = () => {
               <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   boughtItems.map((item, i)=>{
-                    const status = 'Deliver'
+                    
                     return (
                       <div key={i}>
-                        <ItemCard onItemBuy={()=>{
-                          setSelectedItem(item)
-                          setDeliverableModalOpen(true)
-                        }} collectionStatus={status} isBoughtItem item={item}/>
+                        <CollectedItemCard item={item}/>
                       </div>
                     )
                   }

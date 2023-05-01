@@ -2,12 +2,15 @@ import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 
-export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
+export const handleReList = async (item, getItems, setStatus, fractionsToList) => {
   setStatus('Deploying...')
-  if (item && (item.tokenBuyed === item.fractions)) {
-    setStatus('Sold Out')
+  if (!item.voucher) {
     return
   }
+
+  
+
+
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const accounts = await web3.eth.getAccounts()
   if (!accounts || accounts.length === 0) {
@@ -33,26 +36,11 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     _signer: signer
   })
 
-  let ipfsLink = null
-
-  if (!item.ipfsLink) {
-    const { data: ipfs } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload/upload-s3-to-ipfs`, {
-      imageUrl: item.image
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-    if (!ipfs.url) {
-      return
-    } else {
-      ipfsLink = ipfs
-    }
-  }
 
 
 
-  const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, +item.tokenId, item.maxFractions, item.pricePerFraction * (10 ** 18), true, account, +item.royalty * 100, item.ipfsLink || ipfsLink.url)
+
+  const voucher = await newVoucher.createVoucher(account, item.voucher.NFTAddress, item.voucher.tokenId, +fractionsToList, item.pricePerFraction * (10 ** 18), false, item.voucher.royaltyKeeper, +item.voucher.royaltyFees, item.voucher.tokenURI)
 
   const { data: verifyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
     voucher
@@ -66,20 +54,21 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     return
   }
 
-  const { data: signedItem } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${item._id}`, {
+  const { data: relistData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
+    ...item,
+    isRelist: true,
     isDeployed: true,
-    ipfsLink: item.ipfsLink || ipfsLink.url,
-    voucher,
-    signature: voucher.signature,
-    tokenBuyed: 0,
-  }, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  })
+    isApproved: true,
+    maxFractions: +fractionsToList,
+    voucher
+  },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 
-  if (signedItem.success) {
-    setStatus('Deployed')
+  if (relistData.success) {
     getItems()
   }
 

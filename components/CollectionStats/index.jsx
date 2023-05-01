@@ -18,7 +18,7 @@ const Table = ({data=[]})=>{
           <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>VOLUME</p>
         </div>
         <div className='w-[10%]'>
-          <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>%CHANGE</p>
+          <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>COLLECTION</p>
         </div>
         <div className='w-[10%]'>
           <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>FLOOR PRICE</p>
@@ -46,34 +46,34 @@ const TableRow = ({item})=>{
   return (
     <div className='w-[100%] justify-between items-center flex'>
         <div className='w-[5%]'>
-          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>{item.id}</p>
+          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>{item?.id}</p>
         </div>
         <div className='w-[25%] flex gap-[1rem] items-center'>
-          <img src={item.image} className='w-[55px] rounded-md h-[55px]'/>
+          <img src={item?.image} className='w-[55px] rounded-md h-[55px]'/>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
             {item.collection}
           </p>
         </div>
         <div className='w-[10%]'>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
-            {item.volume}
+            {item?.volume}
           </p>
         </div>
         <div className='w-[10%]'>
-          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  ${
-            item.change.includes('-') ? 'text-[#FF0000]' : 'text-[#2FBE6A]'
-          }`}>
-            {item.change}
-          </p>
-        </div>
-        <div className='w-[10%]'>
-          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
-            {item.price}
+          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px] 
+            text-[#FF0000]
+          `}>
+            {item?.collection}
           </p>
         </div>
         <div className='w-[10%]'>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
-            {item.sales}
+            {item?.price}
+          </p>
+        </div>
+        <div className='w-[10%]'>
+          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
+            {item?.sales}
           </p>
         </div>
         <div className='w-[5%]'>
@@ -165,12 +165,12 @@ const CollectionStatsComponent = () => {
       const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`)
       const {items} = data
       const newData = items.map((item, index)=>{
-        if(!item.isDeployed) return null
+        if(!item?.isDeployed) return null
         return {
           id:index+1,
           collection:item.name,
           volume:item.maxFractions,
-          change:'0%',
+          collection:item.collection.name,
           price:`${item.pricePerFraction} ETH`,
           sales:item.tokenBuyed,
           image: item.image,
@@ -179,7 +179,7 @@ const CollectionStatsComponent = () => {
       })
       setData(newData)
 
-      let categories = [...new Set(items.map((item)=>item.collection.category))]
+      let categories = [...new Set(items.map((item)=>item?.collection?.category))]
       categories = categories.map((item)=>item.charAt(0).toUpperCase() + item.slice(1))
       categories =categories.filter((item)=>item!==null && item!==undefined && item!=='')
       categories.unshift('All')

@@ -135,6 +135,7 @@ export const useCollectionModalStore = create(set => ({
 export const useItemModalStore = create(set => ({
   itemModalData: {
     image: '',
+    allImages:[],
     name: '',
     externalLink: '',
     desc: '',

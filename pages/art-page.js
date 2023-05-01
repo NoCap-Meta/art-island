@@ -9,6 +9,7 @@ const { useSelectedItemStore } = Store
 
 const ArtPage = ({ item }) => {
   const router = useRouter()
+  console.log(item)
   const { selectedItem, setSelectedItem } = useSelectedItemStore()
 
   useEffect(() => {

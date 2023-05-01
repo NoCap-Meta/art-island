@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useRef, useState, useEffect } from 'react'
 import {MagnetBold, MagnetMedium, MagnetRegular} from 'pages/_app.js'
 import {Store} from '@/utils'
 import InputField from '@/components/Common/InputField'
@@ -11,23 +11,11 @@ import { useContext } from '@/utils/Context';
 const {useCollectionModalStore} = Store
 
 const dropdownOptions = [{
-  name: 'USDT',
-  value: '0x66D9512e6Cf45ba95586a8E7E1544Cef71521f08'
+  name: 'MATIC',
+  value: '0x0000000000000000000000000000000000001'
 },
 ]
-const categoryOptions = [{
-  name: 'Art',
-  value: 'art'
-},
-{
-  name:'Photography',
-  value:'photography'
-},
-{
-  name:'Real Estate',
-  value:'real-estate'
-}
-]
+
 
 
 export default function CreateCollectionModal() {
@@ -37,14 +25,18 @@ export default function CreateCollectionModal() {
   const fileRef = useRef(null)
   const [previewSource, setPreviewSource] = useState('')
   const [buttonTitle, setButtonTitle] = useState('Submit for Review')
+  const [categoryOptions, setCategoryOptions] = useState([{
+    name:'Select Category',
+    value:null
+  }])
   const [formData, setFormData] = useState({
     name: '',
-    symbol: '',
+    symbol: process.env.NEXT_PUBLIC_NOCAP_SYMBOL,
     royalty: '',
     token: dropdownOptions[0].value,
     tokenType: 'single',
     logo:'',
-    category:categoryOptions[0].value
+    category:categoryOptions?.[0]?.value
   })
 
   function closeModal() {
@@ -133,8 +125,26 @@ export default function CreateCollectionModal() {
   }
 }
 
-let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0  || formData?.token?.length === 0 || file === null || buttonTitle === 'Submitting...'
+let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0  || formData?.token?.length === 0 || file === null || buttonTitle === 'Submitting...' || formData.category === null
 
+useEffect(()=>{
+  const getCategories = async ()=>{
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`)
+
+    if(data.success){
+      if(data.categories.length>0){
+        setCategoryOptions(data.categories)
+      }else{
+        setCategoryOptions([{
+          name:'Not Available',
+          value:null
+        }])
+      }
+    }
+  }
+
+  getCategories()
+},[])
 
   return (
     <>
@@ -200,7 +210,7 @@ let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0 
                           </div>
                         </div>
                         <InputField value={formData.name} onChange={(e)=>handleChange(e,'name')} width={'w-[100%]'} placeholder='My Collection Name' >Name</InputField>
-                        <InputField value={formData.symbol} onChange={(e)=>handleChange(e,'symbol')} width={'w-[100%]'} desc='The token symbol is shown on the block explorer when others view your smart contract.' placeholder='MCN' >Token Symbol</InputField>
+                        {/* <InputField value={formData.symbol} onChange={(e)=>handleChange(e,'symbol')} width={'w-[100%]'} desc='The token symbol is shown on the block explorer when others view your smart contract.' placeholder='MCN' >Token Symbol</InputField> */}
                         <div className="mt-[1rem] overflow-visible">
                             <p className={`${MagnetMedium.className} mb-[5px] text-[16px] text-left`}>
                               Select Token

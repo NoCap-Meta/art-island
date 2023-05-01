@@ -1,4 +1,4 @@
-import { SignIn, Wallet,KycModal, Cart } from "@/components"
+import { SignIn, Wallet,KycModal } from "@/components"
 import { useContext } from "@/utils/Context"
 import { MagnetBold, MagnetLight, MagnetRegular } from "pages/_app"
 import { useState } from 'react';
@@ -133,7 +133,7 @@ const NavBar = ({isLogined}) => {
               </div>
             </div>
         </div> 
-        <Cart/>
+        {/* <Cart/> */}
       </div>
     </>
   )

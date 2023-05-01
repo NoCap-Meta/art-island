@@ -61,7 +61,9 @@ const CreateItemComponent = () => {
   }])
   const {itemModalData,setItemModalData} = useItemModalStore()
   const [file, setFile] = useState(null)
+  const [files, setFiles] = useState([])
   const [previewImage, setPreviewImage] = useState(null)
+  const [previewImages, setPreviewImages] = useState([])
   const router = useRouter()
 
   let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null || itemModalData?.collectionId?.length<1 || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions || +itemModalData?.royalty==0
@@ -160,13 +162,27 @@ const CreateItemComponent = () => {
     fetchCollection()
   },[])
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const file = e.target.files[0]
     setFile(file)
+    setFiles(e.target.files)
     const reader = new FileReader()
     reader.onloadend = () => {
       setPreviewImage(reader.result)
     }
+
+    
+    for (let i = 0; i < e.target.files.length; i++) {
+      const filee = e.target.files[i]
+      const reader2 = new FileReader()
+
+      reader2.onloadend = () => {
+        setPreviewImages((prev) => [...prev, reader2.result])
+      }
+
+      reader2.readAsDataURL(filee)
+    }
+
     reader.readAsDataURL(file)
   }
 
@@ -216,15 +232,55 @@ const CreateItemComponent = () => {
     }
   };
 
+  //handleAllFileUpload
+  const handleAllFileUpload = async () => {
+    if (!localStorage.getItem('token')) {
+      setActiveLoginModal({
+        ...activeModal,
+        google: true
+      })
+      return
+    }
+
+    if(!files) return
+
+    const formData = new FormData()
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i])
+    }
+
+    try {
+      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload/upload-s3-multiple`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'boundary': '----WebKitFormBoundary7MA4YWxkTrZu0gW'
+        }
+      })
+      console.log('File uploaded successfully!', data.data)
+      setItemModalData({
+        ...itemModalData,
+        image: data.data[0].Location,
+        allImages: data.data.map((image)=>image.Location)
+      })
+      return {imageUrl:data.data[0].Location, allImages: data.data.map((image)=>image.Location)}
+    } catch (error) {
+      console.error('Error uploading file:', error)
+    }
+  };
+
   const handleSubmit = async ()=>{
     setButtonTitle('Submitting...')
-    const imageUrl = await handleUpload()
+    const {imageUrl, allImages} = await handleAllFileUpload()
 
     if(!imageUrl) return
-
+    const tokenID = Math.floor(Date.now() * Math.random())
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
       ...itemModalData,
-      image: imageUrl
+      tokenId: tokenID,
+      image: imageUrl,
+      allImages: allImages,
     }, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -267,15 +323,17 @@ const CreateItemComponent = () => {
         </div>
         <div onClick={()=>{
           fileRef.current.click()
-        }} className="w-[100%] h-[40vh] cursor-pointer border flex items-center justify-center border-dotted rounded-lg mt-[10px] border-black">
-            {!previewImage && <img src="Images/SVG/Upload.svg" className="w-[24px] h-[24px]"/>}
+        }} className="w-[100%] h-[40vh] cursor-pointer border flex gap-[1rem] items-center justify-center border-dotted rounded-lg mt-[10px] border-black">
+            {previewImages.length<1 && <img src="Images/SVG/Upload.svg" className="w-[24px] h-[24px]"/>}
             {
-              previewImage && <img src={previewImage} className=" h-[10rem] rounded-md object-cover"/>
+              previewImages.length>0 && previewImages.map((image, index)=>{
+                return <img src={image} className=" h-[10rem] rounded-md object-cover"/>
+              })
             }
-            <input accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
+            <input multiple={true} accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
         </div>
         <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
-        <InputField onChange={(e)=>handleFormDataChange(e, 'tokenId')} placeholder={'ID for your Item'}>Item ID</InputField>
+        {/* <InputField type={'number'} onChange={(e)=>handleFormDataChange(e, 'tokenId')} placeholder={'ID for your Item'}>Item ID</InputField> */}
         <InputField onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Maximum Fractions'}>Max Fractions</InputField>
         <InputField onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Number of Fractions'}>Fractions</InputField>
         <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
