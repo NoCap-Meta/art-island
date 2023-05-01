@@ -49,7 +49,7 @@ const CollectedItemCard = ({item, i}) => {
       <ItemCard onItemBuy={()=>{
           setSelectedItem(item)
           setDeliverableModalOpen(true)
-        }} relistHandler={()=>handleReList()} collectionStatus={status} isBoughtItem item={item}/>
+        }} relistHandler={()=>handleReList()} isDeliverable={item?.voucher?.maxFractions===1} collectionStatus={status} isBoughtItem item={item}/>
         <RelistModal item={item} isOpen={isOpen} setIsOpen={setIsOpen}/>
       </div>
   )
