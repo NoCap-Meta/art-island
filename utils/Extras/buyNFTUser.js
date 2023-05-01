@@ -5,7 +5,7 @@ import axios from "axios"
 export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user, fractions) => {
   setStatus('Deploying...')
   console.log(item, item.is)
-  if (item && (item.tokenBuyed === item.maxFractions)) {
+  if (item && (item.tokenBuyed === item.fractions)) {
     setStatus('Sold Out')
     return
   }

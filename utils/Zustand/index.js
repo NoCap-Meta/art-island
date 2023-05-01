@@ -135,8 +135,9 @@ export const useCollectionModalStore = create(set => ({
 export const useItemModalStore = create(set => ({
   itemModalData: {
     image: '',
-    allImages:[],
+    allImages: [],
     name: '',
+    authorName: '',
     externalLink: '',
     desc: '',
     collectionId: '',
@@ -149,8 +150,9 @@ export const useItemModalStore = create(set => ({
     stats: [],
     hasUnlockableContent: false,
     hasSensitiveContent: false,
+    maxFractions: 1,
     pricePerFraction: 0,
-    fractions: 0,
+    fractions: 1,
     tokenId: '',
     royalty: 0
   },

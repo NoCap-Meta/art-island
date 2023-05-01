@@ -40,22 +40,22 @@ const ItemCard = ({isCollection,onCollectionClick,relistHandler,collectionStatus
         {
           isCollection && (
             <div className='w-[100%] flex justify-center gap-[1rem]'>
-            <button disabled={isDisabled} onClick={onCollectionClick} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+            <button disabled={isDisabled} onClick={onCollectionClick} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>
-            <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+            {/* <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               View
-            </button>
+            </button> */}
             </div>
           )
         }
         {
           isItem && (
-            <div className='w-[100%] flex justify-center gap-[1rem]'>
-              <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+            <div className='w-[100%] flex flex-col items-center'>
+              <button disabled={isDisabled} onClick={onItemBuy} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>
-              <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               View
             </button>
             </div>

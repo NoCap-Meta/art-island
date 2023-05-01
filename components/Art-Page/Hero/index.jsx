@@ -3,22 +3,23 @@ import { Store } from '@/utils'
 import axios from 'axios'
 import { NavBar } from 'components'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser'
+import parse from 'html-react-parser'
 
 const {useUserStore,useSelectedItemStore} = Store
 
-const PropertiesCard = () => {
+const PropertiesCard = ({prop}) => {
   return (
     <div className='bg-[rgba(255,255,255,0.5)] rounded-lg px-[20px] py-[11px] w-[190px]'>
       <p className={`${MagnetMedium.className} text-center text-[14px] leading-[18px]`}>
-        PARTICIPATION SHARE
+        {prop?.name?.toUpperCase()}
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] leading-[18px]`}>
         One Asset
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] opacity-50 leading-[18px]`}>
-        94% have this trait
+        {prop?.type}
       </p>
     </div>
   )
@@ -26,11 +27,12 @@ const PropertiesCard = () => {
 
 
 const ArtPageHero = () => {
-  const [selectedImage, setSelectedImage] = useState('Images/PNG/Gallery1.png')
+  const [selectedImage, setSelectedImage] = useState('')
   const {activeModal, setActiveModal} = useContext()
   const {selectedItem:item, setSelectedItem} = useSelectedItemStore()
   const {user, setUser} = useUserStore()
   const [status, setStatus] = useState('Buy Now')
+  const [images, setImages] = useState([])
 
   let isLiked = item && item.likedUsers.includes(user.id)
 
@@ -54,17 +56,52 @@ const ArtPageHero = () => {
     }
   }
 
+  useEffect(()=>{
+    if(item && item.allImages){
+      let newImages = item.allImages.map((item)=>{
+        return {
+          image:item,
+          selected:false
+        }
+      })
+      setImages(newImages)
+      setSelectedImage(item.allImages[0])
+    }
+  },[item])
+
+  const handleImage = (id)=>{
+    const newImages = images.map((item)=>{
+      if(item.image === id){
+        return {
+          ...item,
+          selected:true
+        }
+      }else{
+        return {
+          ...item,
+          selected:false
+        }
+      }
+    })
+    setImages(newImages)
+    setSelectedImage(id)
+  }
+
 
   return (
     <div className="min-h-[100vh] w-[100vw]">
       <div className="w-[100vw] mt-[2rem] flex justify-center">
         <div className='w-[90vw] flex xl:flex-row flex-col'>
           <div className='xl:w-[44.5vw] w-[90vw] gap-[1rem] flex xl:flex-row flex-col'>
-            {/* <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
+            <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
               {
-                image.map((item) => {
+                images && images.map((item) => {
+                  if(item.image===selectedImage){
+                    return
+                  }
+
                   return (
-                    !item.selected && <div key={item.id} onClick={() => handleImage(item.id)} className='!w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
+                    item && !item.selected && <div key={item.image} onClick={() => handleImage(item.image)} className='!w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
                       backgroundImage: `url(${item.image})`,
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'cover',
@@ -75,10 +112,10 @@ const ArtPageHero = () => {
                 })
               }
 
-            </div> */}
+            </div>
             <div className='h-[584px] flex flex-col justify-end rounded-xl border-[2px] border-black xl:w-[505px]'>
               <div className='xl:w-[505px] h-[541px] border-t-[2px] border-black' style={{
-                backgroundImage: `url(${item ? item.image :selectedImage})`,
+                backgroundImage: `url(${selectedImage})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -107,12 +144,8 @@ const ArtPageHero = () => {
                 item && item.collection.createrAddress
               }
             </p>
-            <div className={`w-[100%] rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
-              <p className={`${MagnetLight.className} text-[16px] opacity-50 italic`}>
-                {
-                  item && item.desc
-                }
-              </p>
+            <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
+            {item && parse(item.desc)}
             </div>
             <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
@@ -152,7 +185,7 @@ const ArtPageHero = () => {
                   {status}
                 </p>
               </div>
-              <div className='w-[100%] flex justify-between mt-[20px]'>
+             {item && item.properties && item.properties.length>0 && <div className='w-[100%] flex justify-between mt-[20px]'>
                 <div className='flex items-center gap-[12px]'>
                   <img className='h-[24px]' src='Images/SVG/Tag.svg' />
                   <p className={`${MagnetMedium.className} text-[18px]`}>
@@ -163,11 +196,13 @@ const ArtPageHero = () => {
                   <img src='Images/SVG/Arrow-small-left.svg' />
                   <img src='Images/SVG/Arrow-small-right.svg' />
                 </div>
-              </div>
+              </div>}
               <div className='flex w-[100%] gap-[1rem] mt-[10px]'>
-                <PropertiesCard />
-                <PropertiesCard />
-                <PropertiesCard />
+                {
+                 item && item.properties && item.properties.map((item) => {
+                  return <PropertiesCard prop={item} />
+                 })
+                }
               </div>
             </div>
           </div>

@@ -91,7 +91,7 @@ const UploadDocument = ()=>{
 
 export default function KycModal() {
   const {activeModal, setActiveModal} = useContext()
-  const isOpen = activeModal.kyc
+  const isOpen = activeModal.kyc && (localStorage.getItem('kycSkipped')?false:true)
   const [step,setStep] = useState(0)
   const [content, setContent] = useState([
     {
@@ -136,6 +136,7 @@ export default function KycModal() {
 
 
   function closeModal() {
+    localStorage.setItem("kycSkipped", "true")
     setActiveModal({
       google: false,
       wallet: false,
@@ -204,11 +205,7 @@ export default function KycModal() {
                         </p>
                       </div>
                     {step===0 &&<div onClick={
-                      ()=>setActiveModal({
-                        google: false,
-                        wallet: false,
-                        kyc: false
-                      })
+closeModal
                     } className='h-[52px] mt-[1rem] w-[247px] flex cursor-pointer items-center gap-[8px] justify-center bg-black rounded-xl'>
                         <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
                           Skip

@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import "slick-carousel/slick/slick.css";
+import 'react-quill/dist/quill.snow.css';
 import "slick-carousel/slick/slick-theme.css";
 import { MetaMaskProvider } from "metamask-react";
 import { ContextProvider } from 'utils/Context/index'

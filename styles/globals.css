@@ -71,3 +71,19 @@ input[type=number] {
     border: none !important;
 
 }
+
+.ql-snow .ql-picker.ql-header{
+    overflow: visible !important;
+}
+
+.ql-toolbar.ql-snow .ql-formats{
+    overflow: visible !important;
+}
+
+.ql-toolbar.ql-snow{
+    overflow: visible !important;
+}
+
+.ql-editor{
+    min-height: 10rem !important;
+}

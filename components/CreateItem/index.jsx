@@ -7,6 +7,8 @@ import { useContext } from '@/utils/Context';
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
+import dynamic from "next/dynamic"
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
@@ -275,7 +277,7 @@ const CreateItemComponent = () => {
       setItemModalData({
         ...itemModalData,
       })
-      return {imageUrl:data.data[0].Location, allImages: data.data.map((image)=>image.Location)}
+      return {imageUrl:data.data[0].Location, allImages: (data.data && data.data.length>0)? data.data.map((image)=>image.Location):[]}
     } catch (error) {
       console.error('Error uploading file:', error)
     }
@@ -290,7 +292,12 @@ const CreateItemComponent = () => {
       return
     }
 
-    const {allImages:allUnlockableFiles} = await handleAllFileUpload(unlockableFiles)
+    let allUnlockableFiles = []
+
+    if(itemModalData.hasUnlockableContent){
+      const {allImages} = await handleAllFileUpload(unlockableFiles)
+      allUnlockableFiles = allImages
+    }
 
     if(!imageUrl) return
     const tokenID = Math.floor(Date.now() * Math.random())
@@ -352,6 +359,7 @@ const CreateItemComponent = () => {
             <input multiple={true} accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
         </div>
         <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
+        <InputField onChange={(e)=>handleFormDataChange(e, 'authorName')} placeholder={'Author'}>Author Name</InputField>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Token Type</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>Will it be a single token or multiple token</p>
@@ -388,8 +396,19 @@ const CreateItemComponent = () => {
         <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
         <InputField onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField>
         <InputField onChange={(e)=>handleFormDataChange(e, 'externalLink')} desc={'NoCap Network will include a link to this URL on this item\'s detail page, so that users can click to learn more about it. You are welcome to link to your own webpage with more details.'} placeholder={'Item Name'}>External Link</InputField>
-        <InputField onChange={(e)=>handleFormDataChange(e, 'desc')} isArea={true} desc={'The description will be included on the item\'s detail page underneath its image. Markdown syntax is supported.'} placeholder={'Provide a detailed description of your item...'}>Description</InputField>
         <div className="mt-[1rem] overflow-visible ">
+          <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Description</p>
+          <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>
+            Describe your item in detail. This will appear on the item's detail page.
+          </p>
+          <ReactQuill  className=" bg-[#faefe1] mb-[2rem] overflow-visible" theme="snow" value={itemModalData.desc} onChange={(e)=>{
+            setItemModalData({
+              ...itemModalData,
+              desc: e
+            })
+          }} />
+        </div>
+        <div className="mt-[2rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Collection</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>Choose the collection that this item will be a part of.</p>
           <DropDownInput value={itemModalData.collectionId ? itemModalData.collectionId:null}  setValue={(e)=>handleFormDataChange(e, 'collectionId', true)} width='w-[100%] mb-[2rem]' options={collections}></DropDownInput>
