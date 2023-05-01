@@ -85,6 +85,33 @@ const ExplorePageComponent = () => {
       }
   },[deployedItems,selectedNavigation])
 
+  useEffect(()=>{
+    const getCategoies = async () => {
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`)
+      const categories = data.categories
+      let newNavigations = categories.map((category)=>{
+        return {
+          name: category.name,
+          isActive: false,
+          value: category.value
+        }
+      })
+      newNavigations = [
+        {
+          name: 'All',
+          isActive: true,
+          value:''
+        },
+        ...newNavigations
+      ]
+      
+      setNavigations(newNavigations)
+    }
+
+
+    getCategoies()
+  },[])
+
   const handleSelectTab = (name) => {
     const newOptions = options.map((option)=>{
       if(option.name === name){
