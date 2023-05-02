@@ -29,6 +29,7 @@ import CaptchaModal from './Modals/CaptchaModal/index';
 import ItemSubmittedModal from './Modals/ItemSubmittedModal/index';
 import DeliverModal from './Modals/DeliverModal/index';
 import RelistModal from './Modals/RelistModal/index';
+import DeliveryStatusModal from './Modals/DeliveryStatus/index';
 
 
 export const imageBackgroundOptions = {
@@ -76,5 +77,6 @@ export {
   CaptchaModal,
   ItemSubmittedModal,
   DeliverModal,
-  RelistModal
+  RelistModal,
+  DeliveryStatusModal
 };

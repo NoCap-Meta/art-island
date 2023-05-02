@@ -144,6 +144,11 @@ const ArtPageHero = () => {
                 item && item.collection.createrAddress
               }
             </p>
+            <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
+              Creater Name {
+                item && item.authorName
+              }
+            </p>
             <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
             {item && parse(item.desc)}
             </div>

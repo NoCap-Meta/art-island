@@ -14,7 +14,7 @@ const {useDeliverableModalStore, useUserStore} = Store
 
 
 
-export default function DeliverModal({item}) {
+export default function DeliverModal({item, getItems}) {
   const {deliverableModalOpen:isOpen, setDeliverableModalOpen:setActiveModal} = useDeliverableModalStore()
   const {user} = useUserStore()
   const [buttonTitle, setButtonTitle] = useState('Order')
@@ -50,25 +50,41 @@ export default function DeliverModal({item}) {
     const {firstName, lastName, address, apartmentNumber, phoneNumber} = formData
     const {_id:itemId, collectionId} = item
     const {_id:userId} = user
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-      firstName,
-      lastName,
-      address,
-      apartmentNumber,
-      phoneNumber,
-      itemId,
-      userId,
-      collectionId
-    },{
-      headers:{
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    try{
+      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+        firstName,
+        lastName,
+        address,
+        apartmentNumber,
+        phoneNumber,
+        itemId,
+        userId,
+        collectionId
+      },{
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      if(data.success){
+        setButtonTitle('Ordered')
+        const {data:updateItem} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${itemId}`,{
+          orderStatus:'ordered',
+          orderID:data.order._id
+        },
+        {
+          headers:{
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+        )
+        getItems()
+        closeModal()
+      }else{
+        setButtonTitle('Order')
       }
-    })
-    if(data.success){
-      setButtonTitle('Ordered')
-      closeModal()
-    }else{
-      setButtonTitle('Order')
+    }
+    catch(err){
+        alert(err.response.data.message)
     }
 }
 

@@ -1,4 +1,4 @@
-import { ArtistHeader, TableCell, Filter,DeliverModal, RelistModal } from "components"
+import { ArtistHeader, TableCell, Filter,DeliverModal, RelistModal, DeliveryStatusModal } from "components"
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
@@ -36,10 +36,19 @@ const DeployItemCard = ({item, handleDeployItem}) => {
 } 
 
 const CollectedItemCard = ({item, i,setSelectedItem}) => {
-  const [status, setStatus] = useState('Buy')
+  const [status, setStatus] = useState('Ship')
+
+  useEffect(()=>{
+    if(item && item.orderStatus==='ordered'){
+      setStatus('View Status')
+    }
+  },[item])
+
   const [isOpen, setIsOpen] = useState(false)
+  const [isStatusOpen , setIsStatusOpen] = useState(false)
   const {deliverableModalOpen, setDeliverableModalOpen} = useDeliverableModalStore()
   const handleReList = async () => {
+    
     setIsOpen(true)
   }
   
@@ -47,10 +56,15 @@ const CollectedItemCard = ({item, i,setSelectedItem}) => {
   return (
     <div>
       <ItemCard onItemBuy={()=>{
-          setSelectedItem(item)
+        setSelectedItem(item)
+        if(item.orderStatus ==='ordered'){
+          setIsStatusOpen(true)
+          return
+        }
           setDeliverableModalOpen(true)
         }} relistHandler={()=>handleReList()} isDeliverable={item?.voucher?.maxFractions===1} collectionStatus={status} isBoughtItem item={item}/>
         <RelistModal item={item} isOpen={isOpen} setIsOpen={setIsOpen}/>
+        <DeliveryStatusModal item={item} isOpen={isStatusOpen} setIsOpen={setIsStatusOpen}/>
       </div>
   )
 }
@@ -254,7 +268,8 @@ const ArtistHero = () => {
             )
           }
       </div>
-      <DeliverModal item={selectedItem}/>
+      <DeliverModal item={selectedItem} getItems={getItems}/>
+
     </div>
   )
 }
