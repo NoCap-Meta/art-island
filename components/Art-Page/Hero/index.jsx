@@ -127,7 +127,7 @@ const ArtPageHero = () => {
           <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
             <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
               {
-                item ? item.collection.name + ' Collection': ''
+                item ? item?.collection?.name + ' Collection': ''
               }
             </p>
             <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
@@ -141,7 +141,7 @@ const ArtPageHero = () => {
             </p>
             <p className={`${MagnetLight.className} text-[16px] opacity-50 leading-[20px]`}>
               Created by {
-                item && item.collection.createrAddress
+                item && item?.collection?.createrAddress
               }
             </p>
             <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
@@ -184,7 +184,7 @@ const ArtPageHero = () => {
               </div>
             </div>
             <div className='mt-[20px]'>
-              <div onClick={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)} className='w-[247px] h-[52px] bg-black cursor-pointer flex items-center gap-[10px] rounded-xl justify-center'>
+              <div onClick={()=>(item&&item.isDeployed) &&  handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)} className={`w-[247px] h-[52px] ${(!item || !item.isDeployed) && 'opacity-50'} bg-black cursor-pointer flex items-center gap-[10px] rounded-xl justify-center`}>
                 <img src='Images/SVG/Cart.svg' />
                 <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
                   {status}

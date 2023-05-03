@@ -13,7 +13,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
 
-const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, onOpenClick,hasUploadable}) => {
+const Property = ({name, desc, imageName,onChange,defaultChecked, toggle, addable, keyValue, onOpenClick,hasUploadable}) => {
   const {itemModalData,setItemModalData} = useItemModalStore()
   const fileRef = useRef(null)
 
@@ -36,7 +36,7 @@ const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, on
           </div>
         }
           {toggle && <Toggle
-        defaultChecked={false}
+        defaultChecked={defaultChecked}
         onChange={(e)=>{
           setItemModalData({
             ...itemModalData,
@@ -60,7 +60,7 @@ const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, on
   )
 }
 
-const CreateItemComponent = () => {
+const UpdateItemComponent = () => {
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const {setCaptchaModalOpen} = useCaptchaModalStore()
   const {setItemLevelModalOpen} = useItemLevelModalStore()
@@ -82,7 +82,7 @@ const CreateItemComponent = () => {
   const router = useRouter()
   const [unlockableFiles, setUnlockableFiles] = useState([])
 
-  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null|| itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions 
+  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...'   || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions || 
   useEffect(()=>{
     const token = localStorage.getItem('token')
     if(!token){
@@ -134,6 +134,28 @@ const CreateItemComponent = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
+
+      const {data:thisItem} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${router.query.itemId}`)
+      if(thisItem.success){
+        const newItemModalData = {
+          ...itemModalData,
+          name: thisItem.item.name,
+          desc: thisItem.item.desc,
+          collectionId: thisItem.item.collectionId,
+          maxFractions: thisItem.item.maxFractions,
+          fractions: thisItem.item.fractions,
+          pricePerFraction: thisItem.item.pricePerFraction,
+          royalty: thisItem.item.royalty,
+          externalLink: thisItem.item.externalLink,
+          unlockable: thisItem.item.unlockable,
+          unlockableFiles: thisItem.item.unlockableFiles,
+          hasUnlockableContent: thisItem.item.hasUnlockableContent ,
+          hasSensitiveContent: thisItem.item.hasSensitiveContent,
+          tokenID: thisItem.item.tokenID,
+        }
+        console.log(newItemModalData)
+        setItemModalData(newItemModalData)
+      }
 
       if(data.success && data.collection.length<1){
         setCollections([{
@@ -300,10 +322,9 @@ const CreateItemComponent = () => {
     }
 
     if(!imageUrl) return
-    const tokenID = Math.floor(Date.now() * Math.random())
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
+    const tokenID = itemModalData.tokenID || Math.floor(Date.now() * Math.random())
+    const {data} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${router.query.itemId}`, {
       ...itemModalData,
-      collectionId: itemModalData.collectionId===''?null:itemModalData.collectionId,
       tokenId: tokenID,
       image: imageUrl,
       allImages: allImages,
@@ -359,8 +380,8 @@ const CreateItemComponent = () => {
             }
             <input multiple={true} accept={'image/png, image/jpeg, image/gif, image/svg+xml, image/webp, image/apng, image/bmp, image/x-icon, image/vnd.mi, image/tiff, image/tiff-fx, image/vnd.adobe.photoshop, image/vnd.dwg, image/vnd.dxf, image/vnd.dgn, image/vnd.djvu, image/vnd.djvu+multipage, image/vnd.dxf, image/vnd.fastbidsheet, image/vnd.fpx, image/vnd.fst, image/vnd.fujixerox.edmics-mmr, image/vnd.fujixerox.edmics-rlc, image/vnd.globalgraphics.pgb, image/vnd.microsoft.icon, image/vnd.mix, image/vnd.ms-modi, image/vnd.ms-photo, image/vnd.net-fpx, image/vnd.radiance, image/vnd.sealed.png, image/vnd.sealedmedia.softseal.gif, image/vnd.sealedmedia.softseal.jpg, image/vnd.svf, image/vnd.wap.wbmp, image/vnd.xiff, image/vnd.zbrush.pcx, image/x-3ds, image/x-cmu-raster, image/x-cmx, image/x-freehand, image/x-icon, image/x-jng, image/x-mrsid-image, image/x-ms-bmp, image/x-msmetafile, image/x-pcx, image/x-pict, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-rgb, image/x-tga, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/x.djvu, image/x.djvu+multipage, image/x.emf, image/x.fst, image/x.g3fax, image/x.ico, image/x.icon'} onChange={handleChange} ref={fileRef} type="file" className="hidden"/>
         </div>
-        <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
-        <InputField onChange={(e)=>handleFormDataChange(e, 'authorName')} placeholder={'Author'}>Author Name</InputField>
+        <InputField value={itemModalData.name} onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
+        <InputField value={itemModalData.authorName} onChange={(e)=>handleFormDataChange(e, 'authorName')} placeholder={'Author'}>Author Name</InputField>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Token Type</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>Will it be a single token or multiple token</p>
@@ -394,9 +415,9 @@ const CreateItemComponent = () => {
           <InputField disabled={tokenType==='single'} value={itemModalData.maxFractions} onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Tokens to Create'}>Maximum Supply</InputField>
           <InputField disabled={tokenType==='single'} value={itemModalData.fractions} onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Tokens that can be minted'}>Maximum Mintable Tokens</InputField>
         </div>
-        <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
-        {/* <InputField onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField> */}
-        <InputField onChange={(e)=>handleFormDataChange(e, 'externalLink')} desc={'NoCap Network will include a link to this URL on this item\'s detail page, so that users can click to learn more about it. You are welcome to link to your own webpage with more details.'} placeholder={'Item Name'}>External Link</InputField>
+        <InputField value={itemModalData.pricePerFraction} onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
+        {/* <InputField value={itemModalData.royalty} onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField> */}
+        <InputField value={itemModalData.externalLink} onChange={(e)=>handleFormDataChange(e, 'externalLink')} desc={'NoCap Network will include a link to this URL on this item\'s detail page, so that users can click to learn more about it. You are welcome to link to your own webpage with more details.'} placeholder={'Item Name'}>External Link</InputField>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Description</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>
@@ -418,8 +439,8 @@ const CreateItemComponent = () => {
         <Property onOpenClick={()=>setCreateItemModalState(true)} name={'Properties'} desc={'Textual traits that show up as rectangles'} addable imageName={'List'}/>
         <Property onOpenClick={()=>setItemLevelModalOpen(true)} name={'Levels'} desc={'Numerical traits that show as a progress bar'} addable imageName={'Star1'}/>
         <Property onOpenClick={()=>setItemStatsModalOpen(true)} name={'Stats'} desc={'Numerical traits that just show as numbers'} addable imageName={'Chart'}/>
-        <Property keyValue={'hasUnlockableContent'} onChange={e=>setUnlockableFiles(e.target.files)} hasUploadable={itemModalData.hasUnlockableContent} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
-        <Property keyValue={'hasSensitiveContent'} name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
+        <Property defaultChecked={itemSubmittedModalOpen.hasUnlockableContent || false} keyValue={'hasUnlockableContent'} onChange={e=>setUnlockableFiles(e.target.files)} hasUploadable={itemModalData.hasUnlockableContent} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
+        <Property defaultChecked={itemSubmittedModalOpen.hasSensitiveContent || false} keyValue={'hasSensitiveContent'} name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Blockchain</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>
@@ -449,4 +470,4 @@ const CreateItemComponent = () => {
   )
 }
 
-export default CreateItemComponent
+export default UpdateItemComponent

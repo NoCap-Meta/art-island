@@ -72,6 +72,29 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     voucher,
     signature: voucher.signature,
     tokenBuyed: 0,
+    transaction: {
+      transactionHash: voucher.signature,
+      price: item.pricePerFraction,
+      to: item.deployedCollectionAddress,
+      type: 'Sign Primary NFT',
+      date: new Date().toISOString(),
+      from: accounts[0],
+    }
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+    transaction: {
+      transactionHash: voucher.signature,
+      price: item.pricePerFraction,
+      to: item.deployedCollectionAddress,
+      type: 'Sign Item',
+      date: new Date().toISOString(),
+      from: accounts[0],
+    }
   }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`

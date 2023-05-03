@@ -91,6 +91,22 @@ const MyCollectionsComponent = () => {
       if(data.success){
         getCollection()
       }
+
+      const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+        transaction: {
+          transactionHash: receipt.logs[0].address,
+          price: null,
+          to: deployedCollectionAddress,
+          type: 'Deploy Collection',
+          date: new Date().toISOString(),
+          from: accounts[0],
+        }
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
     }
 
   } }

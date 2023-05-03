@@ -7,6 +7,8 @@ import DropDownInput from '../../Common/DropDownInput/index';
 import ItemCard from "@/components/Common/ItemCard";
 import axios from "axios";
 import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
+import { BuyItemCard } from "@/components/Common/TopCollectionSection";
+import { useRouter } from "next/router";
 
 const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore,useDeliverableModalStore} = Store
 
@@ -28,10 +30,19 @@ const SearchBar = ({setFilterOpen,sortBy,
   )
 }
 
-const DeployItemCard = ({item, handleDeployItem}) => {
+export const DeployItemCard = ({item, handleDeployItem}) => {
+  const router = useRouter()
+
+  const handleClickEdit = () => {
+    router.push(`/update-item?itemId=${item._id}`)
+  }
+
   const [status, setStatus] = useState(item.isDeployed? 'Deployed': item.collectionApproved ? item.isApproved? item.deployedCollectionAddress? 'Deploy': 'Collection not deployed': 'Pending Item Approval': 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status==='Deploying...')
-  return <div>
+  return <div className="relative">
+    {item.isDeployed && <div className="absolute top-[5px] right-[5px] z-[1]">
+      <img onClick={handleClickEdit} src="Images/SVG/Edit.svg" className="cursor-pointer "/>
+    </div>}
     <ItemCard isDeliverable={item.maxFractions===1} onItemBuy={!isDisabled?()=>handleDeployItem(item, setStatus):()=>{}} isDisabled={isDisabled} item={item} isItem collectionStatus={status}  />
   </div>
 } 
@@ -80,6 +91,7 @@ const ArtistHero = () => {
   const {user, setUser} = useUserStore()
   const [selectedItem, setSelectedItem] = useState({})
   const [sortBy, setSortBy] = useState('Time')
+  const [transactions, setTransactions] = useState([])
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -114,6 +126,14 @@ const ArtistHero = () => {
     const {data: boughtData} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/get-items-by-ids`,{
       ids: user.boughtItems
     })
+
+    const {data:trans} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/transactions`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    setTransactions(trans.transactions)
 
     setLikedItems(likedItems.items)
 
@@ -157,7 +177,7 @@ const ArtistHero = () => {
 
   useEffect(()=>{
     getItems()
-  },[])
+  },[selectedTab])
 
   const handleDeployItem = async (item, setStatus) => {
     await handleBuyPrimaryNFT(item, getItems, setStatus)
@@ -233,17 +253,23 @@ const ArtistHero = () => {
                     <TableCell font={MagnetMedium.className} text='Date'/>
                   </div>
                   {
-                    Array.from({length:10}).map((_, index)=>{
+                    transactions.map((item, index)=>{
                       return (
                         <div className='md:w-[100%] w-[200%] h-[56px] items-center border-y flex border-[rgba(0,0,0,0.2)] '>
-                          <TableCell text='Sale'>
+                          <TableCell text={item.type}>
                             <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
                           </TableCell>
-                          <TableCell text='0.069 ETH'/>
-                          <TableCell text='NeutralHose'/>
-                          <TableCell text='AtomicBrother'/>
-                          <TableCell text='3 days ago' right>
-                            <img src="Images/SVG/Newscreen.svg" />
+                          <TableCell text={item.price || 'N/A'}/>
+                          <TableCell text={item.from.slice(0,6)+'...' || 'N/A'}/>
+                          <TableCell text={item.to.slice(0,6)+'...' || 'N/A'}/>
+                          <TableCell text={
+                            new Date(item.date).toLocaleDateString('en-US', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })
+                          } right>
+                            {/* <img src="Images/SVG/Newscreen.svg" /> */}
                           </TableCell>
                         </div>
                       )
@@ -305,7 +331,7 @@ const ArtistHero = () => {
                   likedItems.map((item, i)=>{
                     return (
                       <div key={i}>
-                        <ItemCard isFav item={item}/>
+                        <BuyItemCard item={item} items={likedItems} />
                       </div>
                     )
                   }

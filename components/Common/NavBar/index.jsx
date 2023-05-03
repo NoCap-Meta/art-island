@@ -5,10 +5,11 @@ import { useState } from 'react';
 import { Store } from "@/utils";
 import { useRouter } from 'next/router';
 
-const {useCartStore, useSelectedArtistProfileTab, useArtistProfileOptionsStore} = Store
+const {useCartStore, useSelectedArtistProfileTab, useArtistProfileOptionsStore, useUserStore} = Store
 
 const NavBar = ({isLogined}) => {
   const {activeModal, setActiveModal, user, setUser} = useContext()
+  const {user:thisUser} = useUserStore()
   const [isClicked, setIsClicked] = useState(false)
   const {cartOpen,setCartOpen} = useCartStore()
   const [searchInput, setSearchInput] = useState('')
@@ -92,7 +93,7 @@ const NavBar = ({isLogined}) => {
             <p onClick={()=>router.push('/collectionstats')}  className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Stats
             </p>
-            <p onClick={()=>router.push('/my-collections')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={()=>router.push('/my-items')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Create
             </p>
             <div className="flex items-center gap-[10px]">
@@ -109,18 +110,18 @@ const NavBar = ({isLogined}) => {
               <div onClick={()=>handleGoToProfile('Featured')}className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Profile</p>
               </div>
-              <div  className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <div onClick={()=>handleGoToProfile('Favourites')}  className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Favourites</p>
               </div>
               <div onClick={()=>handleGoToProfile('Transaction History')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
               </div>
-              <div onClick={()=>{
+              {thisUser.email.includes('@nocapmeta.in') && <div onClick={()=>{
                 router.push('/my-collections')
                 setIsClicked(false)
               }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
                 <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Collections</p>
-              </div>
+              </div>}
               <div onClick={()=>{
                 router.push('/settings')
                 setIsClicked(false)

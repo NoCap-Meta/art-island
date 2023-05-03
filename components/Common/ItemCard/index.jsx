@@ -11,33 +11,18 @@ function downloadFile(fileLink) {
   link.click();
   document.body.removeChild(link);
 }
-const {useArtistProfileOptionsStore} = Store
+const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
 
 
 const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collectionStatus,isDeliverable,isBoughtItem, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
   const {artistProfileOptions,
     setArtistProfileOptions} = useArtistProfileOptionsStore()
+    const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
   const router = useRouter()
 
   const handleCollectionPush = ()=>{
-    // setSelectedArtistProfileTab(name)
-    console.log('hello')
-    let newArtistProfileOptions = artistProfileOptions.map((item)=>{
-      if(item.name === 'Created'){
-        return {
-          ...item,
-          selected: true
-        }
-      }else{
-        return {
-          ...item,
-          selected: false
-        }
-      }
-    })
-    setArtistProfileOptions(newArtistProfileOptions)
-    router.push('/artist-profile')
+    router.push('/collection?id='+item._id)
     // setIsClicked(false)
   }
 
@@ -122,6 +107,12 @@ const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collection
         {
           isFav && (
             <div className='w-[100%] flex flex-col items-center'>
+               <button disabled={isDisabled} onClick={(e)=>{
+                e.stopPropagation()
+                onItemBuy()
+              }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              {collectionStatus}
+            </button>
               <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               View
             </button>

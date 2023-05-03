@@ -30,6 +30,9 @@ import ItemSubmittedModal from './Modals/ItemSubmittedModal/index';
 import DeliverModal from './Modals/DeliverModal/index';
 import RelistModal from './Modals/RelistModal/index';
 import DeliveryStatusModal from './Modals/DeliveryStatus/index';
+import CollectionPageComponent from './CollectionPageComponent/index';
+import MyItems from './MyItems/index';
+import UpdateItemComponent from './UpdateItem/index';
 
 
 export const imageBackgroundOptions = {
@@ -78,5 +81,8 @@ export {
   ItemSubmittedModal,
   DeliverModal,
   RelistModal,
-  DeliveryStatusModal
+  DeliveryStatusModal,
+  CollectionPageComponent,
+  MyItems,
+  UpdateItemComponent
 };

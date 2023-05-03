@@ -49,28 +49,7 @@ const ExplorePageComponent = () => {
       selected:false,
     },
   ])
-  const [navigations, setNavigations] = useState([
-    {
-      name: 'All',
-      isActive: true,
-      value:''
-    },
-    {
-      name: 'Art',
-      isActive: false,
-      value:'art'
-    },
-    {
-      name: 'Photography',
-      isActive: false,
-      value:'photography'
-    },
-    {
-      name: 'Real Estate',
-      isActive: false,
-      value:'real-estate'
-    },
-  ])
+  const [navigations, setNavigations] = useState([])
 
   useEffect(()=>{
       if(deployedItems.length>0){
@@ -93,14 +72,16 @@ const ExplorePageComponent = () => {
         return {
           name: category.name,
           isActive: false,
-          value: category.value
+          value: category.value,
+          isHided: category.isHided
         }
       })
       newNavigations = [
         {
           name: 'All',
           isActive: true,
-          value:''
+          value:'',
+          isHided: false
         },
         ...newNavigations
       ]
@@ -163,6 +144,9 @@ const ExplorePageComponent = () => {
         <div className="w-[90vw] flex gap-[40px] pt-[3rem] overflow-visible">
           {
             navigations.map((navigation, index)=>{
+              if(navigation.isHided){
+                return
+              }
               return <p onClick={()=>handleSelect(navigation)} className={`${MagnetBold.className} cursor-pointer overflow-visible text-[18px] whitespace-nowrap leading-[18px] transition-all duration-300 ${!navigation.isActive && 'opacity-50'} text-[#000000]`}>{navigation.name}</p>
             })
           }

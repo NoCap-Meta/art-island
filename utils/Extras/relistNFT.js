@@ -8,7 +8,7 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
     return
   }
 
-  
+
 
 
   await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -60,13 +60,37 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
     isDeployed: true,
     isApproved: true,
     maxFractions: +fractionsToList,
-    voucher
+    voucher,
+    transaction: {
+      transactionHash: voucher.signature,
+      price: item.pricePerFraction,
+      to: item.deployedCollectionAddress,
+      type: 'Relist Item',
+      date: new Date().toISOString(),
+      from: accounts[0],
+
+    }
   },
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
+
+  const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+    transaction: {
+      transactionHash: voucher.signature,
+      price: item.pricePerFraction,
+      to: item.deployedCollectionAddress,
+      type: 'Relist Item',
+      date: new Date().toISOString(),
+      from: accounts[0],
+    }
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
 
   if (relistData.success) {
     getItems()

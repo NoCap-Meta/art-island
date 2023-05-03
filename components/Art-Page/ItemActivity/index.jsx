@@ -1,4 +1,5 @@
 
+import { useSelectedItemStore } from '@/utils/Zustand';
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app';
 import { useState } from 'react';
 
@@ -58,11 +59,8 @@ export const TableCell = ({children, text, font, right})=>{
 const ItemActivity = () => {
   const [isActivityOpen, setActivityOpen] = useState(true)
   const [isFilterListOpen, setFilterListOpen] = useState(false)
-  const [seletedFilters, setSeletedFilters] = useState([
-    'Sales',
-    'Listings',
-    'Offers',
-  ])
+  const [seletedFilters, setSeletedFilters] = useState([])
+  const {selectedItem:item, setSelectedItem} = useSelectedItemStore()
 
   const handleFilter = (name)=>{
     if(seletedFilters.includes(name)){
@@ -88,7 +86,7 @@ const ItemActivity = () => {
           transition-all duration-300
           cursor-pointer`} />
         </div>
-        {
+        {/* {
           isActivityOpen && (
             <div className={`flex justify-center w-[90vw] border ${seletedFilters.length>0?'pt-[16px]':'py-[16px]'} border-[rgba(0,0,0,0.2)]`}>
               <div className='w-[98%]'>
@@ -118,7 +116,7 @@ const ItemActivity = () => {
               </div>
             </div>
           )
-        }
+        } */}
         <div className='flex flex-col md:overflow-hidden overflow-scroll  w-[90vw]'>
           <div className='md:w-[100%] w-[200%] h-[40px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell font={MagnetMedium.className} text='Event'/>
@@ -127,39 +125,29 @@ const ItemActivity = () => {
             <TableCell font={MagnetMedium.className} text='To'/>
             <TableCell font={MagnetMedium.className} text='Date'/>
           </div>
-          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
-            <TableCell text='Sale'>
-              <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
-            </TableCell>
-            <TableCell text='0.069 ETH'/>
-            <TableCell text='NeutralHose'/>
-            <TableCell text='AtomicBrother'/>
-            <TableCell text='3 days ago' right>
-              <img src="Images/SVG/Newscreen.svg" />
-            </TableCell>
-          </div>
-          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
-            <TableCell text='Minted'>
-              <img src="Images/SVG/Star.svg" className='ml-[10px]' />
-            </TableCell>
-            <TableCell text='0.069 ETH'/>
-            <TableCell text='Kompact'/>
-            <TableCell text='Surreal'/>
-            <TableCell text='15 days ago' right>
-              <img src="Images/SVG/Newscreen.svg" />
-            </TableCell>
-          </div>
-          <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
-            <TableCell text='Transfer'>
-              <img src="Images/SVG/Refresh.svg" className='ml-[10px]' />
-            </TableCell>
-            <TableCell text='-'/>
-            <TableCell text='NeutralHose'/>
-            <TableCell text='AtomicBrother'/>
-            <TableCell text='17 days ago' right>
-              <img src="Images/SVG/Newscreen.svg" />
-            </TableCell>
-          </div>
+          {item && item.transactionHistory && item.transactionHistory.map((i)=>{
+            return (
+              <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
+                <TableCell text={i.type}>
+                  <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
+                </TableCell>
+                <TableCell text={i.price || 'N/A'}/>
+                <TableCell text={i?.from?.slice(0,6)+'...'||'N/A'}/>
+                <TableCell text={i?.to?.slice(0,6)+'...'||'N/A'}/>
+                <TableCell text={
+                  new Date(i.date).toLocaleDateString('en-US', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })
+                } right>
+                  {/* <img src="Images/SVG/Newscreen.svg" /> */}
+                </TableCell>
+              </div>
+            )
+          })
+          }
+
         </div>
       </div>
     </div>

@@ -29,19 +29,29 @@ const ArtPage = ({ item }) => {
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
-  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
-  console.log(data)
-  if (data.success) {
-    const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
+  try {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
+    console.log(data)
+    if (data.success) {
+      const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
+      return {
+        props: {
+          item: { ...data.item, usdPrice }
+        }
+      }
+    }
     return {
       props: {
-        item: { ...data.item, usdPrice }
+        item: null
       }
     }
   }
-  return {
-    props: {
-      item: null
+  catch (err) {
+    console.log(err)
+    return {
+      props: {
+        item: null
+      }
     }
   }
 }

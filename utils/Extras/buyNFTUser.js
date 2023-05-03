@@ -78,6 +78,14 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
       if (signed) {
         const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${item._id}`, {
           tokenBuyed: item.tokenBuyed + 1,
+          transaction: {
+            transactionHash: signed,
+            price: item.pricePerFraction,
+            to: item.deployedCollectionAddress,
+            type: 'Buy Item',
+            date: new Date().toISOString(),
+            from: accounts[0],
+          }
         }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -94,6 +102,21 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
         if (updatedUser?.success) {
           setUser()
         }
+
+        const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+          transaction: {
+            transactionHash: signed,
+            price: item.pricePerFraction,
+            to: item.deployedCollectionAddress,
+            type: 'Buy Item',
+            date: new Date().toISOString(),
+            from: accounts[0],
+          }
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
 
         if (data.success) {
           setStatus('Purchased')
