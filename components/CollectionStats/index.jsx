@@ -241,9 +241,20 @@ const CollectionStatsComponent = () => {
             
           </div>
       </div>
-      <div className='mt-[42px]  w-[100%]'>
+     {data.length>0 && visibleData.length>0 && <div className='mt-[42px]  w-[100%]'>
         <Table data={visibleData}/>
       </div>
+      }
+      {
+        data.length===0 && <div className='mt-[42px]  w-[100%]'>
+          <p className={`${MagnetBold.className} text-[20px] leading-[25px] text-[#000000]`}>No Data</p>
+        </div>
+      }
+      {
+        visibleData.length===0 && data.length>0 && <div className='mt-[42px]  w-[100%]'>
+          <p className={`${MagnetBold.className} text-[20px] leading-[25px] text-[#000000]`}>No Data for Selected Category</p>
+        </div>
+      }
     </div>
   )
 }

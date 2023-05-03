@@ -97,7 +97,7 @@ const NavBar = ({isLogined}) => {
             </p>
             <div className="flex items-center gap-[10px]">
               <img onClick={handleClickProfile} src='Images/SVG/User.svg' />
-              <img onClick={()=> setCartOpen(!cartOpen)} src='Images/SVG/Menu.svg' />
+              {/* <img onClick={()=> setCartOpen(!cartOpen)} src='Images/SVG/Menu.svg' /> */}
             </div>
           </div>
         </div>

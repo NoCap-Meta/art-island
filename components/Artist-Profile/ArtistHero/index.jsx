@@ -12,7 +12,8 @@ const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore,u
 
 
 
-const SearchBar = ({setFilterOpen}) => {
+const SearchBar = ({setFilterOpen,sortBy,
+  setSortBy}) => {
   return (
     <div className="w-[90vw] overflow-visible gap-[1rem] flex mt-[36px]">
       <img onClick={()=>{
@@ -22,7 +23,7 @@ const SearchBar = ({setFilterOpen}) => {
         <input placeholder="Search Items..." className="h-[2.5rem] bg-[rgba(255,255,255,0.5)] rounded-lg w-[60vw] outline-none pl-[3rem]"/>
         <img src='Images/SVG/Search.svg' className='absolute top-[50%] left-[12px] transform -translate-y-1/2'/>
       </div>
-      <DropDownInput preIcon={ <img src='Images/SVG/Refresh.svg' className='scale-75 opacity-50'/>} options={['Sort by', 'Price', 'Time']} width='w-[15vw]'/>
+      <DropDownInput value={sortBy} onChange={e=>setSortBy(e)} preIcon={ <img src='Images/SVG/Refresh.svg' className='scale-75 opacity-50'/>} options={['Time', 'Price']} width='w-[15vw]'/>
     </div>
   )
 }
@@ -78,6 +79,7 @@ const ArtistHero = () => {
   const [likedItems, setLikedItems] = useState([])
   const {user, setUser} = useUserStore()
   const [selectedItem, setSelectedItem] = useState({})
+  const [sortBy, setSortBy] = useState('Time')
 
   const handleSelect = (name) => {
     const newOptions = options.map((option)=>{
@@ -122,9 +124,38 @@ const ArtistHero = () => {
     }
   }
 
+  const sort = (items, field) => {
+    if(items.length <= 1){
+      return items
+    }
+    const pivot = items[items.length-1]
+    const left = []
+    const right = []
+    for(let i = 0; i < items.length-1; i++){
+      if(items[i][field] < pivot[field]){
+        left.push(items[i])
+      }else{
+        right.push(items[i])
+      }
+    }
+    return [...sort(left, field), pivot, ...sort(right, field)]
+
+  }
 
   useEffect(()=>{
+    if(sortBy === 'Time'){
+      setMyItems(sort(myItems, 'createdAt'))
+      setBoughtItems(sort(boughtItems, 'createdAt'))
+      setLikedItems(sort(likedItems, 'createdAt'))
+    }else{
+      setMyItems(sort(myItems, 'pricePerFraction'))
+      setBoughtItems(sort(boughtItems, 'pricePerFraction'))
+      setLikedItems(sort(likedItems, 'pricePerFraction'))
+    }
+  },[sortBy])
 
+
+  useEffect(()=>{
     getItems()
   },[])
 
@@ -159,10 +190,11 @@ const ArtistHero = () => {
           </div>
           <div className="w-[calc(90vw-774px)]">
             <div className="pl-[40px] w-full flex justify-between">
-              <div className="flex">
+              {/* <div className="flex">
                 <p className={`${MagnetLight.className} opacity-50 whitespace-nowrap text-[20px] leading-[25px]`}>More</p>
                 <img className="opacity-50 " src="Images/SVG/Chevron-small-down.svg"/>
-              </div>
+              </div> */}
+              <div/>
               <div className="flex gap-[10px]">
                 <img src="Images/SVG/Grid.svg"/>
                 <img className="opacity-50 " src="Images/SVG/GridH.svg"/>
@@ -172,7 +204,7 @@ const ArtistHero = () => {
           </div>
         </div>
 
-        <SearchBar setFilterOpen={setFilterOpen}/>
+        <SearchBar sortBy={sortBy} setSortBy={setSortBy} setFilterOpen={setFilterOpen}/>
 
       <div className="flex md:flex-row flex-col md:w-[90vw] md:items-start items-center gap-[2rem] md:justify-between">
         {filterOpen && <Filter/>}
@@ -233,6 +265,13 @@ const ArtistHero = () => {
                     )
                   }
                 )}
+                {
+                  myItems.length===0 && (
+                    <div className="flex flex-col items-center justify-center w-full h-[400px]">
+                      <p className={`${MagnetLight.className} text-[20px] mt-[20px]`}>No Items</p>
+                    </div>
+                  )
+                }
               </div>
             )
           }
@@ -249,6 +288,13 @@ const ArtistHero = () => {
                     )
                   }
                 )}
+                {
+                  boughtItems.length===0 && (
+                    <div className="flex flex-col items-center justify-center w-full h-[400px]">
+                      <p className={`${MagnetLight.className} text-[20px] mt-[20px]`}>No Items</p>
+                    </div>
+                  )
+                }
               </div>
             )
           }
@@ -259,11 +305,18 @@ const ArtistHero = () => {
                   likedItems.map((item, i)=>{
                     return (
                       <div key={i}>
-                        <ItemCard item={item}/>
+                        <ItemCard isFav item={item}/>
                       </div>
                     )
                   }
                 )}
+                {
+                  likedItems.length===0 && (
+                    <div className="flex flex-col items-center justify-center w-full h-[400px]">
+                      <p className={`${MagnetLight.className} text-[20px] mt-[20px]`}>No Items</p>
+                      </div>
+                  )
+                }
               </div>
             )
           }

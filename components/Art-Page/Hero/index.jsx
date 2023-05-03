@@ -16,7 +16,7 @@ const PropertiesCard = ({prop}) => {
         {prop?.name?.toUpperCase()}
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] leading-[18px]`}>
-        One Asset
+       
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] opacity-50 leading-[18px]`}>
         {prop?.type}

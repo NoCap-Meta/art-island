@@ -38,7 +38,7 @@ const NotificationSection = () => {
   const {selectedTab} = useTabStore()
   return (
     <Transition
-    show={selectedTab === 'Notifications'}
+    show={selectedTab === 'yar'}
     enter="transition-opacity z-[100] duration-300"
     enterFrom="opacity-0"
     enterTo="opacity-100"

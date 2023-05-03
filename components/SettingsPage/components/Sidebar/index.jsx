@@ -23,6 +23,11 @@ const SideBar = () => {
       name:'Account Support',
       active:false
     },
+    {
+      id: 3,
+      name:'Notifications',
+      active:false
+    }
   ])
 
   //handleTabSelect with tab obj

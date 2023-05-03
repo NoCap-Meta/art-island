@@ -44,7 +44,7 @@ const settings = {
   ]
 };
 
-const BuyItemCard = ({item, items})=>{
+export const BuyItemCard = ({item, items})=>{
   const {user, setUser} = useUserStore()
   const [status, setStatus] = useState('Buy')
   return (
@@ -73,7 +73,7 @@ const TopCollectionSection = ({title, items})=>{
         }
       </Slider>
       </div>}
-      {items && items.length<=4 && <div className='w-[90vw] mt-[5px] flex gap-[2rem]'>
+      {items && (items.length<=4 && items.length>0) && <div className='w-[90vw] mt-[5px] flex gap-[2rem]'>
         {
           items.map((item)=>{  
             return (
@@ -83,6 +83,11 @@ const TopCollectionSection = ({title, items})=>{
           )
         }
       </div>}
+      {
+        !items || items.length<1 && <div className='w-[90vw] mt-[5px] flex gap-[2rem]'>
+          <p className={`${MagnetBold.className} text-[#000000]  text-[24px]`}>No Items</p>
+        </div>
+      }
     </div>
   )
 }

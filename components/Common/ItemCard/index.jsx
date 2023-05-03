@@ -1,6 +1,7 @@
 import { MagnetBold, MagnetLight, web3 } from '@/pages/_app'
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { useRouter } from 'next/router';
+import { Store } from 'utils';
 
 function downloadFile(fileLink) {
   const link = document.createElement('a');
@@ -10,15 +11,39 @@ function downloadFile(fileLink) {
   link.click();
   document.body.removeChild(link);
 }
+const {useArtistProfileOptionsStore} = Store
 
 
-const ItemCard = ({isCollection,onCollectionClick,relistHandler,collectionStatus,isDeliverable,isBoughtItem, item, isDisabled, isItem, onItemBuy})=>{
+const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collectionStatus,isDeliverable,isBoughtItem, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
+  const {artistProfileOptions,
+    setArtistProfileOptions} = useArtistProfileOptionsStore()
   const router = useRouter()
 
-  return (
-    <div onClick={()=>item && router.push(
-      `/art-page?id=${item._id}`
+  const handleCollectionPush = ()=>{
+    // setSelectedArtistProfileTab(name)
+    console.log('hello')
+    let newArtistProfileOptions = artistProfileOptions.map((item)=>{
+      if(item.name === 'Created'){
+        return {
+          ...item,
+          selected: true
+        }
+      }else{
+        return {
+          ...item,
+          selected: false
+        }
+      }
+    })
+    setArtistProfileOptions(newArtistProfileOptions)
+    router.push('/artist-profile')
+    // setIsClicked(false)
+  }
+
+  return (  
+    <div onClick={()=>item && (isCollection?handleCollectionPush():router.push(
+      `/art-page?id=${item._id}`)
     )} style={{
       background: "rgba(255,255,255,0.5)"
     }} className="rounded-lg w-[295px] relative  overflow-hidden">
@@ -49,17 +74,17 @@ const ItemCard = ({isCollection,onCollectionClick,relistHandler,collectionStatus
           {(item && item.maxFractions===1?item.frequency + ' of ' + item.fractions +' token owned':item.frequency  + ' of ' + item.fractions +' token owned') || 'Deranged Music'}
         </p>}
         <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
-          {(item && item.name) || 'Deranged Music'}
+          {(item && (item.symbol||item.authorName)) || ''}
         </p>
         <p className={`${MagnetBold.className} text-[16px] leading-[20px] ml-[12px]`}>
-          {(item && (item.symbol||item.externalLink))|| 'Musical Birds Freeway Collection'}
+          {(item && (item.name))|| ''}
         </p>
-        {!isCollection && isItem && <>
+        {!isCollection && (isItem||isFav) && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-          {isItem && item  && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") +  ' ETH'||'15.2 ETH'}
+          {(isItem||isFav) && item  && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") +  ' ETH'||'15.2 ETH'}
           </p>
           <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
-            {(isItem && item && `Available ${item.maxFractions-item.tokenBuyed} of ${item.maxFractions}`)||'Available 20 of 100'}
+            {((isItem||isFav) && item && `Available ${item.maxFractions-item.tokenBuyed} of ${item.maxFractions}`)||'Available 20 of 100'}
           </p>
         </>}
         <div className='flex w-[100%] justify-center'>
@@ -88,6 +113,15 @@ const ItemCard = ({isCollection,onCollectionClick,relistHandler,collectionStatus
               }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>
+              <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              View
+            </button>
+            </div>
+          )
+        }
+        {
+          isFav && (
+            <div className='w-[100%] flex flex-col items-center'>
               <button onClick={()=>router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               View
             </button>
