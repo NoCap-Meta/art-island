@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Store } from 'utils';
+import RelistArtPageHero from '@/components/Art-Page/RelistHero';
 
 const { useSelectedItemStore } = Store
 
@@ -19,7 +20,8 @@ const ArtPage = ({ item }) => {
   return (
     <div>
       <div className='pb-[125px] bg-[#f5dfc2]'>
-        <ArtPageHero item={item} />
+        {item && !item.fully_subscribed && <ArtPageHero item={item} />}
+        {item && item.fully_subscribed && <RelistArtPageHero item={item} />}
         <Details item={item} />
         <ItemActivity item={item} />
       </div>

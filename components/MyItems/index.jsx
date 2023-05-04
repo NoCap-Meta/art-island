@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { DeployItemCard } from '../Artist-Profile/ArtistHero';
+import { handleBuyPrimaryNFT } from '@/utils/Extras/buyNFT';
 
 const {useCollectionModalStore} = Store
 
@@ -44,7 +45,7 @@ const MyItems = () => {
   },[collectionModalOpen])
 
   const handleDeployItem = async (item, setStatus) => {
-    await handleBuyPrimaryNFT(item, getItems, setStatus)
+    await handleBuyPrimaryNFT(item, getCollection, setStatus)
   }
   
   return (

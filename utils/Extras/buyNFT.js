@@ -5,7 +5,7 @@ import { verifyUser } from './verifyUser';
 
 export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
   setStatus('Deploying...')
-  if (item && (item.tokenBuyed === item.fractions)) {
+  if (item && (item.tokenBuyed === item.maxFractions)) {
     setStatus('Sold Out')
     return
   }
@@ -58,6 +58,8 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
 
   const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, +item.tokenId, item.maxFractions, item.pricePerFraction * (10 ** 18), true, account, +item.royalty * 100, item.ipfsLink || ipfsLink.url)
 
+  console.log(voucher)
+
   const { data: verifyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
     voucher
   }, {
@@ -77,7 +79,6 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     signature: voucher.signature,
     tokenBuyed: 0,
     transaction: {
-      transactionHash: voucher.signature,
       price: item.pricePerFraction,
       to: item.deployedCollectionAddress,
       type: 'Sign Primary NFT',
@@ -92,7 +93,6 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
 
   const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
     transaction: {
-      transactionHash: voucher.signature,
       price: item.pricePerFraction,
       to: item.deployedCollectionAddress,
       type: 'Sign Item',

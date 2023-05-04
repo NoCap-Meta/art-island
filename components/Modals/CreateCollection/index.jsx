@@ -36,7 +36,7 @@ export default function CreateCollectionModal() {
     token: dropdownOptions[0].value,
     tokenType: 'single',
     logo:'',
-    category:categoryOptions?.[0]?.value
+    category:''
   })
 
   function closeModal() {
@@ -125,7 +125,7 @@ export default function CreateCollectionModal() {
   }
 }
 
-let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0  || formData?.token?.length === 0 || file === null || buttonTitle === 'Submitting...' || formData.category === null
+let isDisabled = formData?.name?.length === 0 || formData?.symbol?.length === 0  || formData?.token?.length === 0 || file === null || buttonTitle === 'Submitting...'
 
 useEffect(()=>{
   const getCategories = async ()=>{
@@ -225,12 +225,12 @@ useEffect(()=>{
                             </p>
                             <DropDownInput setValue={(value)=>handleChange(value, 'token', true)} width={'w-[100%]'} options={dropdownOptions}>Category</DropDownInput>
                         </div>
-                        <div className="mt-[1rem] overflow-visible">
+                        {/* <div className="mt-[1rem] overflow-visible">
                             <p className={`${MagnetMedium.className} mb-[5px] text-[16px] text-left`}>
                               Category
                             </p>
                             <DropDownInput setValue={(value)=>handleChange(value, 'category', true)} width={'w-[100%]'} options={categoryOptions}>Category</DropDownInput>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <button onClick={handleSubmit} disabled={

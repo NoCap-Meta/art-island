@@ -11,11 +11,12 @@ function downloadFile(fileLink) {
   link.click();
   document.body.removeChild(link);
 }
-const {useArtistProfileOptionsStore, useSelectedArtistProfileTab} = Store
+const {useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore} = Store
 
 
 const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collectionStatus,isDeliverable,isBoughtItem, item, isDisabled, isItem, onItemBuy})=>{
   const [image, setImage] = useState('/Images/PNG/Gallery1.png')
+  const {user} = useUserStore()
   const {artistProfileOptions,
     setArtistProfileOptions} = useArtistProfileOptionsStore()
     const {selectedArtistProfileTab:selectedTab,setSelectedArtistProfileTab:setSeletctedTab} = useSelectedArtistProfileTab()
@@ -25,6 +26,19 @@ const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collection
     router.push('/collection?id='+item._id)
     // setIsClicked(false)
   }
+
+  //check the number of tokens with same id in user.boughtItems
+  const checkTokenCount = (id)=>{
+    let count = 0
+    user.boughtItems.forEach((item)=>{
+      if(item===id){
+        count++
+      }
+    })
+    console.log(count)
+    return count
+  }
+
 
   return (  
     <div onClick={()=>item && (isCollection?handleCollectionPush():router.push(
@@ -121,11 +135,11 @@ const ItemCard = ({isCollection,onCollectionClick,isFav,relistHandler,collection
         }
          {
           isBoughtItem && (
-            <div className='w-[100%] flex justify-center gap-[1rem]'>
-            {isDeliverable && <button disabled={isDisabled} onClick={(e)=>{
+            <div className='w-[100%] flex flex-col items-center justify-center gap-[0.5]'>
+            {(isDeliverable|| checkTokenCount(item._id)===item.fractions) && <button disabled={isDisabled} onClick={(e)=>{
                 e.stopPropagation()
                 onItemBuy()
-              }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+              }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
             </button>}
               <button onClick={relistHandler} className={`${MagnetBold.className} ${isDeliverable ?'w-[40%]':'w-[90%]'} h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>

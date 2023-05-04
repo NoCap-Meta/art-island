@@ -1,12 +1,15 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useRef, useState, useEffect } from 'react'
 import {MagnetBold, MagnetMedium, MagnetRegular, web3} from 'pages/_app.js'
 import InputField from '@/components/Common/InputField'
 import { handleReList } from '@/utils/Extras/relistNFT'
 import axios from 'axios'
+import { buyRelistToken } from '../../../utils/Extras/buyRelistToken';
+import { useUserStore } from '@/utils/Zustand';
 
-export default function RelistModal({item, isOpen, setIsOpen:setActiveModal}) {
-  const [buttonTitle, setButtonTitle] = useState('Sign the Token')
+export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}) {
+  const [buttonTitle, setButtonTitle] = useState('Bid')
+  const {user} = useUserStore()
   const [formData, setFormData] = useState({
     fractionsToList: '',
   })
@@ -29,63 +32,36 @@ export default function RelistModal({item, isOpen, setIsOpen:setActiveModal}) {
     })
   }
 
+  useEffect(()=>{
+    if(value){
+      setFormData({
+        ...formData,
+        fractionsToList: value[0]?.price
+      })
+    }
+  },[value])
+
 
   const handleSubmit = async ()=>{
-    setButtonTitle('Submitting...')
-
-    //check for address in web3
-    if(!window.ethereum){
-      setButtonTitle('Sign the Token')
+   if(+formData.fractionsToList<+value?.[0]?.price){
+      alert('Bid amount should be greater than or equal to the current bid')
+   }else{
+    //get voucher with the same signature as the value[0].signature
+    const voucher = item.vouchers.find(v=>v.signature===value[0].voucherId)
+    if(!voucher){
+      alert('No voucher found')
       return
     }
-
-    const accounts = await web3.eth.getAccounts()
-
-    if(!accounts || accounts.length===0){
-      setButtonTitle('Sign the Token')
-      return 
-    }
-
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/authenticate-voucher`, {
-      collectionAddress: item.collection.deployedCollectionAddress,
-      tokenID:+item.vouchers[0].tokenId,
-      fractionsToList: 1,
-      account: accounts[0]
-    },{
-      headers:{
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-    if(!data.success){
-      setButtonTitle('Sign the Token')
-      return
-    }
-
-    const {txObject} = data
-
-    const signed = await await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [txObject],
-    });
-
-
-    let receipt = null;
-    while (receipt === null) {
-      receipt = await window.ethereum.request({
-        method: 'eth_getTransactionReceipt',
-        params: [signed],
-      });
-
-      // Wait for 1 second before trying again
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
-    console.log(receipt)
-
-    handleReList(item, ()=>{}, closeModal, formData.fractionsToList)
+    buyRelistToken(item, ()=>{}, ()=>{}, ()=>{}, user, voucher, value)
+   }
   }
 
-let isDisabled = formData.address===null || buttonTitle === 'Submitting...' || formData.firstName === '' || formData.lastName === '' || formData.phoneNumber === '' || formData.apartmentNumber === '' || !item
+let isDisabled = false
+
+const handleDecicalInput = (e, type)=>{
+  e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+  handleChange(e, type)
+}
 
 
   return (
@@ -119,7 +95,7 @@ let isDisabled = formData.address===null || buttonTitle === 'Submitting...' || f
                     <div className='w-[100%] overflow-visible'>
                       <div className='w-[100%] flex justify-between'>
                         <p className={`${MagnetBold.className} text-[18px] text-left`}>
-                          Number of Items to relist
+                          Amount
                         </p>
                         <button onClick={closeModal} className='text-[20px] text-right'>
                           <img src='Images/SVG/Cross-Black.svg' alt='close' />
@@ -129,8 +105,8 @@ let isDisabled = formData.address===null || buttonTitle === 'Submitting...' || f
                         {item?.name}
                       </p>
                       <div className='w-[100%] mt-[1rem] overflow-visible'>
-                      <InputField type='number' value={+formData.fractionsToList} onChange={(e)=>handleChange(e, 'fractionsToList')} placeholder={`Price`} >
-                        Price per Fraction
+                      <InputField tyle={'number'} value={formData.fractionsToList} onChange={(e)=>handleDecicalInput(e, 'fractionsToList')} placeholder={`Price`} >
+                        Price
                       </InputField>
                     </div>
                     <button onClick={handleSubmit} disabled={

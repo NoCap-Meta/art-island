@@ -76,6 +76,10 @@ const CollectedItemCard = ({item, i,setSelectedItem}) => {
           setDeliverableModalOpen(true)
         }} relistHandler={(e)=>{
           e.stopPropagation()
+          if(!item.fully_subscribed){
+            alert('Primary Sale is not completed yet')
+            return
+          }
           handleReList()
         }} isDeliverable={item?.voucher?.maxFractions===1} collectionStatus={status} isBoughtItem item={item}/>
         <RelistModal item={item} isOpen={isOpen} setIsOpen={setIsOpen}/>

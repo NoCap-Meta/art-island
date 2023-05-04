@@ -145,7 +145,12 @@ const ItemActivity = () => {
                     year: 'numeric',
                   })
                 } right>
-                  {/* <img src="Images/SVG/Newscreen.svg" /> */}
+                  {i.transactionHash && <img src="Images/SVG/Newscreen.svg" onClick={
+                    ()=>{
+                      //got to etherscan
+                      window.open('https://mumbai.polygonscan.com/tx/'+i.transactionHash)
+                    }
+                  } />}
                 </TableCell>
               </div>
             )

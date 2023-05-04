@@ -5,9 +5,11 @@ import { verifyUser } from './verifyUser';
 
 export const handleReList = async (item, getItems, setStatus, fractionsToList) => {
   setStatus('Deploying...')
-  if (!item.voucher) {
+  if (!item.vouchers[0]) {
     return
   }
+
+  item.voucher = item.vouchers[0]
 
 
 
@@ -44,7 +46,7 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
 
 
 
-  const voucher = await newVoucher.createVoucher(account, item.voucher.NFTAddress, item.voucher.tokenId, +fractionsToList, item.pricePerFraction * (10 ** 18), false, item.voucher.royaltyKeeper, +item.voucher.royaltyFees, item.voucher.tokenURI)
+  const voucher = await newVoucher.createVoucher(account, item.voucher.NFTAddress, item.voucher.tokenId, 1, +fractionsToList * (10 ** 18), false, item.voucher.royaltyKeeper, +item.voucher.royaltyFees, item.voucher.tokenURI)
 
   const { data: verifyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/verify-voucher`, {
     voucher
@@ -58,35 +60,56 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
     return
   }
 
-  const { data: relistData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
-    ...item,
-    isRelist: true,
-    isDeployed: true,
-    isApproved: true,
-    maxFractions: +fractionsToList,
-    voucher,
-    transaction: {
-      transactionHash: voucher.signature,
-      price: item.pricePerFraction,
-      to: item.deployedCollectionAddress,
-      type: 'Relist Item',
-      date: new Date().toISOString(),
-      from: accounts[0],
+  // const { data: relistData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
+  //   ...item,
+  //   isRelist: true,
+  //   isDeployed: true,
+  //   isApproved: true,
+  //   maxFractions: 1,
+  //   voucher,
+  //   transaction: {
+  //     transactionHash: voucher.signature,
+  //     price: item.pricePerFraction,
+  //     to: item.deployedCollectionAddress,
+  //     type: 'Relist Item',
+  //     date: new Date().toISOString(),
+  //     from: accounts[0],
 
+  //   }
+  // },
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem('token')}`
+  //     }
+  //   })
+
+  const { data: relistData } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${item._id}`, {
+    voucher
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
     }
-  },
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
+  })
+
+  const { data: addRelist } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/relist`, {
+    itemId: item._id,
+    voucherId: voucher.signature,
+    tokenId: voucher.tokenId,
+    price: +fractionsToList,
+    status: 0,
+    transactionType: 'sell'
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
 
   const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
     transaction: {
       transactionHash: voucher.signature,
       price: item.pricePerFraction,
       to: item.deployedCollectionAddress,
-      type: 'Relist Item',
+      type: 'Secondary Market Listing',
       date: new Date().toISOString(),
       from: accounts[0],
     }

@@ -3,13 +3,10 @@ import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 import { verifyUser } from './verifyUser';
 
-export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user, fractions) => {
+export const buyRelistToken = async (item, getItems, setStatus, setUser, user, voucher, value) => {
   setStatus('Deploying...')
   console.log(item, item.is)
-  if (item && (item.tokenBuyed === item.maxFractions)) {
-    setStatus('Sold Out')
-    return
-  }
+
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const accounts = await web3.eth.getAccounts()
   if (!accounts || accounts.length === 0) {
@@ -17,15 +14,14 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
   }
   const account = accounts[0]
   console.log(item.vouchers)
-  const voucher = item.tokenBuyed < item.fractions ? item.vouchers[0] : item.vouchers[0]
 
   await verifyUser(account)
 
   //get total amount
   const { data: totalAmountData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/calculate-total-amount`, {
     voucher,
-    isPrimary: item.isRelist ? false : true,
-    fractions
+    isPrimary: false,
+    fractions: 1,
   }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -42,8 +38,8 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
   const { data: buyData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/buy-nft`, {
     value: web3.utils.fromWei(totalAmountData.totalAmount[1], 'ether'),
     voucher,
-    fractions,
-    isPrimary: item.isRelist ? false : true,
+    fractions: 1,
+    isPrimary: false,
     currency: '0x0000000000000000000000000000000000000001',
     buyer: account
   }, {
@@ -81,15 +77,13 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
 
       if (signed) {
         const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${item._id}`, {
-          tokenBuyed: item.tokenBuyed + 1,
-          fully_subscribed: item.tokenBuyed + 1 === item.maxFractions ? true : false,
           transaction: {
             transactionHash: signed,
             price: item.pricePerFraction,
             to: item.deployedCollectionAddress,
-            type: 'Buy Item',
+            type: 'Secondary Market Purchase',
             date: new Date().toISOString(),
-            from: accounts[0],
+            from: accounts[0]
           }
         }, {
           headers: {
@@ -113,10 +107,33 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
             transactionHash: signed,
             price: item.pricePerFraction,
             to: item.deployedCollectionAddress,
-            type: 'Buy Item',
+            type: 'Secondary Market Purchase',
             date: new Date().toISOString(),
             from: accounts[0],
           }
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+
+        const { data: removeData } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/remove-bought-item`, {
+          itemId: item._id,
+          id: value?.[0]?.createrId
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+
+        const { data: deleteRelist } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/relist/${value?.[0]?._id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+
+        const { data: deleteVoucher } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/remove-voucher/${item._id}`, {
+          signature: value?.[0]?.voucherId,
         }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
