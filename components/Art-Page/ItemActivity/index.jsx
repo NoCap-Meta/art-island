@@ -126,9 +126,13 @@ const ItemActivity = () => {
             <TableCell font={MagnetMedium.className} text='Date'/>
           </div>
           {item && item.transactionHistory && item.transactionHistory.map((i)=>{
+            if(!i){
+              return
+            }
+
             return (
               <div className='md:w-[100%] w-[200%] h-[56px] items-center border flex border-[rgba(0,0,0,0.2)] '>
-                <TableCell text={i.type}>
+                <TableCell text={i?.type}>
                   <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
                 </TableCell>
                 <TableCell text={i.price || 'N/A'}/>

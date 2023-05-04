@@ -6,6 +6,7 @@ import { useContext } from '@/utils/Context';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { verifyUser } from '../../utils/Extras/verifyUser';
 
 const {useCollectionModalStore} = Store
 
@@ -51,6 +52,9 @@ const MyCollectionsComponent = () => {
       createrAddress: accounts[0],
       royalty: +item.royalty*100,
     }
+
+    await verifyUser(accounts[0])
+
     console.log(args)
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/artist/create-transaction`, {
       from:accounts[0],

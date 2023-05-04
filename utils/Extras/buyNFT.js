@@ -1,6 +1,7 @@
 import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
+import { verifyUser } from './verifyUser';
 
 export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
   setStatus('Deploying...')
@@ -14,6 +15,9 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     return
   }
   const account = accounts[0]
+
+  await verifyUser(account)
+
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/get-contract-instance`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -1,6 +1,7 @@
 import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
+import { verifyUser } from './verifyUser';
 
 export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user, fractions) => {
   setStatus('Deploying...')
@@ -16,6 +17,8 @@ export const handleBuyNFTUser = async (item, getItems, setStatus, setUser, user,
   }
   const account = accounts[0]
   const voucher = item.voucher
+
+  await verifyUser(account)
 
   //get total amount
   const { data: totalAmountData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/calculate-total-amount`, {
