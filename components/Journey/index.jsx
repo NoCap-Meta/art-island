@@ -38,23 +38,24 @@ const LeftContent = ({ title, content, image, time }) => {
   )
 }
 
+
 const Journey = () => {
   const [data, setData] = useState([
     {
-      title: 'Our beginning',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      title: 'Grow your Nest',
+      content: 'Access high entry barrier assets and make potentially strong returns with our token marketplace. Invest like a pro, without the need for a trust fund.',
       image: 'Images/PNG/Journey1.png',
       time: 2019
     },
     {
-      title: 'How it all worked out?',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      title: 'Fort Knox x Concierge',
+      content: 'Enjoy peace of mind with our top-notch storage and management solutions. Let us handle the nitty-gritty while you focus on investing.',
       image: 'Images/PNG/Journey2.png',
       time: 2020
     },
     {
-      title: 'The final nail.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.',
+      title: 'Diverse Asset Blend',
+      content: 'Our platform offers a range of tokenized assets for you to choose from, enabling you to diversify your portfolio and manage your risk effectively.',
       image: 'Images/PNG/Journey3.png',
       time: 2022
     }

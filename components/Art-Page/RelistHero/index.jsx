@@ -153,9 +153,12 @@ const RelistArtPageHero = () => {
                 item ? item?.collection?.name + ' Collection' : ''
               }
             </p>
-            <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
-              <img src={isLiked ? 'Images/SVG/HeartFilled.svg' : 'Images/SVG/Heart.svg'} className={`cursor-pointer`} onClick={handleLike} />
+            <div className='flex w-[100%] xl:mb-[0] mb-[1rem] items-center my-[-10px] justify-end gap-[1rem] h-[24px]'>
+              <img src={isLiked ?'Images/SVG/HeartFilled.svg' : 'Images/SVG/Heart.svg'} className={`cursor-pointer`} onClick={handleLike} />
               {/* <img src='Images/SVG/Share.svg' /> */}
+              <p className={`${MagnetMedium.className} overflow-hidden h-[1.5rem] text-[20px]`}>
+                  {item && item?.likes} liked this listing
+                </p>
             </div>
             <p className={`${MagnetBold.className} text-[36px] leading-[46px]`}>
               {
@@ -178,7 +181,7 @@ const RelistArtPageHero = () => {
               }
             </p>} */}
             <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
-              {item && parse(item?.desc)}
+              {item && item?.shortDesc}
             </div>
             {/* <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
@@ -213,7 +216,7 @@ const RelistArtPageHero = () => {
             </div>
             <div className='mt-[20px]'>
               <div className='flex gap-[1rem] items-center'>
-                <div onClick={() => !(!item || !item.isDeployed || reLists.length < 1) && setIsOpen(true)} className={`w-[247px] h-[52px] ${(!item || !item.isDeployed || reLists.length < 1) && 'opacity-50'} bg-black cursor-pointer flex items-center gap-[10px] rounded-xl justify-center`}>
+                <div onClick={() => !(!item || !item.isDeployed) && setIsOpen(true)} className={`w-[247px] h-[52px] ${(!item || !item.isDeployed) && 'opacity-50'} bg-black cursor-pointer flex items-center gap-[10px] rounded-xl justify-center`}>
                   <img src='Images/SVG/Cart.svg' />
                   <p className={`${MagnetMedium.className} text-[18px] leading-[23px] text-white`}>
                     {status}
@@ -260,7 +263,7 @@ const RelistArtPageHero = () => {
                   {
                     buyList.map((item, index) => {
                       return <p className={`${MagnetMedium.className} text-center text-[16px] leading-[23px] mt-[1rem]`}>
-                        {item.price} Matic
+                        {`${item.price}`.slice(0,-2)} Matic
                       </p>
                     }
                     )

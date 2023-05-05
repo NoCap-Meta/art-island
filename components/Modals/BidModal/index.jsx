@@ -44,7 +44,7 @@ export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}
 
 
   const handleSubmit = async ()=>{
-   if(+formData.fractionsToList<+value?.[0]?.price){
+   if((+formData.fractionsToList<+value?.[0]?.price || !value[0])){
     const amount = (+formData.fractionsToList)+ (0.2*(+formData.fractionsToList)) + (((+item.royalty)/100)*(+formData.fractionsToList))
     bidAmount(setButtonTitle,amount, closeModal, item)
     return
@@ -55,7 +55,7 @@ export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}
       alert('No voucher found')
       return
     }
-    buyRelistToken(item, ()=>{}, ()=>{}, ()=>{}, user, voucher, value)
+    buyRelistToken(item, closeModal, setButtonTitle, ()=>{}, user, voucher, value)
    }
   }
 

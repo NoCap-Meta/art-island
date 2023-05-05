@@ -138,7 +138,8 @@ const ExplorePageComponent = () => {
           </div>
         </div> */}
         <div className='explore'>
-          <TopCollectionSection items={showingItems} title='Available Items' />
+          <TopCollectionSection items={showingItems.filter(e=>!e.fully_subscribed)} title='Primary Token Offering' />
+          <TopCollectionSection items={showingItems.filter(e=>e.fully_subscribed)} title='Secondary Sale' />
         </div>
 
       </div>

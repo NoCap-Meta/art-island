@@ -4,7 +4,7 @@ import axios from "axios"
 import { verifyUser } from './verifyUser';
 
 export const buyRelistToken = async (item, getItems, setStatus, setUser, user, voucher, value) => {
-  setStatus('Deploying...')
+  setStatus('Buying...')
   console.log(item, item.is)
 
   await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -141,7 +141,7 @@ export const buyRelistToken = async (item, getItems, setStatus, setUser, user, v
         })
 
         if (data.success) {
-          setStatus('Purchased')
+          setStatus('Complete')
           getItems()
         }
       }

@@ -132,9 +132,12 @@ const ArtPageHero = () => {
                 item ? item?.collection?.name + ' Collection': ''
               }
             </p>
-            <div className='flex w-[100%] xl:mb-[0] mb-[1rem] my-[-10px] justify-end gap-[1rem] h-[24px]'>
+            <div className='flex w-[100%] xl:mb-[0] mb-[1rem] items-center my-[-10px] justify-end gap-[1rem] h-[24px]'>
               <img src={isLiked ?'Images/SVG/HeartFilled.svg' : 'Images/SVG/Heart.svg'} className={`cursor-pointer`} onClick={handleLike} />
               {/* <img src='Images/SVG/Share.svg' /> */}
+              <p className={`${MagnetMedium.className} overflow-hidden h-[1.5rem] text-[20px]`}>
+                  {item && item?.likes} liked this listing
+                </p>
             </div>
             <p className={`${MagnetBold.className} text-[36px] leading-[46px]`}>
               {
@@ -156,8 +159,8 @@ const ArtPageHero = () => {
                 item && item?.itemTokenAddress
               }
             </p>}
-            <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
-            {item && parse(item?.desc)}
+            <div className={`w-[100%] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
+            {item && item?.shortDesc}
             </div>
             <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
@@ -166,12 +169,12 @@ const ArtPageHero = () => {
                   Available {item && (item.maxFractions - item.tokenBuyed)} of {item && item.maxFractions}
                 </p>
               </div>
-              <div className='flex items-center gap-[12px]'>
+              {/* <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Heart.svg' />
                 <p className={`${MagnetMedium.className} text-[20px]`}>
                   {item && item?.likes} favourites
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className='mt-[28px]'>
               <p className={`${MagnetMedium.className} text-[18px] opacity-50 leading-[23px]`}>
@@ -209,7 +212,13 @@ const ArtPageHero = () => {
                   <img src='Images/SVG/Arrow-small-right.svg' />
                 </div>
               </div>}
-              
+              <div className='flex w-[100%] gap-[1rem] mt-[10px]'>
+                {
+                  item && item.properties && item.properties.map((item) => {
+                    return <PropertiesCard prop={item} />
+                  })
+                }
+              </div>
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ const Home = () => {
     <div>
       <div className="">
         <Hero />
-        <TopAndTrendingSection />
+        {/* <TopAndTrendingSection /> */}
         <Featured />
         <Journey />
         <Footer />

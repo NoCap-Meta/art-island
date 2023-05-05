@@ -2,7 +2,7 @@ import { MagnetBold, MagnetMedium, web3 } from "@/pages/_app"
 import InputField from "../Common/InputField"
 import Toggle from 'react-toggle'
 import { Store } from "@/utils"
-import { CreateItemModal, DropDownInput, AddLevelsModals, AddStatsModal, CaptchaModal, ItemSubmittedModal } from ".."
+import { CreateItemModal, DropDownInput,RealEstateModal, AddLevelsModals, AddStatsModal, CaptchaModal, ItemSubmittedModal } from ".."
 import { useContext } from '@/utils/Context';
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
@@ -13,9 +13,11 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
 
-const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, onOpenClick,hasUploadable}) => {
+const Property = ({name, desc, imageName,onChange, toggle, addable,hasAdditionalData, keyValue, onOpenClick,hasUploadable}) => {
   const {itemModalData,setItemModalData} = useItemModalStore()
   const fileRef = useRef(null)
+  const [realEstateOpen, setRealEstateOpen] = useState(false)
+
 
   return (
     <div className="w-[100%] border-b pb-[10px] border-[rgb(0,0,0,0.5)] mt-[1rem] items-center flex justify-between">
@@ -32,6 +34,13 @@ const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, on
             <input hidden type={'file'} onChange={onChange} ref={fileRef} accept={
               'image/*,.pdf,.zip'
             } />
+            <img src="Images/SVG/Plus-Black.svg" className="w-[24px] h-[24px]"/>
+          </div>
+        }
+          {
+          hasAdditionalData && <div onClick={()=>{
+            setRealEstateOpen(true)
+          }} className="h-[50px] w-[50px] border flex items-center justify-center border-[rgb(0,0,0,0.5)] rounded-md">
             <img src="Images/SVG/Plus-Black.svg" className="w-[24px] h-[24px]"/>
           </div>
         }
@@ -55,7 +64,7 @@ const Property = ({name, desc, imageName,onChange, toggle, addable, keyValue, on
             <img src="Images/SVG/Plus-Black.svg" className="w-[24px] h-[24px]"/>
           </div>
         }
-        
+        <RealEstateModal isOpen={realEstateOpen} setIsOpen={setRealEstateOpen}/>
         </div>
   )
 }
@@ -82,7 +91,8 @@ const CreateItemComponent = () => {
   const router = useRouter()
   const [unlockableFiles, setUnlockableFiles] = useState([])
 
-  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null|| itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions 
+
+  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null|| itemModalData?.maxFractions?.length<1 || +itemModalData?.pricePerFraction==0
   useEffect(()=>{
     const token = localStorage.getItem('token')
     if(!token){
@@ -92,6 +102,8 @@ const CreateItemComponent = () => {
       })
       return
     }
+
+  
 
     //check web3 account
     const getAccount = async ()=>{
@@ -361,6 +373,7 @@ const CreateItemComponent = () => {
         </div>
         <InputField onChange={(e)=>handleFormDataChange(e, 'name')} placeholder={'Item Name'}>Name</InputField>
         <InputField onChange={(e)=>handleFormDataChange(e, 'authorName')} placeholder={'Author'}>Author Name</InputField>
+        <InputField onChange={(e)=>handleFormDataChange(e, 'shortDesc')} placeholder={'A short description about the item...'}>Short Description</InputField>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Token Type</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>Will it be a single token or multiple token</p>
@@ -392,7 +405,7 @@ const CreateItemComponent = () => {
         </div>
         <div className={`${tokenType==='single' && 'opacity-50'}`}>
           <InputField disabled={tokenType==='single'} value={itemModalData.maxFractions} onChange={(e)=>handleNumberInput(e, 'maxFractions')} desc={'Maximum number of fractions you want to create for the item'} placeholder={'Tokens to Create'}>Maximum Supply</InputField>
-          <InputField disabled={tokenType==='single'} value={itemModalData.fractions} onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Tokens that can be minted'}>Maximum Mintable Tokens</InputField>
+          {/* <InputField disabled={tokenType==='single'} value={itemModalData.fractions} onChange={(e)=>handleNumberInput(e, 'fractions')} desc={'Number of fractions out of Max Fractions that can be minted'} placeholder={'Tokens that can be minted'}>Maximum Mintable Tokens</InputField> */}
         </div>
         <InputField onChange={(e)=>handleDecicalInput(e, 'pricePerFraction')} placeholder={'Price Per Fraction (in Matic)'}>Price per fraction</InputField>
         {/* <InputField onChange={(e)=>handleNumberInput(e, 'royalty', 100, 0)} placeholder={'Royalty'}>Royality you want on the item</InputField> */}
@@ -419,7 +432,8 @@ const CreateItemComponent = () => {
         <Property onOpenClick={()=>setItemLevelModalOpen(true)} name={'Levels'} desc={'Numerical traits that show as a progress bar'} addable imageName={'Star1'}/>
         <Property onOpenClick={()=>setItemStatsModalOpen(true)} name={'Stats'} desc={'Numerical traits that just show as numbers'} addable imageName={'Chart'}/>
         <Property keyValue={'hasUnlockableContent'} onChange={e=>setUnlockableFiles(e.target.files)} hasUploadable={itemModalData.hasUnlockableContent} name={'Unlockable Content'} toggle desc={'Include unlockable content that can only be revealed by the owner of the item.'} imageName={'Lock-off'}/>
-        <Property keyValue={'hasSensitiveContent'} name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
+        <Property keyValue={'hasSensitiveContent'}  name={'Explicit & Sensitive Content'} toggle desc={'Set this item as explicit and sensitive content'} imageName={'Warning-round'}/>
+        <Property keyValue={'isRealEstateProduct'} hasAdditionalData={itemModalData.isRealEstateProduct} name={'Real Estate Product'} toggle desc={'Set this item as a Real Estate Product'} imageName={'Warning-round'}/>
         <div className="mt-[1rem] overflow-visible ">
           <p className={`text-[16px] ${MagnetMedium.className} text-[#000000]`}>Blockchain</p>
           <p className={`text-[14px] ${MagnetMedium.className} mb-[5px] opacity-50 text-[#000000]`}>

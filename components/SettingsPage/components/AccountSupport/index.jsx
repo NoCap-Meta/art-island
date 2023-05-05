@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const {useTabStore} = Store
 
-const DropDown = ({ques, desc})=>{
+export const DropDown = ({ques, desc})=>{
   const [open, setOpen] = useState(false)
   return (
     <div className='min-h-auto transition-all duration-300 w-[50%] border-b flex flex-col border-[rgb(0,0,0,0.5)]'>

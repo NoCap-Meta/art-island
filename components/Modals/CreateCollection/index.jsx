@@ -185,7 +185,7 @@ useEffect(()=>{
                     <div className='w-[100%] overflow-visible'>
                       <div className='w-[100%] flex justify-between'>
                         <p className={`${MagnetBold.className} text-[18px] text-left`}>
-                          Create a collection
+                          Create a Drop
                         </p>
                         <button onClick={closeModal} className='text-[20px] text-right'>
                           <img src='Images/SVG/Cross-Black.svg' alt='close' />
@@ -217,7 +217,7 @@ useEffect(()=>{
                             </div>
                           </div>
                         </div>
-                        <InputField value={formData.name} onChange={(e)=>handleChange(e,'name')} width={'w-[100%]'} placeholder='My Collection Name' >Name</InputField>
+                        <InputField value={formData.name} onChange={(e)=>handleChange(e,'name')} width={'w-[100%]'} placeholder='My Drop Name' >Name</InputField>
                         {/* <InputField value={formData.symbol} onChange={(e)=>handleChange(e,'symbol')} width={'w-[100%]'} desc='The token symbol is shown on the block explorer when others view your smart contract.' placeholder='MCN' >Token Symbol</InputField> */}
                         <div className="mt-[1rem] overflow-visible">
                             <p className={`${MagnetMedium.className} mb-[5px] text-[16px] text-left`}>

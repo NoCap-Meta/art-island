@@ -33,6 +33,9 @@ import DeliveryStatusModal from './Modals/DeliveryStatus/index';
 import CollectionPageComponent from './CollectionPageComponent/index';
 import MyItems from './MyItems/index';
 import UpdateItemComponent from './UpdateItem/index';
+import RealEstateModal from './Modals/RealEstateModal/index';
+import UpdateCollectionModal from './Modals/EditCollection/index';
+import FAQComponent from './FAQ/index';
 
 
 export const imageBackgroundOptions = {
@@ -85,4 +88,7 @@ export {
   CollectionPageComponent,
   MyItems,
   UpdateItemComponent,
+  RealEstateModal,
+  UpdateCollectionModal,
+  FAQComponent
 };

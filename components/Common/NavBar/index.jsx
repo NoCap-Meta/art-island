@@ -81,7 +81,7 @@ const NavBar = ({ isLogined }) => {
             </p> */}
           </div>
           <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>
-            <img onClick={(e) => handleSubmit(e)} className='opacity-80 cursor-pointer' src='Images/SVG/Search.svg' />
+            <img onClick={(e) => handleSubmit(e)} className='cursor-pointer opacity-80' src='Images/SVG/Search.svg' />
             <form onSubmit={(e) => handleSubmit(e)}>
               <input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black placeholder-gray-600`} placeholder='Search NFTs, Collections...' />
             </form>
@@ -95,6 +95,9 @@ const NavBar = ({ isLogined }) => {
             </p>
             <p onClick={() => router.push('/my-items')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Create
+            </p>
+            <p onClick={() => router.push('/faq')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
+              FAQs
             </p>
             <div className="flex items-center gap-[10px]">
               <img onClick={handleClickProfile} src='Images/SVG/User.svg' />

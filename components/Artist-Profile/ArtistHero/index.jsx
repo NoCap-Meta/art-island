@@ -215,12 +215,11 @@ const ArtistHero = () => {
               })
             }
           </div>
-          <div className="w-[calc(90vw-774px)]">
+          <div className="w-[calc(90vw-574px)]">
             <div className="pl-[40px] w-full flex justify-between">
-              {/* <div className="flex">
-                <p className={`${MagnetLight.className} opacity-50 whitespace-nowrap text-[20px] leading-[25px]`}>More</p>
-                <img className="opacity-50 " src="Images/SVG/Chevron-small-down.svg"/>
-              </div> */}
+              <div className="flex">
+                <p className={`${MagnetLight.className} opacity-50 whitespace-nowrap text-[20px] leading-[25px]`}></p>
+              </div>
               <div />
               <div className="flex gap-[10px]">
                 <img src="Images/SVG/Grid.svg" />
@@ -266,17 +265,26 @@ const ArtistHero = () => {
                         <TableCell text={item.type}>
                           <img src="Images/SVG/Cart-Black.svg" className='ml-[10px]' />
                         </TableCell>
-                        <TableCell text={item.price || 'N/A'} />
-                        <TableCell text={item.from.slice(0, 6) + '...' || 'N/A'} />
-                        <TableCell text={item.to.slice(0, 6) + '...' || 'N/A'} />
+                        <TableCell text={item?.price || 'N/A'} />
+                        <TableCell right text={item.from ? item?.from?.slice(0, 16) + '...' : 'N/A'} >
+                        <img onClick={()=>{
+                            window.open(`https://polygonscan.com/address/${item.from}`)
+                          }}  src="Images/SVG/Newscreen.svg" /></TableCell>
+                        <TableCell right text={item.to? item?.to?.slice(0, 16) + '...' : 'N/A'} >
+                          {item.to && <img onClick={()=>{
+                            window.open(`https://polygonscan.com/address/${item.to}`)
+                          }}  src="Images/SVG/Newscreen.svg" />}
+                        </TableCell>
                         <TableCell text={
-                          new Date(item.date).toLocaleDateString('en-US', {
+                          new Date(item?.date).toLocaleDateString('en-US', {
                             day: 'numeric',
                             month: 'short',
                             year: 'numeric',
                           })
                         } right>
-                          {/* <img src="Images/SVG/Newscreen.svg" /> */}
+                         {item.transactionHash&&<img onClick={()=>{
+                            window.open(process.env.NEXT_PUBLIC_TRANSACTION_URL+item.transactionHash)
+                          }}  src="Images/SVG/Newscreen.svg" />}
                         </TableCell>
                       </div>
                     )
@@ -289,7 +297,7 @@ const ArtistHero = () => {
         {
           selectedTab === 'Created' && (
             <div className={`${filterOpen ? 'w-[70vw] md:w-[70vw]' : 'w-[90vw]'} flex gap-[1rem] md:justify-start justify-center flex-wrap mt-[42px]`}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                 {myItems.map((item, i) => {
                   return (
                     <div key={i}>

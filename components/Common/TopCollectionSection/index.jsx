@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MagnetBold } from 'pages/_app';
+import { MagnetBold, MagnetMedium } from 'pages/_app';
 import ItemCard from '../ItemCard';
 import Slider from 'react-slick';
 import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser';
@@ -84,8 +84,8 @@ const TopCollectionSection = ({title, items})=>{
         }
       </div>}
       {
-        !items || items.length<1 && <div className='w-[90vw] mt-[5px] flex gap-[2rem]'>
-          <p className={`${MagnetBold.className} text-[#000000]  text-[24px]`}>No Items</p>
+        !items || items.length<1 && <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
+         No Items Found
         </div>
       }
     </div>

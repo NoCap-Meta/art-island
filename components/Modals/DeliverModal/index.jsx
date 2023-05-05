@@ -24,6 +24,7 @@ export default function DeliverModal({item, getItems}) {
     address: null,
     apartmentNumber: '',
     phoneNumber:'',
+    addressLine1:'',
   })
 
   function closeModal() {
@@ -47,7 +48,7 @@ export default function DeliverModal({item, getItems}) {
 
   const handleSubmit = async ()=>{
     setButtonTitle('Submitting...')
-    const {firstName, lastName, address, apartmentNumber, phoneNumber} = formData
+    const {firstName, lastName, address, apartmentNumber, phoneNumber, addressLine1} = formData
     const {_id:itemId, collectionId} = item
     const {_id:userId} = user
     try{
@@ -56,6 +57,7 @@ export default function DeliverModal({item, getItems}) {
         lastName,
         address,
         apartmentNumber,
+        addressLine1,
         phoneNumber,
         itemId,
         userId,
@@ -132,19 +134,21 @@ let isDisabled = formData.address===null || buttonTitle === 'Submitting...' || f
                         Please fill the form to get your item delivered
                       </p>
                       <div className='w-[100%] mt-[1rem] overflow-visible'>
+                      <div>
+                          <p className={`text-[#000000] mt-[0.5rem] text-[16px] ${MagnetMedium.className}`}>Address</p>
+                          <Autocomplete onPlaceSelected={e=>setFormData({...formData, address:e})} className={`w-[100%] px-[0.5rem] ${MagnetRegular.className} h-[40px] mt-[5px]  rounded-md bg-[rgb(255,255,255,0.5)] text-[#000000] text-[14px] focus:outline-none focus:border-none`} options={{
+                            types:['address']
+                          }} apiKey={process.env.NEXT_PUBLIC_PLACES_KEY} />
+                      </div>
+                        <InputField value={formData.addressLine1} onChange={(e)=>handleChange(e, 'addressLine1')}  placeholder='Address Line 1' >Address Line 1</InputField>
                        <div className='flex gap-[1rem]'>
                         <InputField value={formData.firstName} onChange={(e)=>handleChange(e, 'firstName')}  placeholder='First Name' >First Name</InputField>
                         <InputField value={formData.lastName} onChange={(e)=>handleChange(e, 'lastName')} placeholder='Last Name' >Last Name</InputField>
                        </div>
-                       <div>
-                          <p className={`text-[#000000] mt-[0.5rem] text-[16px] ${MagnetMedium.className}`}>Address</p>
-                          <Autocomplete onPlaceSelected={e=>setFormData({...formData, address:e})} className={`w-[100%] px-[0.5rem] ${MagnetRegular.className} h-[40px] mt-[5px]  rounded-md bg-[rgb(255,255,255,0.5)] text-[#000000] text-[14px] focus:outline-none focus:border-none`} options={{
-                            types:['address']
-                          }} apiKey='AIzaSyBxRuUAfSrmFLFUWurlcZhAvonnMyasHmk' />
-                      </div>
+                       
                       <div className='flex gap-[1rem]'>
                         <InputField width={'w-[6rem]'}  value={formData.apartmentNumber} onChange={(e)=>handleChange(e, 'apartmentNumber')} placeholder='No. 45' >Apartment No.</InputField>
-                       <div>
+                      <div>
                        <p className={`text-[#000000] mt-[1rem] text-[16px] ${MagnetMedium.className}`}>Phone Number</p>
                         <PhoneInput
                         value={formData.phoneNumber} onChange={(e)=>setFormData({...formData, phoneNumber:e})}

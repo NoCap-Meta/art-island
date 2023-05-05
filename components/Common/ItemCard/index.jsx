@@ -70,7 +70,7 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
       <img src={(item && (item.logo || item.image)) || image} className='h-[295px] cursor-pointer  rounded-lg w-[295px]' />
       <div className="h-[auto] pb-[1rem] w-[295px]">
         {isBoughtItem && <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
-          {(item && item.maxFractions === 1 ? item.frequency + ' of ' + item.fractions + ' token owned' : item.frequency + ' of ' + item.fractions + ' token owned') || 'Deranged Music'}
+          {(item && item.maxFractions === 1 ? item.frequency + ' of ' + item.maxFractions + ' token owned' : item.frequency + ' of ' + item.maxFractions + ' token owned') || 'Deranged Music'}
         </p>}
         <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
           {(item && (item.symbol || item.authorName)) || ''}
@@ -106,12 +106,12 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
           {
             isItem && (
               <div className='w-[100%] flex flex-col items-center'>
-                {/* <button disabled={isDisabled} onClick={(e)=>{
+                <button disabled={isDisabled} onClick={(e)=>{
                 e.stopPropagation()
                 onItemBuy()
               }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
               {collectionStatus}
-            </button> */}
+            </button>
                 <button onClick={() => router.push(`/art-page?id=${item._id}`)} className={`${MagnetBold.className} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
                   View
                 </button>
@@ -135,14 +135,14 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
           }
           {
             isBoughtItem && (
-              <div className='w-[100%] flex flex-col items-center justify-center gap-[0.5]'>
-                {(isDeliverable || checkTokenCount(item._id) === item.fractions) && <button disabled={isDisabled} onClick={(e) => {
+              <div className='w-[100%] flex items-center gap-[1rem] justify-center gap-[0.5]'>
+                {(isDeliverable || checkTokenCount(item._id) === item.maxFractions) && <button disabled={isDisabled} onClick={(e) => {
                   e.stopPropagation()
                   onItemBuy()
-                }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[90%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+                }} className={`${MagnetBold.className} ${isDisabled && 'opacity-50'} w-[40%] h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
                   {collectionStatus}
                 </button>}
-                <button onClick={relistHandler} className={`${MagnetBold.className} ${isDeliverable ? 'w-[40%]' : 'w-[90%]'} h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
+                <button onClick={relistHandler} className={`${MagnetBold.className} ${(isDeliverable || checkTokenCount(item._id) === item.maxFractions) ? 'w-[40%]' : 'w-[90%]'} h-[40px] rounded-md border border-black text-[16px] font-bold mt-[12px]`}>
                   Relist
                 </button>
               </div>

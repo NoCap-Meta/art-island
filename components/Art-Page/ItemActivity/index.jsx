@@ -44,11 +44,11 @@ const FilterList = ({handleFilter})=>{
   )
 }
 
-export const TableCell = ({children, text, font, right})=>{
+export const TableCell = ({children,width, text, font, right})=>{
   return (
-    <div className='w-[20%] flex gap-[5px] items-center'>
+    <div className={`${width||'w-[20%]'} flex gap-[5px] items-center`}>
       {!right && children}
-    {text &&<p className={`${font || MagnetLight.className} whitespace-nowrap text-[18px] ml-[10px] leading-[23px]`}>
+    {text &&<p className={`${font || MagnetLight.className} whitespace-nowrap text-[14px] ml-[10px] leading-[23px]`}>
       {text}
     </p>}
     {right && children}
@@ -148,7 +148,7 @@ const ItemActivity = () => {
                   {i.transactionHash && <img src="Images/SVG/Newscreen.svg" onClick={
                     ()=>{
                       //got to etherscan
-                      window.open('https://mumbai.polygonscan.com/tx/'+i.transactionHash)
+                      window.open(process.env.NEXT_PUBLIC_TRANSACTION_URL+i.transactionHash)
                     }
                   } />}
                 </TableCell>

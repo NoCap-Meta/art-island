@@ -128,6 +128,7 @@ export const useItemModalStore = create(set => ({
   itemModalData: {
     image: '',
     allImages: [],
+    shortDesc: '',
     name: '',
     authorName: '',
     externalLink: '',
@@ -146,7 +147,9 @@ export const useItemModalStore = create(set => ({
     pricePerFraction: 0,
     fractions: 1,
     tokenId: '',
-    royalty: 0
+    royalty: 0,
+    metaData: {},
+    isRealEstateProduct: false,
   },
   setItemModalData: (value) => set(state => ({ itemModalData: value }))
 }))

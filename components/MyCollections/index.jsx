@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { verifyUser } from '../../utils/Extras/verifyUser';
+import {UpdateCollectionModal} from 'components'
 
 const {useCollectionModalStore} = Store
 
@@ -15,6 +16,8 @@ const MyCollectionsComponent = () => {
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const [myCollections, setMyCollections] = useState([])
   const router = useRouter()
+  const [selectedCollection, setSelectedCollection] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
 
   const getCollection = async ()=>{
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
@@ -122,18 +125,25 @@ const MyCollectionsComponent = () => {
   return (
     <div className='w-[70%] mt-[3rem]'>
       <div className=' w-[100%] justify-between'>
-        <p className={`text-[40px] ${MagnetBold.className} h-[3rem] leading-[41px] text-[#000000]`}>My Collections</p>
+        <p className={`text-[40px] ${MagnetBold.className} h-[3rem] leading-[41px] text-[#000000]`}>My Drops</p>
         <p className={`${MagnetMedium.className} opacity-50 text-[16px] text-[#000000]`}>Create, curate, and manage collections of unique NFTs to share and sell.Learn more</p>
         <button onClick={()=>{
           setCollectionModalOpen(true)
-        }} className={`bg-[#000000] ${MagnetLight.className} text-[#FFFFFF] text-[16px] mt-[2rem] font-bold px-[2rem] py-[0.8rem] rounded-md`}>Create a Collection</button>
+        }} className={`bg-[#000000] ${MagnetLight.className} text-[#FFFFFF] text-[16px] mt-[2rem] font-bold px-[2rem] py-[0.8rem] rounded-md`}>Create a new Drop</button>
       </div>
       <div className='w-[100%] mt-[3rem] flex gap-[2rem] flex-wrap'>
         {
           myCollections.map((item, index) => {
             let status = item.isDeployed? 'Deployed': item.isApproved? 'Deploy Contract': 'Add Items'
             let isDisabled = status === 'Deployed'
-            return <ItemCard isDisabled={isDisabled} item={item} onCollectionClick={() =>!item.isApproved ? (()=>{
+            return <div className='relative'>
+              <div className="absolute top-[5px] right-[5px] z-[1]">
+                <img onClick={()=>{
+                  setSelectedCollection(item)
+                  setIsOpen(true)
+                }} src="Images/SVG/Edit.svg" className="cursor-pointer " />
+              </div>
+              <ItemCard isDisabled={isDisabled} item={item} onCollectionClick={() =>!item.isApproved ? (()=>{
               router.push({
                 pathname: '/create-item',
                 query: {
@@ -141,10 +151,12 @@ const MyCollectionsComponent = () => {
                 }
               })
             })() : !item.isDeployed && handleSubmit(item)} isCollection key={index} collectionStatus={status} />
+            </div>
           })
         }
       </div>
       <CreateCollectionModal />
+      <UpdateCollectionModal collection={selectedCollection} isOpen={isOpen} setActiveModal={setIsOpen} />
     </div>
   )
 }
