@@ -1,18 +1,13 @@
-import { Hero, Featured, Browse, Journey, Footer } from "components"
-
-
+import { TopAndTrendingSection } from "@/components/TopAndTrendingSection"
+import { Hero, Featured, Journey, Footer } from "components"
 
 const Home = () => {
-
-
-
   return (
-
     <div>
       <div className="">
         <Hero />
+        <TopAndTrendingSection />
         <Featured />
-        <Browse />
         <Journey />
         <Footer />
       </div>
@@ -21,3 +16,4 @@ const Home = () => {
 }
 
 export default Home
+

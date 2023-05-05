@@ -1,35 +1,35 @@
-import { SignIn, Wallet,KycModal } from "@/components"
+import { SignIn, Wallet, KycModal } from "@/components"
 import { useContext } from "@/utils/Context"
 import { MagnetBold, MagnetLight, MagnetRegular } from "pages/_app"
 import { useState } from 'react';
 import { Store } from "@/utils";
 import { useRouter } from 'next/router';
 
-const {useCartStore, useSelectedArtistProfileTab, useArtistProfileOptionsStore, useUserStore} = Store
+const { useCartStore, useSelectedArtistProfileTab, useArtistProfileOptionsStore, useUserStore } = Store
 
-const NavBar = ({isLogined}) => {
-  const {activeModal, setActiveModal, user, setUser} = useContext()
-  const {user:thisUser} = useUserStore()
+const NavBar = ({ isLogined }) => {
+  const { activeModal, setActiveModal, user, setUser } = useContext()
+  const { user: thisUser } = useUserStore()
   const [isClicked, setIsClicked] = useState(false)
-  const {cartOpen,setCartOpen} = useCartStore()
+  const { cartOpen, setCartOpen } = useCartStore()
   const [searchInput, setSearchInput] = useState('')
   const router = useRouter()
-  const {artistProfileOptions, setArtistProfileOptions} = useArtistProfileOptionsStore()
-  const {selectedArtistProfileTab,setSelectedArtistProfileTab} = useSelectedArtistProfileTab()
+  const { artistProfileOptions, setArtistProfileOptions } = useArtistProfileOptionsStore()
+  const { selectedArtistProfileTab, setSelectedArtistProfileTab } = useSelectedArtistProfileTab()
 
   isLogined = user
 
   const handleSetActiveModal = () => {
-   if(!isLogined){
-    setActiveModal({
-      ...activeModal,
-      google: true
-    })
-    setIsClicked(false)
-   }
+    if (!isLogined) {
+      setActiveModal({
+        ...activeModal,
+        google: true
+      })
+      setIsClicked(false)
+    }
   }
 
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     localStorage.removeItem('token')
     setUser(null)
     setIsClicked(false)
@@ -40,16 +40,16 @@ const NavBar = ({isLogined}) => {
     setIsClicked(!isClicked)
   }
 
-  const handleGoToProfile = (name)=>{
+  const handleGoToProfile = (name) => {
     setSelectedArtistProfileTab(name)
-    
-    let newArtistProfileOptions = artistProfileOptions.map((item)=>{
-      if(item.name === name){
+
+    let newArtistProfileOptions = artistProfileOptions.map((item) => {
+      if (item.name === name) {
         return {
           ...item,
           selected: true
         }
-      }else{
+      } else {
         return {
           ...item,
           selected: false
@@ -61,7 +61,7 @@ const NavBar = ({isLogined}) => {
     setIsClicked(false)
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault()
     let keyword = searchInput.split(' ').join(',')
     router.push(`/search?keyword=${keyword}`)
@@ -69,31 +69,31 @@ const NavBar = ({isLogined}) => {
 
   return (
     <>
-      <SignIn/>
-      <Wallet/>
-      <KycModal/>
+      <SignIn />
+      <Wallet />
+      <KycModal />
       <div className="w-[100vw] bg-[#f5dfc2] relative overflow-visible flex justify-center">
         <div className="w-[90vw] h-[70px] justify-between flex items-center">
-          <div className="flex gap-[10px] h-[70px]  items-center">
-            <img src='Images/PNG/NoCap.png' className='h-[3rem]' />
-            <p onClick={()=>router.push('/')} className={`${MagnetBold.className} text-[24px] cursor-pointer overflow-hidden leading-[29px] text-black`}>
+          <div onClick={() => router.push('/')} className="flex gap-[10px] h-[70px]  items-center">
+            <img src='Images/PNG/NoCapNetwork-Logo.png' className='h-[3rem]' />
+            {/* <p onClick={() => router.push('/')} className={`${MagnetBold.className} text-[24px] cursor-pointer overflow-hidden leading-[29px] text-black`}>
               NoCap.Network
-            </p>
+            </p> */}
           </div>
           <div className='xl:flex hidden gap-[5px] h-[70px]  items-center'>
-            <img onClick={(e)=>handleSubmit(e)} className='opacity-50 cursor-pointer' src='Images/SVG/Search.svg' />
-            <form onSubmit={(e)=>handleSubmit(e)}>
-              <input value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black opacity-50`} placeholder='Search NFTs, Collections...' />
+            <img onClick={(e) => handleSubmit(e)} className='opacity-80 cursor-pointer' src='Images/SVG/Search.svg' />
+            <form onSubmit={(e) => handleSubmit(e)}>
+              <input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} autoComplete="new-password" className={`w-[15rem] bg-[#f5dfc2] px-[10px]  h-[2.5rem] ${MagnetRegular.className} text-[17px] focus:outline-none focus:border-none text-black placeholder-gray-600`} placeholder='Search NFTs, Collections...' />
             </form>
           </div>
           <div className='xl:flex hidden gap-[50px] h-[70px]  items-center'>
-            <p onClick={()=>router.push('/explore')} className={`text-[18px] leading-[23px] cursor-pointer opacity-50 ${MagnetLight.className}`}>
+            <p onClick={() => router.push('/explore')} className={`text-[18px] leading-[23px] cursor-pointer opacity-50 ${MagnetLight.className}`}>
               Explore
             </p>
-            <p onClick={()=>router.push('/collectionstats')}  className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={() => router.push('/collectionstats')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Stats
             </p>
-            <p onClick={()=>router.push('/my-items')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
+            <p onClick={() => router.push('/my-items')} className={`text-[18px] cursor-pointer leading-[23px] opacity-50 ${MagnetLight.className}`}>
               Create
             </p>
             <div className="flex items-center gap-[10px]">
@@ -102,38 +102,38 @@ const NavBar = ({isLogined}) => {
             </div>
           </div>
         </div>
-        <div style={dropDownStyle} className={`min-h-[5rem] ${isClicked ? ' scale-1 opacity-100':'scale-0  opacity-0'} flex origin-top-right transition-all duration-300 w-[15rem] rounded-xl items-center justify-center z-[100] absolute right-[7rem] top-[4rem]`}>
-            <div onClick={handleSetActiveModal} className={`w-[80%] cursor-pointer h-[2.5rem] ${isLogined ?'hidden': 'flex'} flex-col items-center justify-center bg-black rounded-lg`}>
-              <p className={`text-white ${MagnetRegular.className}`}>Connect Wallet</p>
+        <div style={dropDownStyle} className={`min-h-[5rem] ${isClicked ? ' scale-1 opacity-100' : 'scale-0  opacity-0'} flex origin-top-right transition-all duration-300 w-[15rem] rounded-xl items-center justify-center z-[100] absolute right-[7rem] top-[4rem]`}>
+          <div onClick={handleSetActiveModal} className={`w-[80%] cursor-pointer h-[2.5rem] ${isLogined ? 'hidden' : 'flex'} flex-col items-center justify-center bg-black rounded-lg`}>
+            <p className={`text-white ${MagnetRegular.className}`}>Connect Wallet</p>
+          </div>
+          <div className={`w-[80%] ${!isLogined && 'hidden'} pt-[0.5rem]`}>
+            <div onClick={() => handleGoToProfile('Featured')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Profile</p>
             </div>
-            <div className={`w-[80%] ${!isLogined &&'hidden'} pt-[0.5rem]`}>
-              <div onClick={()=>handleGoToProfile('Featured')}className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
-                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Profile</p>
-              </div>
-              <div onClick={()=>handleGoToProfile('Favourites')}  className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
-                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Favourites</p>
-              </div>
-              <div onClick={()=>handleGoToProfile('Transaction History')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
-                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
-              </div>
-              {thisUser.email.includes('@nocapmeta.in') && <div onClick={()=>{
-                router.push('/my-collections')
-                setIsClicked(false)
-              }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
-                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Collections</p>
-              </div>}
-              <div onClick={()=>{
-                router.push('/settings')
-                setIsClicked(false)
-              }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
-                <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Settings</p>
-              </div>
-              <div onClick={handleLogout} className="h-[2.5rem] my-[0.5rem] cursor-pointer flex items-center  gap-[1rem]">
-                <img src='Images/SVG/Logout.svg' className="h-[20px]" />
-                <p className={`text-black text-[17px] opacity-50 ${MagnetRegular.className}`}>Log out</p>
-              </div>
+            <div onClick={() => handleGoToProfile('Favourites')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Favourites</p>
             </div>
-        </div> 
+            <div onClick={() => handleGoToProfile('Transaction History')} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Transaction History</p>
+            </div>
+            {thisUser.email.includes('@nocapmeta.in') && <div onClick={() => {
+              router.push('/my-collections')
+              setIsClicked(false)
+            }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <p className={`text-black text-[17px] ${MagnetRegular.className}`}>My Collections</p>
+            </div>}
+            <div onClick={() => {
+              router.push('/settings')
+              setIsClicked(false)
+            }} className="h-[2.5rem] mt-[0.5rem] cursor-pointer border-b border-[rgba(0,0,0,0.25)]">
+              <p className={`text-black text-[17px] ${MagnetRegular.className}`}>Settings</p>
+            </div>
+            <div onClick={handleLogout} className="h-[2.5rem] my-[0.5rem] cursor-pointer flex items-center  gap-[1rem]">
+              <img src='Images/SVG/Logout.svg' className="h-[20px]" />
+              <p className={`text-black text-[17px] opacity-50 ${MagnetRegular.className}`}>Log out</p>
+            </div>
+          </div>
+        </div>
         {/* <Cart/> */}
       </div>
     </>
