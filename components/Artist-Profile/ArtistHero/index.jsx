@@ -235,7 +235,7 @@ const ArtistHero = () => {
 
       <div className="flex md:flex-row flex-col md:w-[90vw] md:items-start items-center gap-[2rem] md:justify-between">
         {filterOpen && <Filter/>}
-        {selectedTab==="Featured" && <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+        {selectedTab==="Featured" && <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[1rem] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {/* {
                   Array.from({length:10}).map((e, i)=>{
                     return (<div key={i}>
@@ -288,7 +288,7 @@ const ArtistHero = () => {
           }
           {
             selectedTab==='Created' && (
-              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[1rem] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   myItems.map((item, i)=>{
                     return (
@@ -310,7 +310,7 @@ const ArtistHero = () => {
           }
           {
             selectedTab==='Collected' && (
-              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[1rem] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   boughtItems.map((item, i)=>{
                     
@@ -333,7 +333,7 @@ const ArtistHero = () => {
           }
           {
             selectedTab==='Favourites' && (
-              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[40px] md:justify-start justify-center flex-wrap mt-[42px]`}>
+              <div className={`${filterOpen? 'w-[70vw] md:w-[70vw]':'w-[90vw]' } flex gap-[1rem] md:justify-start justify-center flex-wrap mt-[42px]`}>
                 {
                   likedItems.map((item, i)=>{
                     return (

@@ -60,28 +60,66 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
     return
   }
 
-  // const { data: relistData } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/item`, {
-  //   ...item,
-  //   isRelist: true,
-  //   isDeployed: true,
-  //   isApproved: true,
-  //   maxFractions: 1,
-  //   voucher,
-  //   transaction: {
-  //     transactionHash: voucher.signature,
-  //     price: item.pricePerFraction,
-  //     to: item.deployedCollectionAddress,
-  //     type: 'Relist Item',
-  //     date: new Date().toISOString(),
-  //     from: accounts[0],
 
-  //   }
-  // },
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`
-  //     }
-  //   })
+  const { data: alreadyBuyer } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/relist/buy/price/${fractionsToList}/${item._id}`, {})
+  if (alreadyBuyer.success) {
+    if (alreadyBuyer.relists.length > 0) {
+      const relists = alreadyBuyer.relists
+      const { data: bid } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/bid-transfer`, {
+        voucher,
+        bidder: alreadyBuyer.relists[0].bidderAddress,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+
+      })
+
+      if (!bid.success) {
+        return
+      }
+
+      const { txObject } = bid
+
+      const signed = await await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [txObject],
+      });
+
+      const { data: updateTransaction } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, {
+        transaction: {
+          transactionHash: signed,
+          price: item.pricePerFraction,
+          to: item.deployedCollectionAddress,
+          type: 'Secondary Market Purchase',
+          date: new Date().toISOString(),
+          from: accounts[0],
+        }
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
+      const { data: removeData } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/remove-bought-item`, {
+        itemId: item._id,
+        id: relists?.[0]?.createrId
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
+      const { data: deleteRelist } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/relist/${relists?.[0]?._id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
+    }
+  }
+
+
 
   const { data: relistData } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${item._id}`, {
     voucher

@@ -7,7 +7,7 @@ const CollectionPageComponent = ({collection, items}) => {
     <div>
       <div className="flex flex-col items-center w-screen">
         <CollectionHeader collection={collection} />
-         <div className='w-[90%] mt-[2rem] flex gap-[2rem]'>
+         <div className='w-[90%] mt-[2rem] flex flex-wrap gap-[2rem]'>
          {
           items && items.length>0 && items.map((item, index) => {
             return (

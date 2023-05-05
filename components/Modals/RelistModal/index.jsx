@@ -46,6 +46,21 @@ export default function RelistModal({item, isOpen, setIsOpen:setActiveModal}) {
       return 
     }
 
+    const {data:count} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/relist/count/${item._id}`,{
+      headers:{
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    if(count.success){
+      const {count:countItem, boughtItemsCount } = count
+      if(countItem===boughtItemsCount){
+        setButtonTitle('Sign the Token')
+        alert('You have already relisted all the fractions')
+        return
+      }
+    }
+
     const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/items/authenticate-voucher`, {
       collectionAddress: item.collection.deployedCollectionAddress,
       tokenID:+item.vouchers[0].tokenId,

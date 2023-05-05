@@ -84,5 +84,5 @@ export {
   DeliveryStatusModal,
   CollectionPageComponent,
   MyItems,
-  UpdateItemComponent
+  UpdateItemComponent,
 };

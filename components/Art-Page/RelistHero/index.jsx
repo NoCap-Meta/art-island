@@ -1,7 +1,7 @@
 import { useContext } from '@/utils/Context'
 import { Store } from '@/utils'
 import axios from 'axios'
-import { NavBar } from 'components'
+import { NavBar, RelistModal } from 'components'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app'
 import { useState, useEffect } from 'react'
 import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser'
@@ -36,6 +36,8 @@ const RelistArtPageHero = () => {
   const [images, setImages] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [reLists, setReLists] = useState([])
+  const [isRelistOpen, setIsRelistOpen] = useState(false)
+  const [buyList, setBuyList] = useState([])
 
   let isLiked = item && item.likedUsers.includes(user.id)
 
@@ -76,6 +78,11 @@ const RelistArtPageHero = () => {
       if(data.success){
         setReLists(data.relists)
 
+      }
+
+      const {data:buyList} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/relist/buy/${item._id}`, {})
+      if(buyList.success){
+        setBuyList(buyList.relists)
       }
     }
 
@@ -220,7 +227,16 @@ const RelistArtPageHero = () => {
                 <span className='text-[rgb(0,0,0,0.5)]'>
                   Already Have a Token? 
                 </span>
-                <span>
+                <span onClick={()=>{
+                  if(!localStorage.getItem('token')){
+                    setActiveModal({
+                      ...activeModal,
+                      google:true
+                    })
+                  }else{
+                    setIsRelistOpen(true)
+                  }
+                }} className='cursor-pointer'>
                    List Your Token For Sale
                 </span>
               </p>
@@ -242,9 +258,9 @@ const RelistArtPageHero = () => {
                       Bid Price in Matic
                     </p>
                     {
-                      reLists.map((item, index) => {
+                      buyList.map((item, index) => {
                         return <p className={`${MagnetMedium.className} text-center text-[16px] leading-[23px] mt-[1rem]`}>
-                          ---
+                          {item.price} Matic
                         </p>
                       }
                       )
@@ -276,6 +292,7 @@ const RelistArtPageHero = () => {
         </div>
       </div>
       <BidModal isOpen={isOpen} value={reLists} setIsOpen={setIsOpen}  item={item} />
+      <RelistModal item={item} isOpen={isRelistOpen} setIsOpen={setIsRelistOpen}/>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { handleReList } from '@/utils/Extras/relistNFT'
 import axios from 'axios'
 import { buyRelistToken } from '../../../utils/Extras/buyRelistToken';
 import { useUserStore } from '@/utils/Zustand';
+import { bidAmount } from '../../../utils/Extras/bidAmount';
 
 export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}) {
   const [buttonTitle, setButtonTitle] = useState('Bid')
@@ -44,7 +45,9 @@ export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}
 
   const handleSubmit = async ()=>{
    if(+formData.fractionsToList<+value?.[0]?.price){
-      alert('Bid amount should be greater than or equal to the current bid')
+    const amount = (+formData.fractionsToList)+ (0.2*(+formData.fractionsToList)) + (((+item.royalty)/100)*(+formData.fractionsToList))
+    bidAmount(setButtonTitle,amount, closeModal, item)
+    return
    }else{
     //get voucher with the same signature as the value[0].signature
     const voucher = item.vouchers.find(v=>v.signature===value[0].voucherId)
@@ -109,11 +112,17 @@ const handleDecicalInput = (e, type)=>{
                         Price
                       </InputField>
                     </div>
+                    <div className='w-[100%] mt-[1rem] overflow-visible'>
+                      <p className={`${MagnetRegular.className} opacity-50  text-[14px] text-left`}>
+                        {item &&+formData.fractionsToList<+value?.[0]?.price && `Transaction Amount: ${(+formData.fractionsToList)+ (0.2*(+formData.fractionsToList)) + (((+item.royalty)/100)*(+formData.fractionsToList))  }`}
+                      </p>
+                      </div>
                     <button onClick={handleSubmit} disabled={
                       isDisabled
                     } className={`mt-[3rem] ${MagnetMedium.className} ${isDisabled && 'opacity-50'} w-[100%] h-[40px] rounded-md bg-[#000000] text-[#FFFFFF] text-[16px]`}>
                       {buttonTitle}
                     </button>
+
                     </div>
                 </Dialog.Panel>
               </Transition.Child>
