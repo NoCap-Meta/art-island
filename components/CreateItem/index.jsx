@@ -9,6 +9,8 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import dynamic from "next/dynamic"
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
+import { changeToMumbaiPolygonTestnet } from "@/utils/Extras/checkChain"
 
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
@@ -90,6 +92,7 @@ const CreateItemComponent = () => {
   const [previewImages, setPreviewImages] = useState([])
   const router = useRouter()
   const [unlockableFiles, setUnlockableFiles] = useState([])
+  const {checkMetamask} = useCheckMetamask()
 
 
   let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...' ||file==null|| itemModalData?.maxFractions?.length<1 || +itemModalData?.pricePerFraction==0
@@ -103,10 +106,15 @@ const CreateItemComponent = () => {
       return
     }
 
-  
+    
 
     //check web3 account
     const getAccount = async ()=>{
+      const hasMetaMask =await checkMetamask()
+      if(!hasMetaMask){
+        return
+      }
+      await changeToMumbaiPolygonTestnet()
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length<1){
@@ -168,6 +176,11 @@ const CreateItemComponent = () => {
 
     //set form account
     const getAccount = async ()=>{
+      const hasMetaMask =await checkMetamask()
+      if(!hasMetaMask){
+        router.push('/')
+        return
+      }
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length<1){
         setActiveLoginModal({
@@ -178,9 +191,12 @@ const CreateItemComponent = () => {
       }else{
         setItemModalData({
           ...itemModalData,
-          createrAddress: accounts[0]
+          createrAddress: accounts[0],
+          royaltyKeeper: accounts[0]
         })
       }
+
+
 
       return accounts[0]
     }

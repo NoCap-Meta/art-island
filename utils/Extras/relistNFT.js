@@ -2,6 +2,7 @@ import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 import { verifyUser } from './verifyUser';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 
 export const handleReList = async (item, getItems, setStatus, fractionsToList) => {
   setStatus('Deploying...')
@@ -13,7 +14,7 @@ export const handleReList = async (item, getItems, setStatus, fractionsToList) =
 
 
 
-
+  await changeToMumbaiPolygonTestnet()
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const accounts = await web3.eth.getAccounts()
   if (!accounts || accounts.length === 0) {

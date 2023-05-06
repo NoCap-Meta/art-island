@@ -4,9 +4,10 @@ import axios from 'axios'
 import { NavBar, RelistModal } from 'components'
 import { MagnetBold, MagnetLight, MagnetMedium } from 'pages/_app'
 import { useState, useEffect } from 'react'
-import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser'
 import parse from 'html-react-parser'
 import BidModal from '@/components/Modals/BidModal'
+import { useRouter } from 'next/router';
+
 
 const { useUserStore, useSelectedItemStore } = Store
 
@@ -14,13 +15,13 @@ const PropertiesCard = ({ prop }) => {
   return (
     <div className='bg-[rgba(255,255,255,0.5)] rounded-lg px-[20px] py-[11px] w-[190px]'>
       <p className={`${MagnetMedium.className} text-center text-[14px] leading-[18px]`}>
-        {prop?.name?.toUpperCase()}
+        {prop?.type}
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] leading-[18px]`}>
 
       </p>
       <p className={`${MagnetMedium.className} mt-[4px] text-center text-[14px] opacity-50 leading-[18px]`}>
-        {prop?.type}
+        {prop?.name?.toUpperCase()}
       </p>
     </div>
   )
@@ -38,6 +39,7 @@ const RelistArtPageHero = () => {
   const [reLists, setReLists] = useState([])
   const [isRelistOpen, setIsRelistOpen] = useState(false)
   const [buyList, setBuyList] = useState([])
+  const router = useRouter()
 
   let isLiked = item && item.likedUsers.includes(user.id)
 
@@ -119,12 +121,10 @@ const RelistArtPageHero = () => {
             <div className='xl:w-[85px] w-[90vw] flex xl:flex-col xl:justify-start justify-center flex-row gap-[5px]'>
               {
                 images && images.map((item) => {
-                  if (item.image === selectedImage) {
-                    return
-                  }
+                 
 
                   return (
-                    item && !item.selected && <div key={item.image} onClick={() => handleImage(item.image)} className='!w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
+                    item  && <div key={item.image} onClick={() => handleImage(item.image)} className='!w-[85px] cursor-pointer h-[142px] rounded-xl' style={{
                       backgroundImage: `url(${item.image})`,
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'cover',
@@ -150,7 +150,7 @@ const RelistArtPageHero = () => {
           <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
             <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
               {
-                item ? item?.collection?.name + ' Collection' : ''
+                item ? ' Drop: ' + item?.collection?.name : ''
               }
             </p>
             <div className='flex w-[100%] xl:mb-[0] mb-[1rem] items-center my-[-10px] justify-end gap-[1rem] h-[24px]'>
@@ -183,6 +183,13 @@ const RelistArtPageHero = () => {
             <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
               {item && item?.shortDesc}
             </div>
+            {item && item?.hasUnlockableContent &&  <div onClick={()=>{
+            user.boughtItems.includes(item._id) && window.open(item.unlockableFiles[0])
+           }} className={`w-[100%] ${MagnetMedium.className} rounded-xl bg-[#CEF0A4] p-[12px] border mt-[1rem] text-[#192805] border-[#192805]`}>
+              {
+                user.boughtItems.includes(item._id) ? 'You have access to the Unlockable Content' : 'This item has unlockable content'
+              }
+            </div>}
             {/* <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Eye-open.svg' />
@@ -197,6 +204,14 @@ const RelistArtPageHero = () => {
                 </p>
               </div>
             </div> */}
+            {item && item.frequency && <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
+              <div className='flex items-center gap-[12px]'>
+                <img className='h-[24px]' src='Images/SVG/Heart.svg' />
+                <p className={`${MagnetMedium.className} text-[20px]`}>
+                  You Own {item && item.frequency || 0} of {item && item.maxFractions} Tokens
+                </p>
+              </div>
+            </div>}
             <div className='mt-[28px]'>
               <p className={`${MagnetMedium.className} text-[18px] opacity-50 leading-[23px]`}>
                 Current Price
@@ -243,6 +258,9 @@ const RelistArtPageHero = () => {
                   List Your Token For Sale
                 </span>
               </p>
+              <p onClick={()=>router.push(`/warehouseitem?id=${item?.warehouseItemId}`)} className={`${MagnetMedium.className} cursor-pointer mt-[1rem] text-[18px]`}>
+                  Warehouse Item ID: {item?.warehouseItemId}
+              </p>
               {item && item.properties && item.properties.length > 0 && <div className='w-[100%] flex justify-between mt-[20px]'>
                 <div className='flex items-center gap-[12px]'>
                   <img className='h-[24px]' src='Images/SVG/Tag.svg' />
@@ -251,10 +269,15 @@ const RelistArtPageHero = () => {
                   </p>
                 </div>
                 <div className='flex gap-[1rem]'>
-                  <img src='Images/SVG/Arrow-small-left.svg' />
-                  <img src='Images/SVG/Arrow-small-right.svg' />
                 </div>
               </div>}
+              <div className='flex w-[100%] gap-[1rem] mt-[10px]'>
+                {
+                  item && item.properties && item.properties.map((item) => {
+                    return <PropertiesCard prop={item} />
+                  })
+                }
+              </div>
               <div className='w-[40vw] px-[1rem] flex gap-[3rem] min-h-[20vh] mt-[1rem] bg-[rgb(255,255,255,0.5)] rounded-md'>
                 <div>
                   <p className={`${MagnetMedium.className} opacity-50 text-[18px] leading-[23px] mt-[1rem]`}>
@@ -283,13 +306,7 @@ const RelistArtPageHero = () => {
                   }
                 </div>
               </div>
-              <div className='flex w-[100%] gap-[1rem] mt-[10px]'>
-                {
-                  item && item.properties && item.properties.map((item) => {
-                    return <PropertiesCard prop={item} />
-                  })
-                }
-              </div>
+             
             </div>
           </div>
         </div>

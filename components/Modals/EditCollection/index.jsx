@@ -7,6 +7,7 @@ import { DropDownInput } from '@/components/Common'
 import axios from 'axios'
 import { web3 } from 'pages/_app.js'
 import { useContext } from '@/utils/Context';
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
 
 const {useCollectionModalStore} = Store
 
@@ -144,15 +145,6 @@ export default function UpdateCollectionModal({isOpen, setActiveModal, collectio
       bannerLocation = formData.banner
     }
 
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
-    const accounts = await web3.eth.getAccounts()
-    if(!accounts || accounts.length === 0){
-      setActiveLoginModal({
-        ...activeModal,
-        wallet: true
-      })
-      return
-    }
 
     if(!location) return;
 
@@ -160,7 +152,7 @@ export default function UpdateCollectionModal({isOpen, setActiveModal, collectio
       return
     }
   
-    const submitData = {...formData,createrAddress: accounts[0], logo:location, banner:bannerLocation}
+    const submitData = {...formData, logo:location, banner:bannerLocation}
     try {
       const {data} = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/collection/collection/${collection._id}`,submitData ,
       {headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}})

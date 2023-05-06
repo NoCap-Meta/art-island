@@ -80,7 +80,7 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
         </p>
         {!isCollection && (isItem || isFav) && <>
           <p className={`${MagnetBold.className} text-[16px] leading-[20px] mt-[12px] ml-[12px]`}>
-            {(isItem || isFav) && item && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") + ' ETH' || '15.2 ETH'}
+            {(isItem || isFav) && item && `${(item.pricePerFraction).toFixed(10)}`.replace(/0+$/, "") + ' MATIC' || '15.2 MATIC'}
           </p>
           <p className={`${MagnetLight.className} opacity-50 text-[14px] leading-[18px] ml-[12px]`}>
             {((isItem || isFav) && item && `Available ${item.maxFractions - item.tokenBuyed} of ${item.maxFractions}`) || 'Available 20 of 100'}
@@ -135,7 +135,7 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
           }
           {
             isBoughtItem && (
-              <div className='w-[100%] flex items-center gap-[1rem] justify-center gap-[0.5]'>
+              <div className='w-[100%] flex items-center gap-[1rem] justify-center'>
                 {(isDeliverable || checkTokenCount(item._id) === item.maxFractions) && <button disabled={isDisabled} onClick={(e) => {
                   e.stopPropagation()
                   onItemBuy()

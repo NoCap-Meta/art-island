@@ -8,6 +8,7 @@ import { web3 } from 'pages/_app';
 import axios from 'axios';
 import { useContext } from '@/utils/Context';
 import { useRef } from 'react';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 const {useTabStore, useUserStore} = Store
 
 
@@ -28,6 +29,13 @@ const ProfileSection = () => {
 
   useEffect(()=>{
     const getAccount = async ()=>{
+      if(!window || !window.ethereum){
+        setUser({
+          ...user,
+          walletAddress: 'N/A'
+        })
+      }
+      await changeToMumbaiPolygonTestnet()
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       setUser({
@@ -36,7 +44,7 @@ const ProfileSection = () => {
       })
     }
     getAccount()
-  },[])
+  },[user])
 
   useEffect(()=>{
     const token = localStorage.getItem('token')
@@ -48,6 +56,14 @@ const ProfileSection = () => {
       return
     }
     const getAccount = async ()=>{
+      if(!window.ethereum){
+        setActiveLoginModal({
+          ...activeModal,
+          wallet: true
+        })
+        return
+      }
+      await changeToMumbaiPolygonTestnet()
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length === 0){

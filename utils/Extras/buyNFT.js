@@ -2,6 +2,7 @@ import { web3, ethersProvider } from "@/pages/_app"
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
 import axios from "axios"
 import { verifyUser } from './verifyUser';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 
 export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
   setStatus('Deploying...')
@@ -9,6 +10,7 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
     setStatus('Sold Out')
     return
   }
+  await changeToMumbaiPolygonTestnet()
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const accounts = await web3.eth.getAccounts()
   if (!accounts || accounts.length === 0) {
@@ -56,7 +58,7 @@ export const handleBuyPrimaryNFT = async (item, getItems, setStatus) => {
 
 
 
-  const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, +item.tokenId, item.maxFractions, item.pricePerFraction * (10 ** 18), true, account, +item.royalty * 100, item.ipfsLink || ipfsLink.url)
+  const voucher = await newVoucher.createVoucher(account, item.deployedCollectionAddress, +item.tokenId, item.maxFractions, item.pricePerFraction * (10 ** 18), true, item.royaltyKeeper, +item.royalty * 100, item.ipfsLink || ipfsLink.url)
 
   console.log(voucher)
 

@@ -2,14 +2,16 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState, useEffect } from 'react'
 import {MagnetBold, MagnetMedium, MagnetRegular, web3} from 'pages/_app.js'
 import InputField from '@/components/Common/InputField'
-import { handleReList } from '@/utils/Extras/relistNFT'
+
 import axios from 'axios'
 import { buyRelistToken } from '../../../utils/Extras/buyRelistToken';
 import { useUserStore } from '@/utils/Zustand';
 import { bidAmount } from '../../../utils/Extras/bidAmount';
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
 
 export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}) {
   const [buttonTitle, setButtonTitle] = useState('Bid')
+  const {checkMetamask} = useCheckMetamask()
   const {user} = useUserStore()
   const [formData, setFormData] = useState({
     fractionsToList: '',
@@ -44,6 +46,11 @@ export default function BidModal({item, isOpen, setIsOpen:setActiveModal, value}
 
 
   const handleSubmit = async ()=>{
+    const hasMetaMask =await checkMetamask()
+    console.log(hasMetaMask, 'hasMetamask')
+    if(!hasMetaMask){
+      return
+    }
    if((+formData.fractionsToList<+value?.[0]?.price || !value[0])){
     const amount = (+formData.fractionsToList)+ (0.2*(+formData.fractionsToList)) + (((+item.royalty)/100)*(+formData.fractionsToList))
     bidAmount(setButtonTitle,amount, closeModal, item)

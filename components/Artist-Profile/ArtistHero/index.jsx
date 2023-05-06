@@ -9,6 +9,7 @@ import axios from "axios";
 import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
 import { BuyItemCard } from "@/components/Common/TopCollectionSection";
 import { useRouter } from "next/router";
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
 
 const { useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore, useDeliverableModalStore } = Store
 
@@ -40,7 +41,7 @@ export const DeployItemCard = ({ item, handleDeployItem }) => {
   const [status, setStatus] = useState(item.isDeployed ? 'Deployed' : item.collectionApproved ? item.isApproved ? item.deployedCollectionAddress ? 'Deploy' : 'Collection not deployed' : 'Pending Item Approval' : 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status === 'Deploying...')
   return <div className="relative">
-    {item.isDeployed && <div className="absolute top-[5px] right-[5px] z-[1]">
+    {!item.isDeployed && <div className="absolute top-[5px] right-[5px] z-[1]">
       <img onClick={handleClickEdit} src="Images/SVG/Edit.svg" className="cursor-pointer " />
     </div>}
     <ItemCard isDeliverable={item.maxFractions === 1} onItemBuy={!isDisabled ? () => handleDeployItem(item, setStatus) : () => { }} isDisabled={isDisabled} item={item} isItem collectionStatus={status} />
@@ -99,6 +100,7 @@ const ArtistHero = () => {
   const [selectedItem, setSelectedItem] = useState({})
   const [sortBy, setSortBy] = useState('Time')
   const [transactions, setTransactions] = useState([])
+  const {checkMetamask} = useCheckMetamask()
 
   const handleSelect = (name) => {
     const newOptions = options.map((option) => {
@@ -187,6 +189,10 @@ const ArtistHero = () => {
   }, [selectedTab])
 
   const handleDeployItem = async (item, setStatus) => {
+    const hasMetaMask =await checkMetamask()
+    if(!hasMetaMask){
+      return
+    }
     await handleBuyPrimaryNFT(item, getItems, setStatus)
   }
 

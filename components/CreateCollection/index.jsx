@@ -8,6 +8,8 @@ import { web3,ethersProvider } from "@/pages/_app"
 const {useCreateItemStore} = Store
 import axios from 'axios'
 import { NoCapVoucher } from "@/utils/Extras/NoCapVoucher"
+import { useCheckMetamask } from "@/utils/Extras/useGetWalletAddress"
+import { changeToMumbaiPolygonTestnet } from "@/utils/Extras/checkChain"
 
 const Property = ({name, desc, imageName, toggle, addable}) => {
   const {setCreateItemModalState} = useCreateItemStore()
@@ -41,6 +43,8 @@ const CreateCollectionComponent = () => {
   const [value, setValue] = useState('')
   const [file, setFile] = useState(null)
   const fileRef = useRef(null)
+  const {checkMetamask} = useCheckMetamask()
+  
   const [formData, setFormData] = useState({
     name: '',
     symbol: '',
@@ -50,6 +54,11 @@ const CreateCollectionComponent = () => {
 
   const handleSubmit = async () => {
     //check if account is there
+    const hasMetaMask = await checkMetamask()
+    if(!hasMetaMask){
+      return
+    }
+    await changeToMumbaiPolygonTestnet()
     await window.ethereum.request({ method: 'eth_requestAccounts' });
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { DeployItemCard } from '../Artist-Profile/ArtistHero';
 import { handleBuyPrimaryNFT } from '@/utils/Extras/buyNFT';
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
 
 const {useCollectionModalStore} = Store
 
@@ -16,6 +17,7 @@ const MyItems = () => {
   const {  setActiveModal:setActiveLoginModal,activeModal } = useContext()
   const [myItems, setMyItems] = useState([])
   const router = useRouter()
+  const {checkMetamask} = useCheckMetamask()
 
   const getCollection = async ()=>{
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/me`, {
@@ -45,6 +47,10 @@ const MyItems = () => {
   },[collectionModalOpen])
 
   const handleDeployItem = async (item, setStatus) => {
+    const hasMetaMask =await checkMetamask()
+    if(!hasMetaMask){
+      return
+    }
     await handleBuyPrimaryNFT(item, getCollection, setStatus)
   }
   

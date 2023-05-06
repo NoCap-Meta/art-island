@@ -1,6 +1,8 @@
 import {createContext, useState, useContext as useCon, useEffect} from 'react'
 import { web3 } from '@/pages/_app';
 import jwt_decode from "jwt-decode";
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 const Context = createContext()
 
 //provider
@@ -22,22 +24,25 @@ export const ContextProvider = ({children}) => {
         setAuthToken(token)
         const decoded = jwt_decode(token)
         setUser(decoded?.user)
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const accounts = await web3.eth.getAccounts()
-        //if no accounts
-        if(!accounts || accounts.length === 0){
-          setActiveModal({
-            ...activeModal,
-            wallet: true
-          })
-        }else if(accounts.length>0){
-          //localstore get kyc
-          const kyc = localStorage.getItem('kyc')
-          if(!kyc){
+        if(window && window.ethereum){
+          await changeToMumbaiPolygonTestnet()
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const accounts = await web3.eth.getAccounts()
+          //if no accounts
+          if(!accounts || accounts.length === 0){
             setActiveModal({
               ...activeModal,
-              kyc: true
+              wallet: true
             })
+          }else if(accounts.length>0){
+            //localstore get kyc
+            const kyc = localStorage.getItem('kyc')
+            if(!kyc){
+              setActiveModal({
+                ...activeModal,
+                kyc: true
+              })
+            }
           }
         }
       }

@@ -4,6 +4,7 @@ import ItemCard from '../ItemCard';
 import Slider from 'react-slick';
 import { handleBuyNFTUser } from '@/utils/Extras/buyNFTUser';
 import { Store } from '@/utils';
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
 
 const {useUserStore} = Store
 
@@ -47,8 +48,15 @@ const settings = {
 export const BuyItemCard = ({item, items})=>{
   const {user, setUser} = useUserStore()
   const [status, setStatus] = useState('Buy')
+  const {checkMetamask} = useCheckMetamask()
   return (
-    <ItemCard collectionStatus={status} onItemBuy={()=>handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)} item={item} isItem={items && items.length>0}/>
+    <ItemCard collectionStatus={status} onItemBuy={async ()=>{
+      const hasMetaMask =await checkMetamask()
+      if(!hasMetaMask){
+        return
+      }
+      handleBuyNFTUser(item, ()=>{}, setStatus, setUser, user, 1)
+    }} item={item} isItem={items && items.length>0}/>
   )
 }
 

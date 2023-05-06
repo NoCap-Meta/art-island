@@ -26,14 +26,15 @@ const Table = ({data=[]})=>{
         <div className='w-[10%]'>
           <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>SALES</p>
         </div>
-        <div className='w-[5%]'>
+        <div className='w-[10%]'>
+          <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>SALE TYPE</p>
         </div>
       </div>
       <div className='w-[100%] flex flex-col gap-[20px] mt-[20px]'>
         {
           data.map((item, index)=>{
             return (
-              <TableRow key={index} item={item}/>
+              <TableRow key={index} index={index} item={item}/>
             )
           })
         }
@@ -42,16 +43,16 @@ const Table = ({data=[]})=>{
   )
 }
 
-const TableRow = ({item})=>{
+const TableRow = ({item, index})=>{
   return (
     <div className='w-[100%] justify-between items-center flex'>
         <div className='w-[5%]'>
-          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>{item?.id}</p>
+          <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>{index+1}</p>
         </div>
         <div className='w-[25%] flex gap-[1rem] items-center'>
           <img src={item?.image} className='w-[55px] rounded-md h-[55px]'/>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px]  text-[#000000]`}>
-            {item?.collection}
+            {item?.name}
           </p>
         </div>
         <div className='w-[10%]'>
@@ -61,7 +62,6 @@ const TableRow = ({item})=>{
         </div>
         <div className='w-[10%]'>
           <p className={`${MagnetBold.className} text-right text-[14px] leading-[18px] 
-            text-[#FF0000]
           `}>
             {item?.collection}
           </p>
@@ -76,8 +76,8 @@ const TableRow = ({item})=>{
             {item?.sales}
           </p>
         </div>
-        <div className='w-[5%]'>
-          {/* <img src='Images/SVG/Star1.svg' className='w-[20px] h-[20px]'/> */}
+        <div className='w-[10%] mr-[1rem]'>
+          <p className={`${MagnetMedium.className} text-[14px] leading-[18px] opacity-50 text-right text-[#000000]`}>{item?.saleType}</p>
         </div>
     </div>
   )
@@ -113,13 +113,14 @@ const CollectionStatsComponent = () => {
 
   useEffect(()=>{
     if(data.length > 0){
-      const newData = data.filter((item)=>{
+      let newData = data.filter((item)=>{
         if(selectedCategory === 'All'){
           return true
         }else{
           return item.category === selectedCategory.toLowerCase()
         }
       })
+      newData = newData.filter(item=>item!==null)
       setVisibleData(newData)
     }
   },[selectedCategory, data])
@@ -171,16 +172,18 @@ const CollectionStatsComponent = () => {
           collection:item.name,
           volume:item.maxFractions,
           collection:item.collection.name,
-          price:`${item.pricePerFraction} ETH`,
-          sales:item.tokenBuyed,
+          price:`${item.pricePerFraction} MATIC`,
+          sales:item.transactionHistory.length-1,
           image: item.image,
-          category:item.collection.category
+          category:item.collection.category,
+          name:item.name,
+          saleType: item.fully_subscribed?'Secondary':'Primary'
         }
       })
       setData(newData)
 
       let categories = [...new Set(items.map((item)=>item?.collection?.category))]
-      categories = categories.map((item)=>item.charAt(0).toUpperCase() + item.slice(1))
+      categories = categories.map((item)=>item?.charAt(0).toUpperCase() + item?.slice(1))
       categories =categories.filter((item)=>item!==null && item!==undefined && item!=='')
       categories.unshift('All')
       setCategories(categories)

@@ -31,7 +31,6 @@ const Details = () => {
         <div className='flex gap-[1rem]'>
           <Content content={parse(item?.desc || '')} title={'ABOUT THIS LISTING'} />
           <Content content={item?.collection?.desc} title={'ABOUT THE DROP'} />
-          
         </div>
         <div className='flex gap-[1rem]'>
           <Content content={''} title={''} />
@@ -45,7 +44,12 @@ const Details = () => {
               </>
             </div>
         </div>
-        {item?.metaDeta && <iframe src = "https://maps.google.com/maps?q=10.305385,77.923029&hl=es;z=14&amp;output=embed"></iframe>}
+        {item?.metaData && <>
+          <p className={`text-[24px] ${MagnetBold.className} leading-[30px] xl:text-left text-center tracking-[0.2em] `}>
+          Property's Neightbourhood
+              </p>
+          <iframe className='h-[30vw] mt-[-4rem]' src = {"https://maps.google.com/maps?q=" + item.metaData.lat+','+item.metaData.lng+"&hl=es;z=14&output=embed"}></iframe>
+        </>}
       </div>
     </div>
   )

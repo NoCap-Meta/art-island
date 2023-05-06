@@ -7,6 +7,8 @@ import { DropDownInput } from '@/components/Common'
 import axios from 'axios'
 import { web3 } from 'pages/_app.js'
 import { useContext } from '@/utils/Context';
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain'
 
 const {useCollectionModalStore} = Store
 
@@ -25,6 +27,7 @@ export default function CreateCollectionModal() {
   const fileRef = useRef(null)
   const [previewSource, setPreviewSource] = useState('')
   const [buttonTitle, setButtonTitle] = useState('Submit for Review')
+  const {checkMetamask} = useCheckMetamask()
   const [categoryOptions, setCategoryOptions] = useState([{
     name:'Select Category',
     value:null
@@ -92,6 +95,11 @@ export default function CreateCollectionModal() {
   const handleSubmit = async ()=>{
     setButtonTitle('Submitting...')
     const location = await handleUpload()
+    const hasMetaMask =await checkMetamask()
+    if(!hasMetaMask){
+      return
+    }
+    await changeToMumbaiPolygonTestnet()
     await window.ethereum.request({ method: 'eth_requestAccounts' });
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){

@@ -6,6 +6,7 @@ import ModalNavigation from '../ModalNavigation'
 import { useEffect } from 'react';
 import { web3 } from 'pages/_app.js'
 import { Store } from '@/utils'
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain'
 
 const {useWalletStore} = Store
 
@@ -28,6 +29,8 @@ export default function Wallet() {
     setConnectionStatus(window.ethereum ? 'notConnected' : 'unavailable')
   },[])
 
+  
+
   const connectToMetamask = async () => {
     try {
       if (!window.ethereum) {
@@ -35,7 +38,8 @@ export default function Wallet() {
         return;
       }
       setConnectionStatus('connecting'); 
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await changeToMumbaiPolygonTestnet();
+      await window.ethereum.request({ method: 'eth_requestAccounts' })
       await window.ethereum.enable();
       const accounts = await web3.eth.getAccounts();
       if (accounts.length > 0) {

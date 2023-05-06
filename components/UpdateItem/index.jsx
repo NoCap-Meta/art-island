@@ -9,6 +9,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import dynamic from "next/dynamic"
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 
 
 const {useCreateItemStore, useItemModalStore, useItemLevelModalStore, useItemStatsModalStore, useCaptchaModalStore, useItemSubmittedModal} = Store
@@ -95,6 +96,14 @@ const UpdateItemComponent = () => {
 
     //check web3 account
     const getAccount = async ()=>{
+      if(!window.ethereum){
+        setActiveLoginModal({
+          ...activeModal,
+          wallet: true
+        })
+        return
+      }
+      await changeToMumbaiPolygonTestnet()
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts()
       if(!accounts || accounts.length<1){

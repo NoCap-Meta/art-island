@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { verifyUser } from '../../utils/Extras/verifyUser';
 import {UpdateCollectionModal} from 'components'
+import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 
 const {useCollectionModalStore} = Store
 
@@ -18,6 +20,7 @@ const MyCollectionsComponent = () => {
   const router = useRouter()
   const [selectedCollection, setSelectedCollection] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
+  const {checkMetamask} = useCheckMetamask()
 
   const getCollection = async ()=>{
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/collection/collections/me`, {
@@ -43,6 +46,11 @@ const MyCollectionsComponent = () => {
 
   const handleSubmit = async (item) => {
     //check if account is there
+    const hasMetaMask =await checkMetamask()
+    if(!hasMetaMask){
+      return
+    }
+    await changeToMumbaiPolygonTestnet()
     await window.ethereum.request({ method: 'eth_requestAccounts' });
     const accounts = await web3.eth.getAccounts()
     if(!accounts || accounts.length === 0){

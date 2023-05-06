@@ -39,7 +39,6 @@ class NoCapVoucher {
       royaltyFees,
       tokenURI
     };
-    console.log(voucher)
     const domain = await this._signingDomain();
     const types = {
       NFTVoucher: [

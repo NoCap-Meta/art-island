@@ -1,6 +1,8 @@
 import { MagnetLight, MagnetRegular } from 'pages/_app';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Slider from 'react-slick';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const settings = {
   dots: true,
@@ -33,6 +35,27 @@ const Featured = () => {
       src: 'Images/PNG/Featured2.png',
     },
   ])
+  const router = useRouter()
+
+  useEffect(()=>{
+    const getFeatured = async () => {
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/featured`)
+      if(data.success){
+        const newImages = data.items.map((e)=>{
+          return {
+            src:e.image,
+            id:e._id
+          }
+        })
+        console.log(newImages)
+        if(newImages.length>=4){
+          setImages(newImages)
+        }
+      }
+    }
+
+    getFeatured()
+  },[])
 
   return (
     <div className="w-[100vw] xl:h-[100vh] flex xl:items-center xl:pt-[0] pt-[20px] justify-center bg-black">
@@ -46,12 +69,14 @@ const Featured = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit.
             </p>
           </div>
-          <img src='Images/PNG/Success1.png' className='xl:block hidden' />
+          <img src='Images/PNG/Success1.png' className='hidden xl:block' />
         </div>
         <div className='w-[60vw] featured  overflow-visible'>
           <Slider {...settings}>
             {
-              images.map((image) => <img src={image.src} key={image.id} className='h-[35rem] rounded-xl px-[1rem]' />
+              images.map((image) => <img src={image.src} onClick={()=>{
+                router.push(`/art-page?id=${image.id}`)
+              }} key={image.id} className='h-[35rem] rounded-xl px-[1rem]' />
               )
             }
           </Slider>

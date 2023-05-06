@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { convertMaticToUsd, web3 } from '@/pages/_app';
+import { changeToMumbaiPolygonTestnet } from '@/utils/Extras/checkChain';
 
 //manage cart open
 export const useCartStore = create(set => ({
@@ -75,15 +76,22 @@ export const useWalletStore = create(set => ({
   setWalletAddress: async (value) => {
     //get account from metamask
     if (!value && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      
+await changeToMumbaiPolygonTestnet()
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       web3.eth.getAccounts().then(accounts => {
         set(state => ({ walletAddress: accounts[0] }))
       })
     } else {
-      const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, { walletAddress: value }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      try {
+        const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update/me`, { walletAddress: value }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
 
-      if (data?.success) {
-        set(state => ({ walletAddress: value }))
+        if (data?.success) {
+          set(state => ({ walletAddress: value }))
+        }
+      }
+      catch (err) {
+        console.log(err)
       }
     }
   }
