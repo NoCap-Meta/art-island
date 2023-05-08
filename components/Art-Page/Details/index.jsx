@@ -44,7 +44,7 @@ const Details = () => {
               </>
             </div>
         </div>
-        {item?.metaData && <>
+        {item?.metaData && item?.metaData?.address && <>
           <p className={`text-[24px] ${MagnetBold.className} leading-[30px] xl:text-left text-center tracking-[0.2em] `}>
           Property's Neightbourhood
               </p>

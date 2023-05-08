@@ -150,7 +150,7 @@ const ArtPageHero = () => {
                 item && item?.collection?.createrAddress
               }
             </p> */}
-            {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
+            {/* {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
               Token ID {
                 item && item?.tokenId
               }
@@ -159,7 +159,7 @@ const ArtPageHero = () => {
               Token Address {
                 item && item?.itemTokenAddress
               }
-            </p>}
+            </p>} */}
             <div className={`w-[100%] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
             {item && item?.shortDesc}
             </div>

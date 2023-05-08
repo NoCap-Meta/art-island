@@ -10,7 +10,6 @@ const { useSelectedItemStore } = Store
 
 const ArtPage = ({ item }) => {
   const router = useRouter()
-  console.log(item)
   const { selectedItem, setSelectedItem } = useSelectedItemStore()
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export const getServerSideProps = async (context) => {
   const { id } = context.query
   try {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/item/${id}`)
-    console.log(data)
     if (data.success) {
       const usdPrice = await convertMaticToUsd(data.item.pricePerFraction)
       return {
