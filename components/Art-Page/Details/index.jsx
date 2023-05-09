@@ -30,11 +30,9 @@ const Details = () => {
       <div className='w-[90vw] xl:mt-[0] mt-[1rem] flex flex-col gap-[90px]'>
         <div className='flex gap-[1rem]'>
           <Content content={parse(item?.desc || '')} title={'ABOUT THIS LISTING'} />
+          <div>
           <Content content={item?.collection?.desc} title={'ABOUT THE DROP'} />
-        </div>
-        <div className='flex gap-[1rem]'>
-          <Content content={''} title={''} />
-          <div className={`w-[100%] ${MagnetMedium.className} w-[50vw] rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
+          <div className={` ${MagnetMedium.className} w-[40vw] rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
               <p className={`text-[24px] ${MagnetBold.className} leading-[30px] xl:text-left text-center tracking-[0.2em] `}>
                 IMPORT TOKEN
               </p>
@@ -43,7 +41,9 @@ const Details = () => {
               <p>Token Address: {item?.itemTokenAddress}</p>
               </>
             </div>
+          </div>
         </div>
+       
         {item?.metaData && item?.metaData?.address && <>
           <p className={`text-[24px] ${MagnetBold.className} leading-[30px] xl:text-left text-center tracking-[0.2em] `}>
           Property's Neightbourhood

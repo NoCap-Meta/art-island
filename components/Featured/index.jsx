@@ -76,7 +76,7 @@ const Featured = () => {
             {
               images.map((image) => <img src={image.src} onClick={()=>{
                 router.push(`/art-page?id=${image.id}`)
-              }} key={image.id} className='h-[35rem] rounded-xl px-[1rem]' />
+              }} key={image.id} className='h-[35rem] cursor-pointer rounded-xl px-[1rem]' />
               )
             }
           </Slider>

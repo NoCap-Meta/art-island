@@ -148,7 +148,9 @@ const RelistArtPageHero = () => {
             </div>
           </div>
           <div className='xl:w-[44.5vw] xl:mt-[0] mt-[1rem] flex flex-col'>
-            <p className={`${MagnetMedium.className} text-[18px] leading-[23px]`}>
+            <p onClick={()=>{
+              router.push(`/collection?id=${item?.collection?._id}`)
+            }} className={`${MagnetMedium.className} cursor-pointer text-[18px] leading-[23px]`}>
               {
                 item ? ' Drop: ' + item?.collection?.name : ''
               }

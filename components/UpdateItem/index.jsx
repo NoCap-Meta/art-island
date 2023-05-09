@@ -83,7 +83,7 @@ const UpdateItemComponent = () => {
   const router = useRouter()
   const [unlockableFiles, setUnlockableFiles] = useState([])
 
-  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...'   || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions || 
+  let isButtonDisabled = itemModalData?.name?.length<1 || itemModalData?.desc?.length<1 || buttonTitle === 'Submitting...'   || itemModalData?.maxFractions?.length<1 || itemModalData?.fractions?.length<1 || +itemModalData?.pricePerFraction==0 || +itemModalData?.maxFractions < +itemModalData?.fractions
   useEffect(()=>{
     const token = localStorage.getItem('token')
     if(!token){
@@ -206,8 +206,10 @@ const UpdateItemComponent = () => {
 
     
 
-    fetchCollection()
-  },[])
+    if(router.query.itemId){
+      fetchCollection()
+    }
+  },[router.query.itemId])
 
   const handleChange = async (e) => {
     const file = e.target.files[0]

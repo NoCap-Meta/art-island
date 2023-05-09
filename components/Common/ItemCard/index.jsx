@@ -41,9 +41,7 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
 
 
   return (
-    <div onClick={() => item && (isCollection ? handleCollectionPush() : router.push(
-      `/art-page?id=${item._id}`)
-    )} style={{
+    <div style={{
       background: "rgba(255,255,255,0.5)"
     }} className="rounded-lg w-[295px] relative  overflow-hidden">
       {/* {
@@ -67,7 +65,9 @@ const ItemCard = ({ isCollection, onCollectionClick, isFav, relistHandler, colle
           </div>
         </div>
       }
-      <img src={(item && (item.logo || item.image)) || image} className='h-[295px] cursor-pointer  rounded-lg w-[295px]' />
+      <img onClick={() => item && (isCollection ? handleCollectionPush() : router.push(
+      `/art-page?id=${item._id}`)
+    )} src={(item && (item.logo || item.image)) || image} className='h-[295px] cursor-pointer  rounded-lg w-[295px]' />
       <div className="h-[auto] pb-[1rem] w-[295px]">
         {isBoughtItem && <p className={`${MagnetLight.className} mt-[12px] text-[14px] leading-[18px] ml-[12px]`}>
           {(item && item.maxFractions === 1 ? item.frequency + ' of ' + item.maxFractions + ' token owned' : item.frequency + ' of ' + item.maxFractions + ' token owned') || 'Deranged Music'}

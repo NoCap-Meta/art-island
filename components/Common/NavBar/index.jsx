@@ -137,7 +137,7 @@ const NavBar = ({ isLogined }) => {
             </div>
           </div>
         </div>
-        {/* <Cart/> */}
+        
       </div>
     </>
   )

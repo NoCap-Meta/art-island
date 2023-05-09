@@ -10,6 +10,7 @@ import { handleBuyPrimaryNFT } from "@/utils/Extras/buyNFT";
 import { BuyItemCard } from "@/components/Common/TopCollectionSection";
 import { useRouter } from "next/router";
 import { useCheckMetamask } from '@/utils/Extras/useGetWalletAddress';
+import UploadDocuments from "@/components/Modals/UploadDocuments";
 
 const { useArtistProfileOptionsStore, useSelectedArtistProfileTab, useUserStore, useDeliverableModalStore } = Store
 
@@ -33,18 +34,34 @@ const SearchBar = ({ setFilterOpen, sortBy,
 
 export const DeployItemCard = ({ item, handleDeployItem }) => {
   const router = useRouter()
+  const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
 
   const handleClickEdit = () => {
     router.push(`/update-item?itemId=${item._id}`)
   }
 
-  const [status, setStatus] = useState(item.isDeployed ? 'Deployed' : item.collectionApproved ? item.isApproved ? item.deployedCollectionAddress ? 'Deploy' : 'Collection not deployed' : 'Pending Item Approval' : 'Pending Collection Approval')
+  const [status, setStatus] = useState(item.isDeployed ? 'Deployed' : item.collectionApproved ? item.isApproved ? item.deployedCollectionAddress ? 'Deploy' : 'Collection not deployed' : 'Upload Documents' : 'Pending Collection Approval')
   let isDisabled = (status === 'Deployed' || status === 'Pending Item Approval' || status === 'Pending Collection Approval' || status === 'Deploying...')
   return <div className="relative">
     {!item.isDeployed && <div className="absolute top-[5px] right-[5px] z-[1]">
       <img onClick={handleClickEdit} src="Images/SVG/Edit.svg" className="cursor-pointer " />
     </div>}
-    <ItemCard isDeliverable={item.maxFractions === 1} onItemBuy={!isDisabled ? () => handleDeployItem(item, setStatus) : () => { }} isDisabled={isDisabled} item={item} isItem collectionStatus={status} />
+    <ItemCard isDeliverable={item.maxFractions === 1} onItemBuy={
+      () => {
+        if (item.isDeployed) {
+          return
+        }
+
+        if(status === 'Upload Documents'){
+          setUploadDocumentOpen(true)
+          return;
+        }
+
+        handleDeployItem(item, setStatus)
+      }
+    } isDisabled={isDisabled} item={item} isItem collectionStatus={status} />
+
+    {status==='Upload Documents' && <UploadDocuments isOpen={uploadDocumentOpen} setIsOpen={setUploadDocumentOpen} item={item}/>}
   </div>
 }
 
