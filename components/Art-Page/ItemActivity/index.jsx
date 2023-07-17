@@ -86,37 +86,6 @@ const ItemActivity = () => {
           transition-all duration-300
           cursor-pointer`} />
         </div>
-        {/* {
-          isActivityOpen && (
-            <div className={`flex justify-center w-[90vw] border ${seletedFilters.length>0?'pt-[16px]':'py-[16px]'} border-[rgba(0,0,0,0.2)]`}>
-              <div className='w-[98%]'>
-                <div className='relative'>
-                  <div className={`bg-[rgba(255,255,255,0.5)] flex items-center  justify-between w-[100%] ${isFilterListOpen ? 'rounded-t-lg' : 'rounded-lg'} h-[48px]`}>
-                    <p className={`${MagnetMedium.className} text-[18px] ml-[10px] leading-[23px] opacity-50`}>
-                      Filter
-                    </p>
-                    <img onClick={()=>setFilterListOpen(e=>!e)} src="Images/SVG/Chevron-small-down.svg" className={`mr-[10px] 
-                    ${isFilterListOpen ? 'transform rotate-180' : 'transform rotate-0'}
-                    cursor-pointer`} />
-                  </div>
-                  {isFilterListOpen && <div>
-                    <FilterList handleFilter={handleFilter}/>
-                  </div>}
-                </div>
-                {seletedFilters.length>0 && <div className='w-[100%] h-[64px] gap-[12px] flex items-center'>
-                  {
-                    seletedFilters.map((item)=>{
-                      return <FilterBubble onClick={handleFilter} name={item} key={item}/>
-                    })
-                  }
-                    <p onClick={()=>setSeletedFilters([])} className={`${MagnetMedium.className} text-[18px] cursor-pointer leading-[23px]`}>
-                      Clear all
-                    </p>
-                </div>}
-              </div>
-            </div>
-          )
-        } */}
         <div className='flex flex-col md:overflow-hidden overflow-scroll  w-[90vw]'>
           <div className='md:w-[100%] w-[200%] h-[40px] items-center border flex border-[rgba(0,0,0,0.2)] '>
             <TableCell font={MagnetMedium.className} text='Event'/>

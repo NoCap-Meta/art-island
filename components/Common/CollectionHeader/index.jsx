@@ -3,7 +3,6 @@ import { MagnetBold, MagnetLight } from 'pages/_app';
 import { Store, useGetWalletAddress } from '@/utils';
 
 const CollectionHeader = ({ collection }) => {
-  console.log(collection)
   return (
     <>
       <div className="w-[90vw] h-[50vh] mt-[2rem] flex justify-center items-end rounded-lg" style={{

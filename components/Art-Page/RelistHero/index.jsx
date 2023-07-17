@@ -167,21 +167,6 @@ const RelistArtPageHero = () => {
                 item ? item?.name : ''
               }
             </p>
-            {/* <p className={`${MagnetLight.className} text-[16px] opacity-50 leading-[20px]`}>
-              Created by {
-                item && item?.collection?.createrAddress
-              }
-            </p> */}
-            {/* {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
-              Token ID {
-                item && item?.tokenId
-              }
-            </p>}
-            {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
-              Token Address {
-                item && item?.itemTokenAddress
-              }
-            </p>} */}
             <div className={`w-[100%] text-[rgb(0,0,0,0.5)] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
               {item && item?.shortDesc}
             </div>
@@ -192,20 +177,7 @@ const RelistArtPageHero = () => {
                 user.boughtItems.includes(item._id) ? 'You have access to the Unlockable Content' : 'This item has unlockable content'
               }
             </div>}
-            {/* <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
-              <div className='flex items-center gap-[12px]'>
-                <img className='h-[24px]' src='Images/SVG/Eye-open.svg' />
-                <p className={`${MagnetMedium.className} text-[20px]`}>
-                  Available {item && (item.fractions - item.tokenBuyed)} of {item && item.fractions}
-                </p>
-              </div>
-              <div className='flex items-center gap-[12px]'>
-                <img className='h-[24px]' src='Images/SVG/Heart.svg' />
-                <p className={`${MagnetMedium.className} text-[20px]`}>
-                  {item && item?.likes} favourites
-                </p>
-              </div>
-            </div> */}
+
             {item && item.frequency && <div className={'flex gap-[32px] mt-[28px] h-[30px]'}>
               <div className='flex items-center gap-[12px]'>
                 <img className='h-[24px]' src='Images/SVG/Heart.svg' />

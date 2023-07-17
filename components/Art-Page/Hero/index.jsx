@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 
 const {useUserStore,useSelectedItemStore} = Store
 
+
+
 const PropertiesCard = ({prop}) => {
   return (
     <div className='bg-[rgba(255,255,255,0.5)] rounded-lg px-[20px] py-[11px] w-[190px]'>
@@ -40,8 +42,8 @@ const ArtPageHero = () => {
 
   let isLiked = item && item.likedUsers.includes(user.id)
 
+
   const handleLike = async ()=>{
-    //search for user token
     if(!localStorage.getItem('token')){
       setActiveModal({
         ...activeModal,
@@ -147,21 +149,6 @@ const ArtPageHero = () => {
                 item ? item?.name : ''
               }
             </p>
-            {/* <p className={`${MagnetLight.className} text-[16px] opacity-50 leading-[20px]`}>
-              Created by {
-                item && item?.collection?.createrAddress
-              }
-            </p> */}
-            {/* {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
-              Token ID {
-                item && item?.tokenId
-              }
-            </p>}
-            {item && item.itemTokenAddress && <p className={`${MagnetLight.className} text-[16px] mt-[10px] opacity-50 leading-[20px]`}>
-              Token Address {
-                item && item?.itemTokenAddress
-              }
-            </p>} */}
             <div className={`w-[100%] ${MagnetMedium.className} rounded-xl bg-[rgba(255,255,255,0.5)] p-[12px] border mt-[1rem] border-[rgba(0,0,0,0.5)]`}>
             {item && item?.shortDesc}
             </div>

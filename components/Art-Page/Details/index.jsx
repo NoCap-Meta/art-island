@@ -1,11 +1,7 @@
 
 import { useSelectedItemStore } from '@/utils/Zustand';
-import { MagnetBold, MagnetMedium, MagnetLight } from 'pages/_app';
+import { MagnetBold, MagnetMedium } from 'pages/_app';
 import parse from 'html-react-parser'
-import dynamic from "next/dynamic"
-const { MapContainer, Marker, Popup, TileLayer } = dynamic(() => import('react-leaflet'), { ssr: false })
-
-const demoContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, ris us sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.'
 
 const Content = ({ content, title }) => {
   return (
@@ -22,9 +18,6 @@ const Content = ({ content, title }) => {
 
 const Details = () => {
   const {selectedItem:item, setSelectedItem} = useSelectedItemStore()
-
-  
-
   return (
     <div className="pb-[72px] flex justify-center w-[100vw] pt-[20px]">
       <div className='w-[90vw] xl:mt-[0] mt-[1rem] flex flex-col gap-[90px]'>

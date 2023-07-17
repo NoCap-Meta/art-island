@@ -64,7 +64,7 @@ export default function App({ Component, pageProps }) {
       <MetaMaskProvider>
         <ContextProvider>
           <AuthChecker>
-            <NavBar />
+            <NavBar/>
             <Component {...pageProps} />
           </AuthChecker>
         </ContextProvider>
